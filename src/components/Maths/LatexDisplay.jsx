@@ -514,25 +514,6 @@ function treeToLatex(tree, msgArray, controlNegate) {
             throw new Error("Invalid token type!")
     }
 }
-function tokensToLatex(tokens) {
-    const postfixTokens = getTokensInPostfix(tokens)
-    const tree = generateExprTree(postfixTokens)
-    let msgArray = ['']
-    treeToLatex(tree, msgArray)
-    return msgArray[0]
-}
-function getLatexEquivalent(mathExpr) {
-    let tokens 
-    try {
-        tokens = getTokens(mathExpr)
-        const ret = tokensToLatex(tokens)
-        console.log("ret without latex format: " + ret)
-        return ret
-    } catch (error) {
-        console.log(error.toString())
-        return '-'
-    }
-}
 /*
 Should return:
 - Tokens
@@ -552,7 +533,9 @@ export function exprToLatex(mathExpr) {
     let ret
     try {
         const tokens = getTokens(mathExpr)
+        console.log(tokensToString(tokens))
         const postfixTokens = getTokensInPostfix(tokens)
+        console.log(tokensToString(postfixTokens))
         console.log(postfixTokens)
         const tree = generateExprTree(postfixTokens)
         let latexArray = ['']

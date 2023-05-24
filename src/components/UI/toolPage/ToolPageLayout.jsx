@@ -1,4 +1,4 @@
-import { Box, Typography, useMediaQuery } from "@mui/material"
+import { Box, useMediaQuery } from "@mui/material"
 import { Outlet, useLocation } from "react-router-dom"
 import { tools } from "../../../data"
 import { PageTitle } from "../DefaultLayout"

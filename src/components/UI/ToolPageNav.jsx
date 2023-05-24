@@ -1,4 +1,4 @@
-import { Box, List, ListItem, Typography } from "@mui/material"
+import { Box, List } from "@mui/material"
 import { HashLink } from 'react-router-hash-link';
 import { Link } from '@mui/material';
 import { scrollWithOffset } from "./DefaultLayout";

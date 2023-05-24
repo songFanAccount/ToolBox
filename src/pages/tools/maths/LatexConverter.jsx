@@ -1,10 +1,7 @@
-import { Box, Link, TextField, Typography } from '@mui/material';
+import { Box, TextField, Typography } from '@mui/material';
 import React from 'react';
-import { useOutletContext } from 'react-router-dom';
-import { BinaryTree } from '../../../components/BinaryTree';
 import { exprToLatex } from '../../../components/Maths/LatexDisplay';
 import { CopyableParagraph, ExternalLink, PageEndSpace, PageParagraph, PageSectionTitle, PageTextList, SectionBox, ToolLink } from '../../../components/UI/DefaultLayout';
-import SideBar from '../../../components/UI/toolPage/SideBar';
 
 /*
 Page Content:
@@ -12,11 +9,11 @@ User input for math equation
 */
 function LatexConverter() {
     const [tex, setTex] = React.useState('-')
+    // eslint-disable-next-line
     const [tree, setTree] = React.useState({})
     const [delay, setDelay] = React.useState(1000)
     const [errorMsg, setErrorMsg] = React.useState('')
     const [latexRendered, setLatexRendered] = React.useState('-')
-
     React.useEffect(() => {
         function typeset() {
             if(window?.MathJax !== undefined){
