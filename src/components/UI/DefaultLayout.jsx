@@ -98,9 +98,12 @@ export function PageSectionTitle({title}) {
     )
 }
 
-export function PageParagraph({text, bold, inline}) {
+/*
+By default, paragraphs are inline, since it is common to insert link or want to modify part of the paragraph.
+*/
+export function PageParagraph({text, bold, block}) {
     return (
-        <Typography display={inline ? 'inline' : 'block'}
+        <Typography display={block ? 'block' : 'inline'}
             sx={{
                 fontFamily: 'Verdana',
                 fontWeight: bold ? 'bold' : 'normal',
@@ -159,7 +162,7 @@ export function CopyableParagraph({preText, copyableText, copyable}) {
 
 export function ExternalLink({href, target, children}) {
     return (
-        <Link href={href} target={target}
+        <Link href={href} target={target ? target : '_blank'}
             sx={{
                 fontFamily: 'Verdana',
                 color:'#011627',

@@ -127,7 +127,7 @@ const compsciTools = {
             tools: {
                 'maths-expression-parser': {
                     displayName: 'Maths expression parser',
-                    sectionTitles: ['The Tool', 'How to use', 'Limitations', 'How it works']
+                    sectionTitles: ['The Tool', 'How it works', 'Limitations']
                 }
             },
             subCategories: null

@@ -1,7 +1,7 @@
 import { Box, useMediaQuery } from "@mui/material"
 import { Outlet, useLocation } from "react-router-dom"
 import { tools } from "../../../data"
-import { PageTitle } from "../DefaultLayout"
+import { PageEndSpace, PageTitle } from "../DefaultLayout"
 import SideBar from "./SideBar"
 import ToolPagePath from "./ToolPagePath"
 
@@ -78,16 +78,17 @@ function ToolPageLayout() {
                 position: 'absolute',
                 overflowX: 'clip',
                 top: 130,
-                width: 'calc(100vw - 370px)',
+                width: dimX > 0 ? 'calc(100vw - 370px)' : '100vw',
             }}
         >
             <Box sx={{zIndex: 7,
                     position: 'relative',
-                    left: 370,
-                    width: 'calc(100vw - 2*370px)',}}>
+                    left: dimX > 0 ? 370 : 20,
+                    width: dimX > 0 ? 'calc(100vw - 2*370px)' : '100vw',}}>
                 <ToolPagePath urls={pathURLs} displayNames={displayNames}/>
                 <PageTitle title={curToolName}/>
                 <Outlet />
+                <PageEndSpace/>
             </Box>
             {dimX > 0 && <SideBar toolName={curToolName} sections={sectionTitles}/>}
         </Box>

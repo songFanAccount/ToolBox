@@ -461,7 +461,7 @@ function SideNavBar(props) {
 				color: 'black',
 				p: 1,
 				ml: 2.5,
-				mt: inHeader ? 0 : 3,
+				mt: 3,
 				mb: inHeader ? 0 : 3,
 				borderRadius: 0,
 			}}

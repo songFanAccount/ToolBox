@@ -107,7 +107,7 @@ function getTokens(expr) {
                 }
                 if(needNegate) {
                     tokens.push({token: '1', type: tokenTypes.number, negate: true})
-                    if(causeUnaryPrec > precedence['*']) {
+                    if(causeUnaryPrec >= precedence['*']) {
                         tokens.push({token: '@', type: tokenTypes.operator})
                     } else {
                         tokens.push({token: '*', type: tokenTypes.operator})
@@ -142,7 +142,6 @@ function getTokens(expr) {
                         tokens.push({
                             token: parseFloat(curToken).toString(),
                             type: curType,
-                            negate: needNegate
                         })
                         needNegate = false
                         tokens.push({token: '*', type: tokenTypes.operator, autoAdded: true})
@@ -153,7 +152,6 @@ function getTokens(expr) {
                         tokens.push({
                             token: parseFloat(curToken).toString(),
                             type: curType,
-                            negate: needNegate
                         })
                         needNegate = false
                         if(newChar === '(') { // e.g. 5( should be intepreted as 5 * (
@@ -173,7 +171,7 @@ function getTokens(expr) {
                     case tokenTypes.number:
                         throw new Error("Invalid expression: Cannot have number immediately after variables!")
                     case tokenTypes.variable:
-                        tokens.push({token: curToken, type: curType, negate: needNegate})
+                        tokens.push({token: curToken, type: curType})
                         needNegate = false
                         tokens.push({token: '*', type: tokenTypes.operator, autoAdded: true})
                         curToken = newChar
@@ -216,7 +214,7 @@ function getTokens(expr) {
                                 }
                             }
                         }
-                        tokens.push({token: curToken, type: curType, negate: needNegate})
+                        tokens.push({token: curToken, type: curType})
                         needNegate = false
                         if(newChar === '(' && !formsFunction) { // e.g. x( should be intepreted as x * (
                             tokens.push({token: '*', type: tokenTypes.operator, autoAdded: true})
@@ -253,7 +251,7 @@ function getTokens(expr) {
                         } 
 
                         if(curToken !== ')' && newChar !== '(') {throw new Error(`Operator problem: ${curToken + newChar}`)}
-                        tokens.push({token: curToken, type: curType, negate: needNegate})
+                        tokens.push({token: curToken, type: curType,})
                         if(curToken === ')' && newChar === '(') {
                             tokens.push({token: '*', type: tokenTypes.operator, autoAdded: true})
                         }
@@ -270,16 +268,16 @@ function getTokens(expr) {
     }
     // Push last token
     if(!isUnary) {
-        tokens.push({token: curToken, type: curType, negate: needNegate})
+        tokens.push({token: curToken, type: curType})
     }
     // Matching open parentheses:
     // If the last token was a '(', need to manually supply an argument before closing parentheses
     if(curType === tokenTypes.operator && curToken !== ')') {
-        tokens.push({token: '?', type: tokenTypes.number, fillArg: true})
+        tokens.push({token: '?', type: tokenTypes.number, fillArg: true, autoAdded: true})
     }
     // Push right parentheses until all left parentheses are matched
     for(let i = 0; i < numOpenBrac; i++) {
-        tokens.push({token: ')', type: tokenTypes.operator})
+        tokens.push({token: ')', type: tokenTypes.operator, autoAdded: true})
     }
     return tokens
 }
@@ -467,7 +465,7 @@ function treeToLatex(tree, msgArray, controlNegate) {
                     if(addParenthesesRight) {msgArray[0] += '('}
                     if(treeToLatex(right, msgArray, true)) {subExprNegate = !subExprNegate}
                     if(addParenthesesRight) {msgArray[0] += ')'}
-                    if(msgArray[0].length <= insertIndex) {
+                    if(msgArray[0].length < insertIndex) {
                         throw new Error("Invalid expression: Nothing on the right of *?")
                     } else {
                         let firstRightNum
@@ -524,6 +522,7 @@ Should return:
 */
 export function exprToLatex(mathExpr) {
     if(mathExpr === undefined || mathExpr === null) {throw new Error("LatexDisplay needs mathExpr!")}
+    mathExpr = mathExpr.replaceAll(' ', '') // Getting rid of all spaces
     if(mathExpr === '') {
         return {
             success: false,

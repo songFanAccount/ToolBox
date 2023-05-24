@@ -1,7 +1,7 @@
 import { Box, TextField, Typography } from '@mui/material';
 import React from 'react';
 import { exprToLatex } from '../../../components/Maths/LatexDisplay';
-import { CopyableParagraph, ExternalLink, PageEndSpace, PageParagraph, PageSectionTitle, PageTextList, SectionBox, ToolLink } from '../../../components/UI/DefaultLayout';
+import { CopyableParagraph, ExternalLink, PageParagraph, PageSectionTitle, PageTextList, SectionBox, ToolLink } from '../../../components/UI/DefaultLayout';
 
 /*
 Page Content:
@@ -31,7 +31,6 @@ function LatexConverter() {
 
     function handleChange(event) {
         let input = event.target.value
-        input = input.replaceAll(' ', '') // Getting rid of all spaces
         const latexObj = exprToLatex(input)
         if(latexObj.success) {
             setTex(latexObj.latex)
@@ -96,28 +95,27 @@ function LatexConverter() {
             <PageSectionTitle title="How it works"/>
             <SectionBox>
                 <Box>
-                    <PageParagraph text={`Inspiration taken from the `} inline={true}/>
-                    <ExternalLink target="_blank" 
+                    <PageParagraph text={`Inspiration taken from the `}/>
+                    <ExternalLink
                         href="https://www.integral-calculator.com/">
                         integral calculator
                     </ExternalLink>
-                    <PageParagraph text={`. The LaTeX convertion involves the use of the `} inline={true}/>
-                    <ExternalLink target="_blank" 
+                    <PageParagraph text={`. The LaTeX convertion involves the use of the `}/>
+                    <ExternalLink
                         href="https://en.wikipedia.org/wiki/Shunting_yard_algorithm#:~:text=In%20computer%20science%2C%20the%20shunting,abstract%20syntax%20tree%20(AST).">
                         Shunting yard algorithm
                     </ExternalLink>
-                    <PageParagraph inline={true} text={
+                    <PageParagraph text={
                         ` to process the input tokens (given in infix notation) to be in postfix notation.
                         A binary expression tree is then generated, from which an inorder traversal of the tree produces the corresponding LaTeX code.`} />
                 </Box>
                 <Box>
-                    <PageParagraph inline={true} text="For the programmers, click "/>
+                    <PageParagraph text="For the programmers, click "/>
                     <ToolLink name="maths expression parser" linkText="here"/>
-                    <PageParagraph inline={true} text=" for a more in-depth explanation."/>
+                    <PageParagraph text=" for a more in-depth explanation."/>
                 </Box>
                 
             </SectionBox>
-            <PageEndSpace/>
             {/* <Typography>
                 Tree:
             </Typography>
