@@ -1,7 +1,10 @@
-import { Box, IconButton, Link, List, ListItemText, Typography, useMediaQuery } from '@mui/material';
+import React from 'react';
+import { Box, IconButton, Link, List, ListItemText, Collapse, Typography, useMediaQuery, Button } from '@mui/material';
 import { Outlet, Link as RouterLink } from 'react-router-dom';
 import Header from './Header/Header';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 function DefaultLayout() {
     /*
@@ -48,16 +51,19 @@ function DefaultLayout() {
 
 export default DefaultLayout
 
-export function SectionBox(props) {
-    const showBorder = !props.noBorder
-    return (
+export function SectionBox({title, noBorder, children, collapsible, startClosed}) {
+    if(!title && collapsible) {throw new Error("SectionBox: Cannot be collapsible without title!")}
+    console.log(title)
+    console.log(collapsible)
+    console.log(startClosed)
+    const Contents = () => (
         <Box
             sx={{
-                ml: showBorder ? 1.5 : 0,
+                ml: noBorder ? 0 : 1.5,
                 mb: 3,
-                pl: showBorder ? 2 : 0,
-                py: showBorder ? 1.5 : 0,
-                borderLeft: showBorder ? 2 : 0,
+                pl: noBorder ? 0 : 2,
+                py: noBorder ? 0 : 1.5,
+                borderLeft: noBorder ? 0 : 2,
                 borderColor: '#AEAEAE',
                 display: 'flex',
                 flexDirection: 'column',
@@ -65,8 +71,63 @@ export function SectionBox(props) {
                 width: 'fit-content'
             }}
         >
-            {props.children}
+            {children}
         </Box>
+    )
+    const CollapseContents = ({open}) => {
+        return (
+            <Collapse
+                in={open}
+            >
+                <Contents/>
+            </Collapse>
+        )
+    }
+    const CollapseTitle = ({onClick, open}) => {
+        return (
+            <Button
+                disableRipple
+                onClick={onClick}
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    color: 'black',
+                    p: 0,
+                    textTransform: 'none',
+                    '&:hover': {
+                        backgroundColor: 'transparent'
+                    }
+                }}
+            >
+                <PageSectionTitle title={title}/>
+                {open ? <KeyboardArrowUpIcon sx={{fontSize: 30, ml: 1}}/> : <KeyboardArrowDownIcon sx={{fontSize: 30, ml: 1}}/>}
+            </Button>
+        )
+    }
+    const CollapseBox = () => {
+        const [open, setOpen] = React.useState(startClosed ? false : true)
+        function handleClick() {
+            setOpen(!open)
+        }
+        return (
+            <Box>
+                <CollapseTitle onClick={handleClick} open={open}/>
+                <CollapseContents open={open}/>
+            </Box>
+        )
+    }
+    const NormalBox = () => {
+        return (
+            <Box>
+                {title && <PageSectionTitle title={title}/>}
+                <Contents/>
+            </Box>
+        )
+    }
+    return (
+        <>
+            {collapsible ? <CollapseBox /> : <NormalBox />}
+        </>
     )
 }
 export function PageTitle({title}) {
@@ -102,6 +163,7 @@ export function PageSectionTitle({title}) {
 By default, paragraphs are inline, since it is common to insert link or want to modify part of the paragraph.
 */
 export function PageParagraph({text, bold, block}) {
+    if(!text) {return <></>}
     return (
         <Typography display={block ? 'block' : 'inline'}
             sx={{
@@ -115,14 +177,21 @@ export function PageParagraph({text, bold, block}) {
     )
 }
 
-export function PageTextList({list, listName}) {
+export function PageTextList({list, listName, noPaddingsY}) {
     if(!list) {throw new Error("Need input list in PageTextList!")}
+    const ListElement = ({element}) => {
+        if(typeof element === 'string') {
+            return <ListItemText primaryTypographyProps={{fontFamily: 'Verdana'}} sx={{display: 'list-item'}}>{element}</ListItemText>
+        } else {
+            return <Box sx={{display: 'list-item'}}>{element}</Box>
+        }
+    }
     return (
         <Box>
             <PageParagraph text={listName}/>
-            <List sx={{pl: 4, listStyleType: 'square'}}>
+            <List sx={{pl: 4, listStyleType: 'square', py: noPaddingsY ? 0 : 'inherit',}}>
                 {list.map((e) => (
-                    <ListItemText primaryTypographyProps={{fontFamily: 'Verdana'}} sx={{display: 'list-item'}}>{e}</ListItemText>
+                    <ListElement element={e}/>
                 ))}
             </List>
         </Box>

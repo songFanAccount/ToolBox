@@ -1,7 +1,7 @@
 import { Box, TextField, Typography } from '@mui/material';
 import React from 'react';
 import { exprToLatex } from '../../../components/Maths/LatexDisplay';
-import { CopyableParagraph, ExternalLink, PageParagraph, PageSectionTitle, PageTextList, SectionBox, ToolLink } from '../../../components/UI/DefaultLayout';
+import { CopyableParagraph, ExternalLink, PageParagraph, PageTextList, SectionBox, ToolLink } from '../../../components/UI/DefaultLayout';
 
 /*
 Page Content:
@@ -54,8 +54,7 @@ function LatexConverter() {
                     onChange={(e) => handleChange(e)}
                 />
             </SectionBox>
-            <PageSectionTitle title="Results"/>
-            <SectionBox>
+            <SectionBox title="Results">
                 <CopyableParagraph preText="The converted LaTeX expression: " copyableText={tex} copyable={tex !== '-'}/>
                 {errorMsg !== '' && <PageParagraph bold={true} text={errorMsg}/>}
                 {errorMsg === '' &&
@@ -68,15 +67,13 @@ function LatexConverter() {
                     </>
                 }
             </SectionBox>
-            <PageSectionTitle title="How to use"/>
-            <SectionBox id="How to use">
+            <SectionBox title="How to use" id="How to use">
                 <PageParagraph text=
                     {`To use the tool, simply enter your math expression into the input box above. 
                     It will be parsed to be equipped with LaTeX syntax while preserving the intended order of operation.
                     The output LaTeX code can then be copied and pasted into your LaTeX documents.`}/>
             </SectionBox>
-            <PageSectionTitle title="Limitations"/>
-            <SectionBox>
+            <SectionBox title="Limitations">
                 <PageParagraph text=
                     {`The purpose of making this dynamic parser was largely for the development of other maths tools.
                     As a result, there is a lack of support for a large portion of all maths operators, functions and symbols.
@@ -92,8 +89,7 @@ function LatexConverter() {
                     ]}
                 />
             </SectionBox>
-            <PageSectionTitle title="How it works"/>
-            <SectionBox>
+            <SectionBox title="How it works">
                 <Box>
                     <PageParagraph text={`Inspiration taken from the `}/>
                     <ExternalLink
@@ -107,7 +103,12 @@ function LatexConverter() {
                     </ExternalLink>
                     <PageParagraph text={
                         ` to process the input tokens (given in infix notation) to be in postfix notation.
-                        A binary expression tree is then generated, from which an inorder traversal of the tree produces the corresponding LaTeX code.`} />
+                        A binary expression tree is then generated, from which an inorder traversal of the tree produces the corresponding LaTeX code.
+                        The LaTeX preview is rendered using `} />
+                    <ExternalLink href="https://www.mathjax.org/">
+                        MathJax
+                    </ExternalLink>
+                    <PageParagraph text="."/>
                 </Box>
                 <Box>
                     <PageParagraph text="For the programmers, click "/>

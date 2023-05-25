@@ -3,9 +3,27 @@ import { Box, Typography } from "@mui/material"
 /*
 Use this for an input array of already created DOMs
 */
-export function ElementArray({array}) {
-    const Element = (e) => {
-        return (
+export function ElementArray({array, maxLength}) {
+    if(maxLength < 0) {throw new Error("ElementArray: Negative maxLength not allowed!")}
+    const Elements = () => {
+        let generatedArray = []
+        const l = maxLength ? Math.min(array.length, maxLength) : array.length
+        for(let i = 0; i < l; i++) {
+            generatedArray.push(
+                <Box
+                    sx={{
+                        border: 1,
+                        minHeight: 25,
+                        minWidth: 25,
+                        textAlign: 'center'
+                    }}
+                >
+                    {array[i]}
+                </Box>
+            )
+        }
+        if(maxLength < array.length) {
+            generatedArray.push(
             <Box
                 sx={{
                     border: 1,
@@ -14,8 +32,11 @@ export function ElementArray({array}) {
                     textAlign: 'center'
                 }}
             >
-                {e}
-            </Box>
+                ...
+            </Box>)
+        }
+        return (
+            generatedArray
         )
     }
     return (
@@ -28,7 +49,7 @@ export function ElementArray({array}) {
                 width: 'fit-content'
             }}
         >
-            {array.map((e) => Element(e))}
+            <Elements array={array}/>
         </Box>
     )
 }

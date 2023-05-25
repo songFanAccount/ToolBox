@@ -108,9 +108,9 @@ function getTokens(expr) {
                 if(needNegate) {
                     tokens.push({token: '1', type: tokenTypes.number, negate: true})
                     if(causeUnaryPrec >= precedence['*']) {
-                        tokens.push({token: '@', type: tokenTypes.operator})
+                        tokens.push({token: '@', type: tokenTypes.operator, autoAdded: true})
                     } else {
-                        tokens.push({token: '*', type: tokenTypes.operator})
+                        tokens.push({token: '*', type: tokenTypes.operator, autoAdded: true})
                     }
                     needNegate = false
                 }
@@ -268,7 +268,14 @@ function getTokens(expr) {
     }
     // Push last token
     if(!isUnary) {
-        tokens.push({token: curToken, type: curType})
+        if(curType === tokenTypes.number) {
+            tokens.push({
+                token: parseFloat(curToken).toString(),
+                type: curType,
+            })
+        } else {
+            tokens.push({token: curToken, type: curType})
+        }
     }
     // Matching open parentheses:
     // If the last token was a '(', need to manually supply an argument before closing parentheses
