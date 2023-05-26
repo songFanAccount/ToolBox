@@ -23,6 +23,9 @@ export default function MathsExpressionParser() {
             </Typography>
         )
     }
+    const EmptyTokens = () => (
+        <PageParagraph text=" No input..." bold/>
+    )
     function handleChange(event) {
         const newExpr = event.target.value
         setExpr(newExpr)
@@ -32,7 +35,7 @@ export default function MathsExpressionParser() {
             setTokens(<ElementArray maxLength={40} array={latexObj.tokens.map((e) => <ArrayElement token={e}/>)}/>)
         } else {
             setLatex(null)
-            setTokens(null)
+            setTokens(<EmptyTokens/>)
         }
         return newExpr
     }
@@ -51,7 +54,7 @@ export default function MathsExpressionParser() {
                 <PageParagraph text="Enter an expression to begin:"/>
                 <MEPTextField handleChange={handleChange} expr={expr}/>
                 <PageParagraph text={`The parser first processes the input string, character by character, left to right, and produces an array of tokens.
-                                      The parser needs to follow the set of rules listed below, some of which account for typical conventions such as negation.`}/>
+                                      The parser needs to follow the set of rules listed below and make modifications to the input expression wherever necessary.`}/>
                 <CollapseSectionBox title="Rules:" startClosed={true}>
                     <PageTextList 
                         listName="If the current token is a number, and the next character is a:"
@@ -111,6 +114,17 @@ export default function MathsExpressionParser() {
                         ]}
                     />
                 </CollapseSectionBox>
+                <PageParagraph text={`
+                    Additionally, the parser keeps track of the number of open parentheses. This is used to 1. detect invalid expressions due to
+                    an excess of closing parentheses, and 2. after processing the entire input, close any parentheses that are still open.`}/>
+                <Box>
+                    <PageParagraph text={`The tokens array generated from your input expression is shown below. Note that anything shown in `}/>
+                    <PageParagraph text='red' color='red'/>
+                    <PageParagraph text={` is auto-added according to the listed rules. You may also notice a `}/>
+                    <PageParagraph text='?' color='red'/>
+                    <PageParagraph text=" in the tokens, this is because the parser is expecting a number/variable there, so it uses a placeholder there to validify the otherwise invalid expression."/>
+                </Box>
+                <PageParagraph text='Tokens (showing up to the first 40):'/>
                 {tokens}
                 {latex}
             </SectionBox>

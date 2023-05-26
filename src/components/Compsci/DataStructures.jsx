@@ -45,8 +45,9 @@ export function ElementArray({array, maxLength}) {
                 display: 'flex',
                 flexDirection: 'row',
                 alignItems: 'center',
-                border: 1,
-                width: 'fit-content'
+                width: 'fit-content',
+                maxWidth: 1,
+                flexWrap: 'wrap'
             }}
         >
             <Elements array={array}/>
