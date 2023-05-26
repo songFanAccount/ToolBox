@@ -437,13 +437,21 @@ function SideNavBar(props) {
 		</>
     )
 	const ToolsIcon = () => {
-		const sx = {
-			fontSize: 40,
+		let sx = {
+			fontSize: 32,
 			m: 0,
 			p: 0
 		}
 		if(inHeader) {
-			sx.color = '#fdfffc'
+			sx = {
+				...sx,
+				color: '#fdfffc',
+				backgroundColor: '#595959',
+				p: 1,
+				border: 1,
+				borderColor: 'transparent',
+				borderRadius: '50%'
+			}
 		}
 		return (
 			<ConstructionSharpIcon
@@ -461,7 +469,7 @@ function SideNavBar(props) {
 				color: 'black',
 				p: 1,
 				ml: 2.5,
-				mt: 3,
+				mt: inHeader ? 0 : 3,
 				mb: inHeader ? 0 : 3,
 				borderRadius: 0,
 			}}

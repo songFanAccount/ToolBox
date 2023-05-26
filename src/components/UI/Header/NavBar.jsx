@@ -23,8 +23,13 @@ function NavBar(props) {
                     >
                         <MenuIcon
                             sx={{
-                                fontSize: 40,
-                                color: '#fdfffc'
+                                fontSize: 32,
+                                color: '#fdfffc',
+                                backgroundColor: '#595959',
+                                p: 1,
+                                border: 1,
+                                borderColor: 'transparent',
+                                borderRadius: '50%'
                             }}
                         />
                     </IconButton>
