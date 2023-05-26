@@ -1,10 +1,11 @@
 import React from 'react';
 import { Box, TextField, Typography } from "@mui/material";
-import { ExternalLink, PageParagraph, PageSectionTitle, PageTextList, SectionBox, ToolLink } from "../../../../components/UI/DefaultLayout";
+import { ExternalLink, PageParagraph, PageTextList, SectionBox, ToolLink } from "../../../../components/UI/DefaultLayout";
 import { exprToLatex } from '../../../../components/Maths/LatexDisplay';
-import { ElementArray, TextArray } from '../../../../components/Compsci/DataStructures';
+import { ElementArray } from '../../../../components/Compsci/DataStructures';
 
 export default function MathsExpressionParser() {
+    // eslint-disable-next-line
     const [expr, setExpr] = React.useState('')
     const [latex, setLatex] = React.useState('')
     const [tokens, setTokens] = React.useState(null)
