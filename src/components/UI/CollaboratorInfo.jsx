@@ -8,6 +8,7 @@ function CollaboratorInfo() {
                 display: 'flex',
                 flexDirection: 'column',
                 width: 0.8,
+                maxHeight: 'fit-content'
             }}
         >
             <Typography

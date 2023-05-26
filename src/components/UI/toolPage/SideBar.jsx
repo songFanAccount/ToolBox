@@ -10,7 +10,7 @@ function SideBar({toolName, sections}) {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                width: 350,
+                width: 320,
                 backgroundColor: '#ADD8E6',
                 position: 'fixed',
                 top: 100,
@@ -24,11 +24,13 @@ function SideBar({toolName, sections}) {
             <Box
                 sx={{
                     width: 0.8,
+                    minHeight: 0.3,
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     border: 3,
-                    borderRadius: 1.5
+                    borderRadius: 1.5,
+                    backgroundColor: '#c9e8f2',
                 }}
             >
                 <Box

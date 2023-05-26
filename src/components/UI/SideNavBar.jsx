@@ -422,7 +422,7 @@ function SideNavBar(props) {
 				sx={{
 					display: 'flex',
 					flexDirection: 'column',
-					width: 350
+					width: 320
 				}}
 			>
 				<Box sx={{minHeight: 100}}>

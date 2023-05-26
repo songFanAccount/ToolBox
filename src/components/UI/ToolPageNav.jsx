@@ -33,8 +33,7 @@ function ToolPageNav({sections}) {
                 display: 'flex',
                 flexDirection: 'column',
                 width: 1,
-                backgroundColor: '#c9e8f2',
-                minHeight: 200
+                pb: 'auto',
             }}
         >
             <List

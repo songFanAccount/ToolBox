@@ -1,5 +1,6 @@
-import { Box, TextField, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import React from 'react';
+import { MEPTextField } from '../../../components/Maths/GeneralComponents';
 import { exprToLatex } from '../../../components/Maths/LatexDisplay';
 import { CopyableParagraph, ExternalLink, PageParagraph, PageTextList, SectionBox, ToolLink } from '../../../components/UI/DefaultLayout';
 
@@ -8,6 +9,7 @@ Page Content:
 User input for math equation
 */
 function LatexConverter() {
+    const [expr, setExpr] = React.useState('')
     const [tex, setTex] = React.useState('-')
     // eslint-disable-next-line
     const [tree, setTree] = React.useState({})
@@ -27,10 +29,11 @@ function LatexConverter() {
             typeset()
         }
     // eslint-disable-next-line
-    }, [tex])
+    }, [expr])
 
     function handleChange(event) {
         let input = event.target.value
+        setExpr(input)
         const latexObj = exprToLatex(input)
         if(latexObj.success) {
             setTex(latexObj.latex)
@@ -48,11 +51,7 @@ function LatexConverter() {
             <SectionBox noBorder={true}>
                 <PageParagraph text="LaTeX converter takes in mathematical expressions and outputs the equivalent expression in LaTeX syntax."/>
                 <PageParagraph text="Enter an expression:"/>
-                <TextField
-                    placeholder="e.g. ax^2 + bx + c"
-                    sx={{maxWidth: 500,}}
-                    onChange={(e) => handleChange(e)}
-                />
+                <MEPTextField handleChange={handleChange} expr={expr}/>
             </SectionBox>
             <SectionBox title="Results">
                 <CopyableParagraph preText="The converted LaTeX expression: " copyableText={tex} copyable={tex !== '-'}/>

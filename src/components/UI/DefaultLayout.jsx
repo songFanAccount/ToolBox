@@ -44,19 +44,15 @@ function DefaultLayout() {
             >
                 <Header dimX={dimX}/>
             </Box>
-            <Outlet/>
+            <Outlet context={{dimX: dimX}}/>
         </>
     )
 }
 
 export default DefaultLayout
 
-export function SectionBox({title, noBorder, children, collapsible, startClosed}) {
-    if(!title && collapsible) {throw new Error("SectionBox: Cannot be collapsible without title!")}
-    console.log(title)
-    console.log(collapsible)
-    console.log(startClosed)
-    const Contents = () => (
+function Contents({noBorder, children}) {
+    return(
         <Box
             sx={{
                 ml: noBorder ? 0 : 1.5,
@@ -68,26 +64,43 @@ export function SectionBox({title, noBorder, children, collapsible, startClosed}
                 display: 'flex',
                 flexDirection: 'column',
                 rowGap: 2,
-                width: 'fit-content'
+                width: 'fit-content',
             }}
         >
             {children}
         </Box>
     )
-    const CollapseContents = ({open}) => {
+}
+
+export function SectionBox({title, noBorder, children}) {
+    return (
+        <Box>
+            {title && <PageSectionTitle title={title}/>}
+            <Contents noBorder={noBorder} children={children}/>
+        </Box>
+    )
+}
+
+export function CollapseSectionBox({title, children, startClosed}) {
+    if(!title) {throw new Error("CollapseSectionBox: Cannot be collapsible without title!")}
+    const [open, setOpen] = React.useState(startClosed ? false : true)
+    function handleClick() {
+        setOpen(!open)
+    }
+    const CollapseContents = () => {
         return (
             <Collapse
                 in={open}
             >
-                <Contents/>
+                <Contents children={children}/>
             </Collapse>
         )
     }
-    const CollapseTitle = ({onClick, open}) => {
+    const CollapseTitle = () => {
         return (
             <Button
                 disableRipple
-                onClick={onClick}
+                onClick={handleClick}
                 sx={{
                     display: 'flex',
                     alignItems: 'center',
@@ -104,30 +117,11 @@ export function SectionBox({title, noBorder, children, collapsible, startClosed}
             </Button>
         )
     }
-    const CollapseBox = () => {
-        const [open, setOpen] = React.useState(startClosed ? false : true)
-        function handleClick() {
-            setOpen(!open)
-        }
-        return (
-            <Box>
-                <CollapseTitle onClick={handleClick} open={open}/>
-                <CollapseContents open={open}/>
-            </Box>
-        )
-    }
-    const NormalBox = () => {
-        return (
-            <Box>
-                {title && <PageSectionTitle title={title}/>}
-                <Contents/>
-            </Box>
-        )
-    }
     return (
-        <>
-            {collapsible ? <CollapseBox /> : <NormalBox />}
-        </>
+        <Box>
+            <CollapseTitle/>
+            <CollapseContents/>
+        </Box>
     )
 }
 export function PageTitle({title}) {

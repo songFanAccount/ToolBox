@@ -1,8 +1,9 @@
 import React from 'react';
-import { Box, TextField, Typography } from "@mui/material";
-import { ExternalLink, PageParagraph, PageTextList, SectionBox, ToolLink } from "../../../../components/UI/DefaultLayout";
+import { Box, Typography } from "@mui/material";
+import { CollapseSectionBox, ExternalLink, PageParagraph, PageTextList, SectionBox, ToolLink } from "../../../../components/UI/DefaultLayout";
 import { exprToLatex } from '../../../../components/Maths/LatexDisplay';
 import { ElementArray } from '../../../../components/Compsci/DataStructures';
+import { MEPTextField } from '../../../../components/Maths/GeneralComponents';
 
 export default function MathsExpressionParser() {
     // eslint-disable-next-line
@@ -33,6 +34,7 @@ export default function MathsExpressionParser() {
             setLatex(null)
             setTokens(null)
         }
+        return newExpr
     }
     return (
         <Box>
@@ -47,14 +49,10 @@ export default function MathsExpressionParser() {
             </SectionBox>
             <SectionBox title="How it works">
                 <PageParagraph text="Enter an expression to begin:"/>
-                <TextField
-                    placeholder="e.g. ax^2 + bx + c"
-                    sx={{maxWidth: 500,}}
-                    onChange={(e) => handleChange(e)}
-                />
+                <MEPTextField handleChange={handleChange} expr={expr}/>
                 <PageParagraph text={`The parser first processes the input string, character by character, left to right, and produces an array of tokens.
                                       The parser needs to follow the set of rules listed below, some of which account for typical conventions such as negation.`}/>
-                <SectionBox title="Rules:" collapsible={true} startClosed={true}>
+                <CollapseSectionBox title="Rules:" startClosed={true}>
                     <PageTextList 
                         listName="If the current token is a number, and the next character is a:"
                         list={[
@@ -104,7 +102,7 @@ export default function MathsExpressionParser() {
                             ]}/>
                         ]}
                     />
-                </SectionBox>
+                </CollapseSectionBox>
                 {tokens}
                 {latex}
             </SectionBox>

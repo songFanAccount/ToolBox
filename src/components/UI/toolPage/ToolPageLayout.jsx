@@ -1,3 +1,4 @@
+import React from 'react'
 import { Box, useMediaQuery } from "@mui/material"
 import { Outlet, useLocation } from "react-router-dom"
 import { tools } from "../../../data"
@@ -51,6 +52,9 @@ function ToolPageLayout() {
     if(useMediaQuery('(min-width:900px)')) {
         dimX = 1
     }
+    const sideBarWidth = 320
+    const gap = 20
+    const endGap = 20
     /*
     It is the responsibility of the layout to figure out the following info of the tool from the URL:
     - Chain of display names -> Page path display
@@ -72,19 +76,21 @@ function ToolPageLayout() {
     } catch(e) {
         console.log(e.message)
     }
+
     return(
         <Box className="pageContent"
             sx={{
                 position: 'absolute',
                 overflowX: 'clip',
                 top: 130,
-                width: dimX > 0 ? 'calc(100vw - 370px)' : '100vw',
+                width: `calc(100vw - ${gap}px)`,
             }}
         >
             <Box sx={{zIndex: 7,
                     position: 'relative',
-                    left: dimX > 0 ? 370 : 20,
-                    width: dimX > 0 ? 'calc(100vw - 2*370px)' : '100vw',}}>
+                    left: dimX > 0 ? sideBarWidth + gap : gap,
+                    width: dimX > 0 ? `calc(100vw - ${sideBarWidth + gap + endGap}px)` : `calc(100vw - ${gap + endGap}px)`,
+                    maxWidth: 1200}}>
                 <ToolPagePath urls={pathURLs} displayNames={displayNames}/>
                 <PageTitle title={curToolName}/>
                 <Outlet />
