@@ -7,7 +7,6 @@ export function MEPTextField({handleChange, expr}) {
             sx={{maxWidth: 500,}}
             onChange={(e) => handleChange(e)}
             value={expr}
-            autoFocus="autoFocus"
         />
     )
 }
