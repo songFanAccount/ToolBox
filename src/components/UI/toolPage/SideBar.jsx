@@ -31,6 +31,7 @@ function SideBar({toolName, sections}) {
                     border: 3,
                     borderRadius: 1.5,
                     backgroundColor: '#c9e8f2',
+                    overflowY: 'clip'
                 }}
             >
                 <Box

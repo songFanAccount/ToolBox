@@ -15,10 +15,9 @@ function ToolPagePath({urls, displayNames}) {
                     <Link component={RouterLink} to={urls[i]}
                         sx={{
                             color: 'black',
-                            textDecoration: 'none',
+                            textDecoration: 'underline',
                             fontFamily: 'Verdana',
                             fontSize: 14,
-                            '&:hover': {textDecoration: 'underline'}
                         }}
                     >
                         {displayNames[i]}

@@ -251,6 +251,7 @@ export function ToolLink({name, linkText}) {
         <Link
             component={RouterLink}
             to={toolPath}
+            onClick={() => window.scrollTo(0, 0)}
             sx={{
                 fontFamily: 'Verdana',
                 color:'#011627',

@@ -89,15 +89,23 @@ export default function MathsExpressionParser() {
                                     <PageParagraph block={true} text={
                                         `My solution was to interpret '-' as '(-1) *', but this was still insufficient. Take for example '-5 ^ -4', both '-' signs here
                                         are negation signs so it would be interpreted as '(-1) * 5 ^ (-1) * 4', since ^ takes precedence over *, we end up with 5 to the power of -1 instead of -4.`}/>
-                                    <PageParagraph block={true} text={
-                                        `This was resolved by the introduction of the special '@' operator, which is designed to be equivalent to '*', except with a higher value of precedence.
-                                        If we replace every negation-induced * with @, we would end up with '(-1) @ 5 ^ (-1) @ 4', and since @ > ^ in precedence, we now should get 5^(-4) as intended.
-                                        However, if you have caught on, you would have seen that the first negation sign is now incorrectly interpreted, and (!!!) we will instead get (-5)^(-4), NOT -(5^(-4)).
-                                        This means that the negation sign is picky, on the left it needs to preserve the '*' precedence, so we need '(-1) * 5 ^ (-1) @ 4'.`}/>
-                                    <PageParagraph block={true} text={
-                                        `So to solve this, the choice between using * and @ is determined conditionally by the operator that initiated the negation, for example, 
-                                        the negation in '3^-4' is initiated by ^. Based on the initiator operator X, @ is used if X's precedence challenges that of *, so that we ensure the negation
-                                        is applied before X. Otherwise if X does not challenge *, simply use *, to avoid incorrectly taking precedence over future operators, like in the case marked (!!!).`}/>
+                                    <Box>
+                                        <PageParagraph text={
+                                            `This was resolved by the introduction of the special '@' operator, which is designed to be equivalent to '*', except with a higher value of precedence.
+                                            If we replace every negation-induced * with @, we would end up with '(-1) @ 5 ^ (-1) @ 4', and since @ > ^ in precedence, we now should get 5^(-4) as intended.
+                                            However, if you have caught on, you would have seen that the first negation sign is now incorrectly interpreted, and `}/>
+                                        <PageParagraph text="[*]" bold={true}/>
+                                        <PageParagraph text=" we will instead get (-5)^(-4), NOT -(5^(-4)).
+                                            This means that the negation sign is picky, on the left it needs to preserve the '*' precedence, so we need '(-1) * 5 ^ (-1) @ 4'."/>
+                                    </Box>
+                                    <Box>
+                                        <PageParagraph text={
+                                            `So to solve this, the choice between using * and @ is determined conditionally by the operator that initiated the negation, for example, 
+                                            the negation in '3^-4' is initiated by ^. Based on the initiator operator X, @ is used if X's precedence challenges that of *, so that we ensure the negation
+                                            is applied before X. Otherwise if X does not challenge *, simply use *, to avoid incorrectly taking precedence over future operators, like in the case marked `}/>
+                                        <PageParagraph text="[*]" bold={true}/>
+                                        <PageParagraph text="."/>
+                                    </Box>
                                 </SectionBox>
                             ]}/>
                         ]}

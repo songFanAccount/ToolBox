@@ -327,7 +327,7 @@ function SideNavBar(props) {
 									ml: 4, mr: 1, mb: .8, p: 0,
 									fontSize: 16,
 									color: 'black',
-									width: 'fit-content',
+									maxWidth: '10%',
 								}}
 							/>
 							<ListItemText
