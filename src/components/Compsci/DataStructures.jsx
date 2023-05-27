@@ -88,10 +88,8 @@ export function BinaryTree(props) {
                     justifyContent: 'center',
                     alignItems: 'center',
                     width: 30,
-                    minWidth: 0,
                     aspectRatio: '1 / 1',
                     border: node ? 1 : 1,
-                    m: '1%'
                 }}
             >
                 <NodeInfo str={displayStr}/>
@@ -147,11 +145,35 @@ export function BinaryTree(props) {
                 justifyContent: 'center',
                 maxWidth: 1,
                 width: 'fit-content',
-                overflowX: 'visible',
+                overflowX: 'scroll',
                 border: 1
             }}
         >
             <Tree/>
         </Box>
     )
+}
+
+/*
+Set-up:
+Do a DFS to determine the max depth of the tree, use this to initialise the layers array e.g. depth=3 -> layers=[[],[],[]]
+
+High level overview:
+Fill the arrays with DOM elements of each layer, each layer is a row-flexbox with no fancy justifyContent, they'd by default just be all to the left.
+Spacing between the elements will be done via margin, each node will determine how much to push itself based on the width of their subtrees.
+
+Recursive logic:
+For the root node, determine how much margin left it needs by determining the width of the left subtree. Then, determine how much margin right it needs by determining
+the width of the right subtree. 
+
+Layer 1: ...
+Layer 2:
+--- ML1 --- Node 1 --- (MR1 - ML2) --- Node 2 --- (MR2 - ML3) --- Node 3    etc
+Layer 3: ... 
+
+ML-> To position the root node itself
+MR-> To help position the root node's node on the right, in the same layer
+*/
+export function BinaryTree2({tree}) {
+
 }

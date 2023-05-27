@@ -7,7 +7,7 @@ import { MEPTextField } from '../../../../components/Maths/GeneralComponents';
 
 export default function MathsExpressionParser() {
     const TokenError = ({errorMsg}) => (
-        <PageParagraph text={errorMsg} bold/>
+        <PageParagraph text={`>> ${errorMsg}`} bold/>
     )
     const [expr, setExpr] = React.useState('')
     const latexObj = React.useRef(null)
