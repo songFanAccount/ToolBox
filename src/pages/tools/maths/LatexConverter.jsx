@@ -10,41 +10,51 @@ User input for math equation
 */
 function LatexConverter() {
     const [expr, setExpr] = React.useState('')
-    const [tex, setTex] = React.useState('-')
-    // eslint-disable-next-line
-    const [tree, setTree] = React.useState({})
-    const [delay, setDelay] = React.useState(1000)
-    const [errorMsg, setErrorMsg] = React.useState('')
-    const [latexRendered, setLatexRendered] = React.useState('-')
+    const latexobj = React.useRef(null)
+    const delay = React.useRef(1000)
     React.useEffect(() => {
         function typeset() {
             if(window?.MathJax !== undefined){
                 window.MathJax.typeset()
             }
         }
-        if(delay > 0) {
-            setTimeout(() => typeset, delay)
-            setDelay(0)
+        if(delay.current > 0) {
+            setTimeout(() => typeset, delay.current)
+            delay.current = 0
         } else {
             typeset()
         }
     // eslint-disable-next-line
     }, [expr])
-
+    function validTex() {
+        return latexobj.current?.latex !== '-'
+    }
+    function getTex() {
+        if(latexobj.current?.success) {
+            return latexobj.current.latex
+        } else {
+            return '-'
+        }
+    }
+    function getTexRendered() {
+        if(validTex()) {
+            return `$${latexobj.current.latex}$`
+        } else {
+            return '-'
+        }
+    }
+    function getErrorMsg() {
+        if(latexobj.current?.success) {
+            return ''
+        } else {
+            return latexobj.current?.errorMsg
+        }
+    }
     function handleChange(event) {
         let input = event.target.value
         setExpr(input)
         const latexObj = exprToLatex(input)
-        if(latexObj.success) {
-            setTex(latexObj.latex)
-            setTree(latexObj.tree)
-            setLatexRendered(`$${latexObj.latex}$`)
-            setErrorMsg('')
-        } else {
-            setErrorMsg(latexObj.errorMsg)
-            setLatexRendered('-')
-            setTex('-')
-        }
+        latexobj.current = latexObj
     }
     return (
         <Box>
@@ -54,16 +64,13 @@ function LatexConverter() {
                 <MEPTextField handleChange={handleChange} expr={expr}/>
             </SectionBox>
             <SectionBox title="Results">
-                <CopyableParagraph preText="The converted LaTeX expression: " copyableText={tex} copyable={tex !== '-'}/>
-                {errorMsg !== '' && <PageParagraph bold={true} text={errorMsg}/>}
-                {errorMsg === '' &&
-                    <>
-                        <PageParagraph text="LaTeX preview:"/>
-                        {tex !== '-' && 
-                        <Typography sx={{fontSize: 20}}>
-                            {latexRendered}
-                        </Typography>}
-                    </>
+                <CopyableParagraph preText="The converted LaTeX expression: " copyableText={getTex()} copyable={validTex()}/>
+                {(latexobj.current && !latexobj.current?.success) && <PageParagraph bold={true} text={getErrorMsg()}/>}
+                <PageParagraph text="LaTeX preview:"/>
+                {latexobj.current?.success &&
+                    <Typography sx={{fontSize: 20}}>
+                        {getTexRendered()}
+                    </Typography>
                 }
             </SectionBox>
             <SectionBox title="How to use" id="How to use">

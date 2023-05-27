@@ -6,10 +6,11 @@ import { ElementArray } from '../../../../components/Compsci/DataStructures';
 import { MEPTextField } from '../../../../components/Maths/GeneralComponents';
 
 export default function MathsExpressionParser() {
-    // eslint-disable-next-line
+    const TokenError = ({errorMsg}) => (
+        <PageParagraph text={errorMsg} bold/>
+    )
     const [expr, setExpr] = React.useState('')
-    const [latex, setLatex] = React.useState('')
-    const [tokens, setTokens] = React.useState(null)
+    const latexobj = React.useRef(null)
     const ArrayElement = ({token}) => {
         let newToken = token.negate ? '-' : ''
         newToken += token.token
@@ -23,20 +24,35 @@ export default function MathsExpressionParser() {
             </Typography>
         )
     }
-    const EmptyTokens = () => (
-        <PageParagraph text=" No input..." bold/>
-    )
+    const Tokens = () => {
+        if(latexobj.current) {
+            return(
+                <>
+                    {latexobj.current.success ? <ElementArray maxLength={40} array={latexobj.current.tokens.map((e) => <ArrayElement token={e}/>)}/> : <TokenError errorMsg={latexobj.current.errorMsg}/>}
+                </>
+            )
+        } else {
+            return(
+                <TokenError errorMsg="Empty input!"/>
+            )
+        }   
+    }
+    const PostfixTokens = () => {
+        if(latexobj.current?.success) {
+            return(
+                <ElementArray maxLength={40} array={latexobj.current.postfixTokens.map((e) => <ArrayElement token={e}/>)}/>
+            )
+        } else {
+            return(
+                <TokenError errorMsg="Could not generate tokens!"/>
+            )
+        }   
+    }
     function handleChange(event) {
         const newExpr = event.target.value
         setExpr(newExpr)
         const latexObj = exprToLatex(newExpr)
-        if(latexObj.success) {
-            setLatex(latexObj.latex)
-            setTokens(<ElementArray maxLength={40} array={latexObj.tokens.map((e) => <ArrayElement token={e}/>)}/>)
-        } else {
-            setLatex(null)
-            setTokens(<EmptyTokens/>)
-        }
+        latexobj.current = latexObj
         return newExpr
     }
     return (
@@ -53,8 +69,11 @@ export default function MathsExpressionParser() {
             <SectionBox title="How it works">
                 <PageParagraph text="Enter an expression to begin:"/>
                 <MEPTextField handleChange={handleChange} expr={expr}/>
-                <PageParagraph text={`The parser first processes the input string, character by character, left to right, and produces an array of tokens.
-                                      The parser needs to follow the set of rules listed below and make modifications to the input expression wherever necessary.`}/>
+                <Box>
+                    <PageParagraph text="Step 1. " bold/>
+                    <PageParagraph text={`The parser first processes the input string, character by character, left to right, and produces an array of tokens.
+                                          The parser needs to follow the set of rules listed below and make modifications to the input expression wherever necessary.`}/>
+                </Box>
                 <CollapseSectionBox title="Rules:" startClosed={true}>
                     <PageTextList 
                         listName="If the current token is a number, and the next character is a:"
@@ -116,7 +135,7 @@ export default function MathsExpressionParser() {
                 </CollapseSectionBox>
                 <PageParagraph text={`
                     Additionally, the parser keeps track of the number of open parentheses. This is used to 1. detect invalid expressions due to
-                    an excess of closing parentheses, and 2. after processing the entire input, close any parentheses that are still open.`}/>
+                    an excess of closing parentheses, and 2. after processing the entire input, automatically close any parentheses that are still open.`}/>
                 <Box>
                     <PageParagraph text={`The tokens array generated from your input expression is shown below. Note that anything shown in `}/>
                     <PageParagraph text='red' color='red'/>
@@ -125,8 +144,30 @@ export default function MathsExpressionParser() {
                     <PageParagraph text=" in the tokens, this is because the parser is expecting a number/variable there, so it uses a placeholder there to validify the otherwise invalid expression."/>
                 </Box>
                 <PageParagraph text='Tokens (showing up to the first 40):'/>
-                {tokens}
-                {latex}
+                <Tokens/>
+                <Box>
+                    <PageParagraph text="Step 2. " bold/>
+                    <PageParagraph text={`With these tokens, we apply the `}/>
+                    <ExternalLink 
+                        href="https://en.wikipedia.org/wiki/Shunting_yard_algorithm#:~:text=In%20computer%20science%2C%20the%20shunting,abstract%20syntax%20tree%20(AST)."
+                    >
+                        Shunting yard
+                    </ExternalLink>
+                    <PageParagraph text={` algorithm (pseudo-code and examples on the Wiki) to generate the tokens array in postfix notation. By using postfix
+                                           notation instead of the original infix notation, we no longer need to deal with precedence and associativity when
+                                           we generate the expression tree.`}/>
+                </Box>
+                <PageParagraph text="Postfix tokens:"/>
+                <PostfixTokens/>
+                <Box>
+                    <PageParagraph text="Step 3. " bold/>
+                    <PageParagraph text={`We can then generate a binary expression tree. The method I used can be followed from `}/>
+                    <ExternalLink href="https://youtu.be/J8Ht91eeR0E">ComputerAdx's video on Youtube</ExternalLink>
+                    <PageParagraph text={`. The method traverses the postfix array right to left. Essentially, we use the tokens to generate child nodes on the
+                                          right of the current node until we've reached a number or variable, in which case the right branch terminates, and
+                                          only then do we generate child nodes on the left. This means that the numbers and variables are all
+                                          leaf nodes of the tree.`}/>
+                </Box>
             </SectionBox>
         </Box>
     )
