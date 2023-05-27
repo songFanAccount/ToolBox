@@ -91,15 +91,21 @@ function ToolPageLayout() {
                     width: `calc(100vw - ${gap}px)`,
                 }}
             >
-                <Box sx={{zIndex: 7,
+                <Box 
+                    sx={{
+                        zIndex: 7,
                         position: 'relative',
                         left: dimX > 0 ? sideBarWidth + gap : gap,
                         width: dimX > 0 ? `calc(100vw - ${sideBarWidth + gap + endGap}px)` : `calc(100vw - ${gap + endGap}px)`,
-                        maxWidth: 1200}}>
-                    <ToolPagePath urls={pathURLs} displayNames={displayNames}/>
-                    <PageTitle title={curToolName}/>
-                    <Outlet />
-                    <PageEndSpace/>
+                        maxWidth: 1200
+                    }}
+                >
+                    <Box sx={{mr: 5}}>
+                        <ToolPagePath urls={pathURLs} displayNames={displayNames}/>
+                        <PageTitle title={curToolName}/>
+                        <Outlet />
+                        <PageEndSpace/>
+                    </Box>
                 </Box>
                 {dimX > 0 && <SideBar toolName={curToolName} sections={sectionTitles}/>}
             </Box>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography } from "@mui/material";
 import { CollapseSectionBox, ExternalLink, PageParagraph, PageTextList, SectionBox, ToolLink } from "../../../../components/UI/DefaultLayout";
 import { exprToLatex } from '../../../../components/Maths/LatexDisplay';
-import { ElementArray } from '../../../../components/Compsci/DataStructures';
+import { BinaryTree, ElementArray } from '../../../../components/Compsci/DataStructures';
 import { MEPTextField } from '../../../../components/Maths/GeneralComponents';
 
 export default function MathsExpressionParser() {
@@ -10,7 +10,7 @@ export default function MathsExpressionParser() {
         <PageParagraph text={errorMsg} bold/>
     )
     const [expr, setExpr] = React.useState('')
-    const latexobj = React.useRef(null)
+    const latexObj = React.useRef(null)
     const ArrayElement = ({token}) => {
         let newToken = token.negate ? '-' : ''
         newToken += token.token
@@ -25,10 +25,10 @@ export default function MathsExpressionParser() {
         )
     }
     const Tokens = () => {
-        if(latexobj.current) {
+        if(latexObj.current) {
             return(
                 <>
-                    {latexobj.current.success ? <ElementArray maxLength={40} array={latexobj.current.tokens.map((e) => <ArrayElement token={e}/>)}/> : <TokenError errorMsg={latexobj.current.errorMsg}/>}
+                    {latexObj.current.success ? <ElementArray maxLength={40} array={latexObj.current.tokens.map((e) => <ArrayElement token={e}/>)}/> : <TokenError errorMsg={latexObj.current.errorMsg}/>}
                 </>
             )
         } else {
@@ -38,9 +38,9 @@ export default function MathsExpressionParser() {
         }   
     }
     const PostfixTokens = () => {
-        if(latexobj.current?.success) {
+        if(latexObj.current?.success) {
             return(
-                <ElementArray maxLength={40} array={latexobj.current.postfixTokens.map((e) => <ArrayElement token={e}/>)}/>
+                <ElementArray maxLength={40} array={latexObj.current.postfixTokens.map((e) => <ArrayElement token={e}/>)}/>
             )
         } else {
             return(
@@ -51,8 +51,7 @@ export default function MathsExpressionParser() {
     function handleChange(event) {
         const newExpr = event.target.value
         setExpr(newExpr)
-        const latexObj = exprToLatex(newExpr)
-        latexobj.current = latexObj
+        latexObj.current = exprToLatex(newExpr)
         return newExpr
     }
     return (
@@ -168,6 +167,7 @@ export default function MathsExpressionParser() {
                                           only then do we generate child nodes on the left. This means that the numbers and variables are all
                                           leaf nodes of the tree.`}/>
                 </Box>
+                <BinaryTree tree={[latexObj.current?.tree]}/>
             </SectionBox>
         </Box>
     )

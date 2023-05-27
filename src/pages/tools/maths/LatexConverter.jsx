@@ -10,7 +10,7 @@ User input for math equation
 */
 function LatexConverter() {
     const [expr, setExpr] = React.useState('')
-    const latexobj = React.useRef(null)
+    const latexObj = React.useRef(null)
     const delay = React.useRef(1000)
     React.useEffect(() => {
         function typeset() {
@@ -27,34 +27,33 @@ function LatexConverter() {
     // eslint-disable-next-line
     }, [expr])
     function validTex() {
-        return latexobj.current?.latex !== '-'
+        return latexObj.current?.latex !== '-'
     }
     function getTex() {
-        if(latexobj.current?.success) {
-            return latexobj.current.latex
+        if(latexObj.current?.success) {
+            return latexObj.current.latex
         } else {
             return '-'
         }
     }
     function getTexRendered() {
         if(validTex()) {
-            return `$${latexobj.current.latex}$`
+            return `$${latexObj.current.latex}$`
         } else {
             return '-'
         }
     }
     function getErrorMsg() {
-        if(latexobj.current?.success) {
+        if(latexObj.current?.success) {
             return ''
         } else {
-            return latexobj.current?.errorMsg
+            return latexObj.current?.errorMsg
         }
     }
     function handleChange(event) {
         let input = event.target.value
         setExpr(input)
-        const latexObj = exprToLatex(input)
-        latexobj.current = latexObj
+        latexObj.current = exprToLatex(input)
     }
     return (
         <Box>
@@ -65,9 +64,9 @@ function LatexConverter() {
             </SectionBox>
             <SectionBox title="Results">
                 <CopyableParagraph preText="The converted LaTeX expression: " copyableText={getTex()} copyable={validTex()}/>
-                {(latexobj.current && !latexobj.current?.success) && <PageParagraph bold={true} text={getErrorMsg()}/>}
+                {(latexObj.current && !latexObj.current?.success) && <PageParagraph bold={true} text={getErrorMsg()}/>}
                 <PageParagraph text="LaTeX preview:"/>
-                {latexobj.current?.success &&
+                {latexObj.current?.success &&
                     <Typography sx={{fontSize: 20}}>
                         {getTexRendered()}
                     </Typography>
@@ -123,10 +122,6 @@ function LatexConverter() {
                 </Box>
                 
             </SectionBox>
-            {/* <Typography>
-                Tree:
-            </Typography>
-            <BinaryTree tree={[tree]}/> */}
         </Box>
     )
 }

@@ -65,6 +65,7 @@ function Contents({noBorder, children}) {
                 flexDirection: 'column',
                 rowGap: 2,
                 width: 'fit-content',
+                maxWidth: 1
             }}
         >
             {children}
