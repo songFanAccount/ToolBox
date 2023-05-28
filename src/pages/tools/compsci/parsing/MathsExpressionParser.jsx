@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography } from "@mui/material";
 import { CollapseSectionBox, ExternalLink, PageParagraph, PageTextList, SectionBox, ToolLink } from "../../../../components/UI/DefaultLayout";
 import { exprToLatex } from '../../../../components/Maths/LatexDisplay';
-import { BinaryTree, ElementArray } from '../../../../components/Compsci/DataStructures';
+import { BinaryTree, BinaryTree2, ElementArray } from '../../../../components/Compsci/DataStructures';
 import { MEPTextField } from '../../../../components/Maths/GeneralComponents';
 
 export default function MathsExpressionParser() {
@@ -167,7 +167,8 @@ export default function MathsExpressionParser() {
                                           only then do we generate child nodes on the left. This means that the numbers and variables are all
                                           leaf nodes of the tree.`}/>
                 </Box>
-                <BinaryTree tree={[latexObj.current?.tree]}/>
+                {/* <BinaryTree tree={[latexObj.current?.tree]}/> */}
+                <BinaryTree2 tree={[latexObj.current?.tree]} name="tree"/>
             </SectionBox>
         </Box>
     )
