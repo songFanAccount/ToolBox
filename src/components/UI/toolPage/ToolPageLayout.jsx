@@ -55,7 +55,6 @@ function ToolPageLayout() {
     }
     const sideBarWidth = 320
     const gap = 20
-    const endGap = 20
     /*
     It is the responsibility of the layout to figure out the following info of the tool from the URL:
     - Chain of display names -> Page path display
@@ -89,7 +88,7 @@ function ToolPageLayout() {
                         zIndex: 7,
                         position: 'relative',
                         left: dimX > 0 ? sideBarWidth + gap : gap,
-                        width: dimX > 0 ? `calc(100vw - ${sideBarWidth + gap + endGap}px)` : `calc(100vw - ${gap + endGap}px)`,
+                        width: dimX > 0 ? `calc(100vw - ${sideBarWidth + gap}px)` : `calc(100vw - ${gap}px)`,
                         maxWidth: 1200
                     }}
                 >
