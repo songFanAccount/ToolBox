@@ -5,6 +5,7 @@ export function MEPTextField({handleChange, expr}) {
         <TextField
             placeholder="e.g. ax^2 + bx + c"
             sx={{maxWidth: 500,}}
+            inputProps={{ maxLength: 150 }}
             onChange={(e) => handleChange(e)}
             value={expr}
         />

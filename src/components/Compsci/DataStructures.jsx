@@ -1,6 +1,7 @@
-import React, { useId } from 'react';
+import React from 'react';
 import { Box, Typography } from "@mui/material"
 import Xarrow, { Xwrapper } from 'react-xarrows';
+import { PageParagraph } from '../UI/DefaultLayout';
 /*
 Use this for an input array of already created DOMs
 */
@@ -62,99 +63,6 @@ export function TextArray({array}) {
     )
 }
 
-export function BinaryTree(props) {
-    const inputTree = props.tree?.[0]
-    if(!inputTree) {return <></>}
-    const Node = ({node}) => {
-        console.log('Input node = ')
-        console.log(node)
-        const displayStr = node ? node.token : ''
-        const NodeInfo = ({str}) => (
-            <Typography
-                sx={{
-                    p: 0,
-                    m: 0,
-                    minWidth: 0,
-                    fontSize: 18,
-                }}
-            >{str}</Typography>
-        )
-        return (
-            <Box
-                key={useId()}
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: 30,
-                    aspectRatio: '1 / 1',
-                    border: node ? 1 : 1,
-                    m: '1%'
-                }}
-            >
-                <NodeInfo str={displayStr}/>
-            </Box>
-        )
-    }
-    function generateLayers(tree, layers, curLayerNum) {
-        if(curLayerNum >= layers.length) {return}
-        const curNode = <Node node={tree?.value}/>
-        layers[curLayerNum].push(curNode)
-        // Adding child nodes
-        generateLayers(tree?.left, layers, curLayerNum + 1)
-        generateLayers(tree?.right, layers, curLayerNum + 1)
-    }
-    function numLayers(tree) {
-        if(!tree) {return 0}
-        return 1 + Math.max(numLayers(tree.left), numLayers(tree.right))
-    }
-    const Layer = ({nodes}) => (
-        <Box
-            key={useId()}
-            sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-                my: '2%'
-            }}
-        >
-            {nodes}
-        </Box>
-    )
-    const Tree = () => {
-        if(inputTree === {}) {return (<Typography>NO TREE</Typography>)}
-        let layers = []
-        for(let i = 0; i < numLayers(inputTree); i++) {
-            layers.push([])
-        }
-        generateLayers(inputTree, layers, 0)
-        return (
-            <Box
-                sx={{
-                    width: 1,
-                }}
-            >
-                {layers.map((e) => (<Layer nodes={e}/>))}
-            </Box>
-        )
-    }
-    return (
-        <Box
-            sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                maxWidth: 1,
-                width: 'fit-content',
-                overflowX: 'scroll',
-                border: 1
-            }}
-        >
-            <Tree/>
-        </Box>
-    )
-}
-
 /* General tree wrapper, simply wrap each layer in a row-flexbox, then wrap the layers in a column flexbox */
 function Tree({layers, lines, name}) {
     const array = layers?.[0]
@@ -170,21 +78,24 @@ function Tree({layers, lines, name}) {
         </Box>
     )
     return (
-        <Box className={name} sx={{border: 1, overflowX: 'scroll'}}>
+        <Box className={name} sx={{pb: 2, overflowX: 'scroll'}}>
             <Xwrapper>
                 <Box 
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',
                         rowGap: 5,
-                        border: 1,
                         minWidth: 'fit-content',
-                        width: 'fit-content'
+                        width: 'fit-content',
+                        zIndex: 5
                     }}
                 >
                     {array.map((e) => (<Layer layer={e}/>))}
                 </Box>
-                {lines}
+                <Box sx={{position: 'relative'}}>
+                    {lines}
+                </Box>
+                
             </Xwrapper>
         </Box>
     )
@@ -213,22 +124,46 @@ Layer 3: ...
 ML-> To position the root node itself
 MR-> To help position the root node's node on the right, in the same layer
 */
-export function BinaryTree2({tree, name}) {
+export function BinaryTree({tree, name, maxLayers}) {
     const inputTree = tree?.[0]
     if(!inputTree) {return <></>}
-    let numLayers
-    let layers = []
-    let lines = []
+    if(maxLayers === 0) {throw new Error("BinaryTree: maxLayers of 0 doesn't make sense!")}
     const nodeRadius = 16 // in px
+    const defaultMaxLayers = 10
     function getNumLayers(tree) {
         if(!tree) {return 0}
         return 1 + Math.max(getNumLayers(tree.left), getNumLayers(tree.right))
     }
-    const Node = ({value, ml, mr, nodeName}) => (
+    let numLayers = getNumLayers(inputTree)
+    const MaxExceededMsg = ({maxDisplayable}) => (
+        <Box>
+            <PageParagraph bold block text="Input tree exceeds the max number of displayable layers!"/> 
+            <PageParagraph bold text={`Input layers: ${numLayers}. Max displayable: ${maxDisplayable}.`}/>
+        </Box>
+    )
+    
+    if(maxLayers) {
+        if(numLayers > maxLayers) {
+            return <MaxExceededMsg maxDisplayable={maxLayers}/>
+        }
+    } else {
+        if(numLayers > defaultMaxLayers) {
+            return <MaxExceededMsg maxDisplayable={defaultMaxLayers}/>
+        }
+    }
+    let layers = []
+    let lines = []
+    /* 
+    Whenever a leaf node is reached and is null, we need to track the amount of marginLeft to give to nodes further right of the same layer.
+    The values in this array are purely used for spacing purposes.
+    */
+    let nullMarginLeft = [] 
+    const Node = ({value, ml, mr, color, nodeName}) => (
         <Box
             id={nodeName}
             sx={{
                 width: nodeRadius * 2 - 2,
+                maxWidth: nodeRadius * 2 - 2,
                 height: nodeRadius * 2 - 2,
                 border: 1,
                 borderRadius: '50%',
@@ -236,16 +171,19 @@ export function BinaryTree2({tree, name}) {
                 mr: `${mr}px`,
                 display: 'flex',
                 alignItems: 'center',
-                zIndex:5
+                backgroundColor: 'white',
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis'
             }}
         >
-            <Typography sx={{minWidth: 1, textAlign: 'center'}}>
+            <Typography sx={{width:nodeRadius * 2 - 2, textAlign: 'center', color: color, fontSize: 14}}>
                 {value}
             </Typography>
         </Box>
     )
     const Arrow = ({start, end}) => (
-        <Xarrow zIndex={5} start={start} end={end}/>
+        <Xarrow zIndex={-1} strokeWidth={2} color="black" start={start} end={end} path="straight" showHead={false} startAnchor="middle" endAnchor="middle"/>
     )
     /* 
     Returns the width of the node including its subtrees, used to provide parent nodes their margins
@@ -253,15 +191,23 @@ export function BinaryTree2({tree, name}) {
     A singular node should return its radius
     */
     function generateNode(node, curLayerNum) {
-        if(!node) {return {width: 0, }}
+        if(!node) {
+            for(let i = curLayerNum; i < numLayers; i++) {
+                nullMarginLeft[i] += 1.5 * nodeRadius
+            }
+            return {width: 0, }
+        }
+        let marginLeft = 0
+        marginLeft += nullMarginLeft[curLayerNum]
+        nullMarginLeft[curLayerNum] = 0
         const left = generateNode(node.left, curLayerNum + 1)
         const widthLeft = left.width
-        const marginLeft = Math.max(0, widthLeft - nodeRadius / 2)
+        marginLeft += Math.max(0, widthLeft - nodeRadius / 2)
         const right = generateNode(node.right, curLayerNum + 1)
         const widthRight = right.width
-        const marginRight = Math.max(0, widthRight) + nodeRadius
+        const marginRight = Math.max(0, widthRight - nodeRadius / 2) + nodeRadius
         const nodeName = `${name}-${curLayerNum}-${layers[curLayerNum].length}`
-        layers[curLayerNum].push(<Node value={node.value.token} ml={marginLeft} mr={marginRight} nodeName={nodeName}/>)
+        layers[curLayerNum].push(<Node value={node.value.token} color={node.value.autoAdded ? 'red' : 'inherit'} ml={marginLeft} mr={marginRight} nodeName={nodeName}/>)
         if(left.nodeName) {
             lines.push(<Arrow zIndex={5} start={nodeName} end={left.nodeName}/>)
         }
@@ -269,11 +215,11 @@ export function BinaryTree2({tree, name}) {
         return {width: Math.max(widthLeft, nodeRadius / 2) + Math.max(widthRight, nodeRadius / 2) + nodeRadius, nodeName: nodeName}
     }
     function generateTree(tree) {
-        numLayers = getNumLayers(tree)
         let i
-        /* Initialising layers' arrays */
+        /* Initialising layers' arrays and nullMarginLeft array */
         for(i = 0; i < numLayers; i++) {
             layers.push([])
+            nullMarginLeft.push(0)
         }
         /* Initiating recursive logic */
         generateNode(tree, 0)
