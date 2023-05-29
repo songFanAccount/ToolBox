@@ -1,6 +1,6 @@
 import React, { useId } from 'react';
 import { Box, Typography } from "@mui/material"
-import LineTo from 'react-lineto'
+import Xarrow, { Xwrapper } from 'react-xarrows';
 /*
 Use this for an input array of already created DOMs
 */
@@ -156,20 +156,9 @@ export function BinaryTree(props) {
 }
 
 /* General tree wrapper, simply wrap each layer in a row-flexbox, then wrap the layers in a column flexbox */
-function Tree({layers, lines}) {
+function Tree({layers, lines, name}) {
     const array = layers?.[0]
     if(!array) {throw new Error("Tree: Not provided layers!")}
-    
-    React.useEffect(() => {
-        function handleResize() {
-
-        }
-
-        window.addEventListener("resize", handleResize)
-        return _ => {
-            window.removeEventListener("resize", handleResize)
-        }
-    })
     const Layer = ({layer}) => (
         <Box
             sx={{
@@ -181,20 +170,22 @@ function Tree({layers, lines}) {
         </Box>
     )
     return (
-        <Box sx={{border: 1, overflowX: 'scroll'}}>
-            <Box 
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    rowGap: 5,
-                    border: 1,
-                    minWidth: 'fit-content',
-                    width: 'fit-content'
-                }}
-            >
-                {array.map((e) => (<Layer layer={e}/>))}
-            </Box>
-            {lines}
+        <Box className={name} sx={{border: 1, overflowX: 'scroll'}}>
+            <Xwrapper>
+                <Box 
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        rowGap: 5,
+                        border: 1,
+                        minWidth: 'fit-content',
+                        width: 'fit-content'
+                    }}
+                >
+                    {array.map((e) => (<Layer layer={e}/>))}
+                </Box>
+                {lines}
+            </Xwrapper>
         </Box>
     )
 }
@@ -235,7 +226,7 @@ export function BinaryTree2({tree, name}) {
     }
     const Node = ({value, ml, mr, nodeName}) => (
         <Box
-            className={nodeName}
+            id={nodeName}
             sx={{
                 width: nodeRadius * 2 - 2,
                 height: nodeRadius * 2 - 2,
@@ -253,6 +244,9 @@ export function BinaryTree2({tree, name}) {
             </Typography>
         </Box>
     )
+    const Arrow = ({start, end}) => (
+        <Xarrow zIndex={5} start={start} end={end}/>
+    )
     /* 
     Returns the width of the node including its subtrees, used to provide parent nodes their margins
     A null node should return 0
@@ -269,9 +263,9 @@ export function BinaryTree2({tree, name}) {
         const nodeName = `${name}-${curLayerNum}-${layers[curLayerNum].length}`
         layers[curLayerNum].push(<Node value={node.value.token} ml={marginLeft} mr={marginRight} nodeName={nodeName}/>)
         if(left.nodeName) {
-            lines.push(<LineTo zIndex={5} delay={0} from={nodeName} to={left.nodeName}/>)
+            lines.push(<Arrow zIndex={5} start={nodeName} end={left.nodeName}/>)
         }
-        if(right.nodeName) {lines.push(<LineTo zIndex={5} delay={0} from={nodeName} to={right.nodeName}/>)}
+        if(right.nodeName) {lines.push(<Arrow zIndex={5} start={nodeName} end={right.nodeName}/>)}
         return {width: Math.max(widthLeft, nodeRadius / 2) + Math.max(widthRight, nodeRadius / 2) + nodeRadius, nodeName: nodeName}
     }
     function generateTree(tree) {
@@ -283,7 +277,6 @@ export function BinaryTree2({tree, name}) {
         }
         /* Initiating recursive logic */
         generateNode(tree, 0)
-        console.log(lines)
     }
 
     generateTree(inputTree)
