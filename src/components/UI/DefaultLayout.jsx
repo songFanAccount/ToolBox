@@ -44,7 +44,16 @@ function DefaultLayout() {
             >
                 <Header dimX={dimX}/>
             </Box>
-            <Outlet context={{dimX: dimX}}/>
+            <Box className="pageContent"
+                sx={{
+                    position: 'absolute',
+                    overflowX: 'clip',
+                    top: 130,
+                    width: `100vw`,
+                }}
+            >
+                <Outlet context={{dimX: dimX}}/>
+            </Box>
         </>
     )
 }

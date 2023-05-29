@@ -83,14 +83,7 @@ function ToolPageLayout() {
             <Helmet>
                 <title>{curToolName}</title>
             </Helmet>
-            <Box className="pageContent"
-                sx={{
-                    position: 'absolute',
-                    overflowX: 'clip',
-                    top: 130,
-                    width: `calc(100vw - ${gap}px)`,
-                }}
-            >
+            
                 <Box 
                     sx={{
                         zIndex: 7,
@@ -108,7 +101,6 @@ function ToolPageLayout() {
                     </Box>
                 </Box>
                 {dimX > 0 && <SideBar toolName={curToolName} sections={sectionTitles}/>}
-            </Box>
         </>
     )
 }
