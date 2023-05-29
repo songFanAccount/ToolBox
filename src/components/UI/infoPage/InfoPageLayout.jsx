@@ -23,13 +23,11 @@ export default function InfoPageLayout() {
                     position: 'relative',
                     left: gap,
                     width: `calc(100vw - 2*${gap}px)`,
-                    border: 1
                 }}
             >
                 <Box
                     sx={{
                         mx: 5,
-                        border: 1
                     }}
                 >
                     <Outlet/>

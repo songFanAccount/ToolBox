@@ -134,14 +134,35 @@ export function CollapseSectionBox({title, children, startClosed}) {
         </Box>
     )
 }
-export function PageTitle({title}) {
+
+export function InfoPageTitle({title, color, fs}) {
+    return (
+        <Typography
+            sx={{
+                fontSize: fs,
+                fontFamily: 'Braah One',
+                textAlign: 'center',
+                mb: 3,
+                color: color
+            }}
+        >
+            {title}
+        </Typography>
+    )
+}
+
+export function PageTitle({title, color, fs, underline}) {
     return (
         <Typography
             id="The Tool"
             sx={{
-                fontSize: 30,
+                fontSize: fs ? fs : 30,
                 fontFamily: 'Montserrat',
-                mb: 3
+                mb: 3,
+                borderBottom: underline ? 2 : 0,
+                borderBottomStyle: underline ? underline : 'inherit',
+                borderBottomColor: color,
+                color: color
             }}
         >
             {title}
