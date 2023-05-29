@@ -5,6 +5,7 @@ import { tools } from "../../../data"
 import { PageEndSpace, PageTitle } from "../DefaultLayout"
 import SideBar from "./SideBar"
 import ToolPagePath from "./ToolPagePath"
+import { Helmet } from 'react-helmet'
 
 /*
 THIS MIGHT BREAK IF CATEGORY NAME = TOOL NAME BUT NOT SURE
@@ -78,26 +79,37 @@ function ToolPageLayout() {
     }
 
     return(
-        <Box className="pageContent"
-            sx={{
-                position: 'absolute',
-                overflowX: 'clip',
-                top: 130,
-                width: `calc(100vw - ${gap}px)`,
-            }}
-        >
-            <Box sx={{zIndex: 7,
-                    position: 'relative',
-                    left: dimX > 0 ? sideBarWidth + gap : gap,
-                    width: dimX > 0 ? `calc(100vw - ${sideBarWidth + gap + endGap}px)` : `calc(100vw - ${gap + endGap}px)`,
-                    maxWidth: 1200}}>
-                <ToolPagePath urls={pathURLs} displayNames={displayNames}/>
-                <PageTitle title={curToolName}/>
-                <Outlet />
-                <PageEndSpace/>
+        <>
+            <Helmet>
+                <title>{curToolName}</title>
+            </Helmet>
+            <Box className="pageContent"
+                sx={{
+                    position: 'absolute',
+                    overflowX: 'clip',
+                    top: 130,
+                    width: `calc(100vw - ${gap}px)`,
+                }}
+            >
+                <Box 
+                    sx={{
+                        zIndex: 7,
+                        position: 'relative',
+                        left: dimX > 0 ? sideBarWidth + gap : gap,
+                        width: dimX > 0 ? `calc(100vw - ${sideBarWidth + gap + endGap}px)` : `calc(100vw - ${gap + endGap}px)`,
+                        maxWidth: 1200
+                    }}
+                >
+                    <Box sx={{mr: 5}}>
+                        <ToolPagePath urls={pathURLs} displayNames={displayNames}/>
+                        <PageTitle title={curToolName}/>
+                        <Outlet />
+                        <PageEndSpace/>
+                    </Box>
+                </Box>
+                {dimX > 0 && <SideBar toolName={curToolName} sections={sectionTitles}/>}
             </Box>
-            {dimX > 0 && <SideBar toolName={curToolName} sections={sectionTitles}/>}
-        </Box>
+        </>
     )
 }
 

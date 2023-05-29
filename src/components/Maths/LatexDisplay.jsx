@@ -288,6 +288,7 @@ function getTokens(expr) {
     }
     return tokens
 }
+// eslint-disable-next-line
 function tokensToString(tokens) {
     let ret = ''
     tokens.forEach((e) => ret += e.token)
@@ -539,10 +540,7 @@ export function exprToLatex(mathExpr) {
     let ret
     try {
         const tokens = getTokens(mathExpr)
-        console.log(tokensToString(tokens))
         const postfixTokens = getTokensInPostfix(tokens)
-        console.log(tokensToString(postfixTokens))
-        console.log(postfixTokens)
         const tree = generateExprTree(postfixTokens)
         let latexArray = ['']
         treeToLatex(tree, latexArray)
