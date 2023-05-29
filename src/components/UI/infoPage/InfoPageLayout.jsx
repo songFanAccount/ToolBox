@@ -1,5 +1,7 @@
+import { Outlet } from "react-router-dom";
+
 export default function InfoPageLayout() {
     return (
-        <h1>INFO</h1>
+        <Outlet/>
     )
 }

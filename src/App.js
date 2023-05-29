@@ -16,6 +16,7 @@ import Compsci from './pages/tools/compsci/Compsci';
 import Parsing from './pages/tools/compsci/parsing/Parsing';
 import MathsExpressionParser from './pages/tools/compsci/parsing/MathsExpressionParser';
 import InfoPageLayout from './components/UI/infoPage/InfoPageLayout';
+import Collaborate from './pages/Collaborate';
 function App() {
 	return (
     	<BrowserRouter>
@@ -23,6 +24,7 @@ function App() {
 				<Route path="/" element={<DefaultLayout />} >
 					<Route index element={<Home />} />
 					<Route element={<InfoPageLayout/>}>
+						<Route path="collab" element={<Collaborate />} />
 						<Route path="about" element={<AboutUs />} />
 						<Route path="contact" element={<Contact />} />
 					</Route>

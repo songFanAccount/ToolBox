@@ -38,6 +38,7 @@ function NavBar(props) {
                 return (
                     <>
                         <NavBarLink href="/" text="Home"/>
+                        <NavBarLink href="collab" text="Collaborate"/>
                         <NavBarLink href="about" text="About Us"/>
                         <NavBarLink href="contact" text="Contact Us"/>
                     </>
