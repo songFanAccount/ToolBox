@@ -228,6 +228,10 @@ function SideNavBar(props) {
 			<Divider/>
 		</Box>
 	)
+	function clickTool() {
+		toggleOff()
+		window.scrollTo(0, 0)
+	}
 	const Tools = () => (
 		<>
 			<Box
@@ -253,7 +257,7 @@ function SideNavBar(props) {
 								to={`${newPath}/${entry[0]}`}
 								key={entry[0]}
 								id={entry[0]}
-								onClick={toggleOff}
+								onClick={clickTool}
 								sx={listItemStyle}
 							>
 								<RemoveIcon
