@@ -300,3 +300,80 @@ export function scrollWithOffset(el) {
     const yOffset = -100; 
     window.scrollTo({ top: yCoordinate + yOffset, behavior: 'smooth' }); 
 }
+
+export function TempContent() {
+    return (
+        <SectionBox>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+            <PageParagraph text="PLACEHOLDER"/>
+        </SectionBox>
+    )
+}

@@ -1,4 +1,3 @@
-import { Box, Typography } from "@mui/material"
 import { Helmet } from "react-helmet"
 
 function AboutUs() {
@@ -7,9 +6,6 @@ function AboutUs() {
             <Helmet>
                 <title>About Us</title>
             </Helmet>
-            <Box> 
-                <Typography>About Us</Typography>
-            </Box>
         </>  
     )
 }

@@ -1,11 +1,8 @@
-import { Box, } from "@mui/material";
 import React from "react";
+import { TempContent } from "../components/UI/DefaultLayout";
 
 export default function Collaborate() {
     return (
-        <Box>
-                  
-        </Box>
-        
+        <TempContent />
     )
 }
