@@ -141,9 +141,9 @@ export function InfoPageTitle({title, color, fs}) {
             sx={{
                 fontSize: fs,
                 fontFamily: 'Braah One',
-                textAlign: 'center',
                 mb: 3,
-                color: color
+                color: color,
+                width: 'fit-content'
             }}
         >
             {title}
@@ -151,18 +151,20 @@ export function InfoPageTitle({title, color, fs}) {
     )
 }
 
-export function PageTitle({title, color, fs, underline}) {
+export function PageTitle({title, color, fs, underline, align, mb}) {
     return (
         <Typography
             id="The Tool"
             sx={{
                 fontSize: fs ? fs : 30,
                 fontFamily: 'Montserrat',
-                mb: 3,
+                mb: mb !== undefined ? mb : 3,
                 borderBottom: underline ? 2 : 0,
                 borderBottomStyle: underline ? underline : 'inherit',
                 borderBottomColor: color,
-                color: color
+                color: color,
+                width: 'fit-content',
+                textAlign: align ? 'center' : 'start'
             }}
         >
             {title}
