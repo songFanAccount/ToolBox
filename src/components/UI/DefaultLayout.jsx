@@ -33,13 +33,12 @@ function DefaultLayout() {
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    minHeight: '100vh',
-                    width: 'calc(100vw+10px)',
+                    width: 'calc(100vw + 10px)',
                     overflowX: 'clip',
                     position: 'fixed',
                     top: 0,
                     left: 0,
-                    zIndex: 8,
+                    zIndex: 4,
                 }}
             >
                 <Header dimX={dimX}/>
@@ -47,9 +46,9 @@ function DefaultLayout() {
             <Box className="pageContent"
                 sx={{
                     position: 'absolute',
-                    overflowX: 'clip',
+                    width: 'calc(100vw - 17px)',
+                    overflowX: 'visible',
                     top: 130,
-                    width: `100vw`,
                 }}
             >
                 <Outlet context={{dimX: dimX}}/>
@@ -304,16 +303,6 @@ export function scrollWithOffset(el) {
 export function TempContent() {
     return (
         <SectionBox>
-            <PageParagraph text="PLACEHOLDER"/>
-            <PageParagraph text="PLACEHOLDER"/>
-            <PageParagraph text="PLACEHOLDER"/>
-            <PageParagraph text="PLACEHOLDER"/>
-            <PageParagraph text="PLACEHOLDER"/>
-            <PageParagraph text="PLACEHOLDER"/>
-            <PageParagraph text="PLACEHOLDER"/>
-            <PageParagraph text="PLACEHOLDER"/>
-            <PageParagraph text="PLACEHOLDER"/>
-            <PageParagraph text="PLACEHOLDER"/>
             <PageParagraph text="PLACEHOLDER"/>
             <PageParagraph text="PLACEHOLDER"/>
             <PageParagraph text="PLACEHOLDER"/>

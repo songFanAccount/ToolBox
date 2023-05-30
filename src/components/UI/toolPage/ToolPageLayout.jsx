@@ -82,24 +82,23 @@ function ToolPageLayout() {
             <Helmet>
                 <title>{curToolName}</title>
             </Helmet>
-            
-                <Box 
-                    sx={{
-                        zIndex: 7,
-                        position: 'relative',
-                        left: dimX > 0 ? sideBarWidth + gap : gap,
-                        width: dimX > 0 ? `calc(100vw - ${sideBarWidth + gap}px)` : `calc(100vw - ${gap}px)`,
-                        maxWidth: 1200
-                    }}
-                >
-                    <Box sx={{mr: 5}}>
-                        <ToolPagePath urls={pathURLs} displayNames={displayNames}/>
-                        <PageTitle title={curToolName}/>
-                        <Outlet />
-                        <PageEndSpace/>
-                    </Box>
+            <Box 
+                sx={{
+                    zIndex: 7,
+                    position: 'relative',
+                    left: dimX > 0 ? sideBarWidth + gap : gap,
+                    width: dimX > 0 ? `calc(100% - ${sideBarWidth + gap}px)` : `calc(100% - ${gap}px)`,
+                    maxWidth: 1200
+                }}
+            >
+                <Box sx={{mr: 5}}>
+                    <ToolPagePath urls={pathURLs} displayNames={displayNames}/>
+                    <PageTitle title={curToolName}/>
+                    <Outlet />
+                    <PageEndSpace/>
                 </Box>
-                {dimX > 0 && <SideBar toolName={curToolName} sections={sectionTitles}/>}
+            </Box>
+            {dimX > 0 && <SideBar toolName={curToolName} sections={sectionTitles}/>}
         </>
     )
 }

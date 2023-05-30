@@ -138,7 +138,9 @@ function InfoPageBanner({screenWidth, dimX, path}) {
                 position: 'absolute',
                 top: -180,
                 left: 0,
-                width: '100vw',
+                width: 1,
+                maxWidth: 1,
+                overflowX: 'clip',
                 height: bannerHeight,
                 backgroundColor: dimX === 2 ? backgroundColor : 'inherit',
                 display: 'flex',
@@ -173,7 +175,8 @@ export default function InfoPageLayout() {
     const gap = dimX > 0 ? 160 : 20
     const path = useLocation().pathname
     return (
-        <Box>
+        <Box
+        >
             <Box
                 sx={{
                     position: 'fixed',
