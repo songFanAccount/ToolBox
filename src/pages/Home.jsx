@@ -8,17 +8,10 @@ function Home() {
             <Helmet>
                 <title>ToolBox</title>
             </Helmet>
-            <Box
-                sx={{
-                    position: 'absolute',
-                    top: 100
-                }}
-            >
-                <Box> 
-                    <Typography>Home Page</Typography>
-                </Box>
-                <SideNavBar inHeader={false}/>
+            <Box> 
+                <Typography>Home Page</Typography>
             </Box>
+            <SideNavBar inHeader={false}/>
         </>  
     )
 }

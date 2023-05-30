@@ -44,7 +44,16 @@ function DefaultLayout() {
             >
                 <Header dimX={dimX}/>
             </Box>
-            <Outlet context={{dimX: dimX}}/>
+            <Box className="pageContent"
+                sx={{
+                    position: 'absolute',
+                    overflowX: 'clip',
+                    top: 130,
+                    width: `100vw`,
+                }}
+            >
+                <Outlet context={{dimX: dimX}}/>
+            </Box>
         </>
     )
 }
@@ -125,14 +134,37 @@ export function CollapseSectionBox({title, children, startClosed}) {
         </Box>
     )
 }
-export function PageTitle({title}) {
+
+export function InfoPageTitle({title, color, fs}) {
+    return (
+        <Typography
+            sx={{
+                fontSize: fs,
+                fontFamily: 'Braah One',
+                mb: 3,
+                color: color,
+                width: 'fit-content'
+            }}
+        >
+            {title}
+        </Typography>
+    )
+}
+
+export function PageTitle({title, color, fs, underline, align, mb}) {
     return (
         <Typography
             id="The Tool"
             sx={{
-                fontSize: 30,
+                fontSize: fs ? fs : 30,
                 fontFamily: 'Montserrat',
-                mb: 3
+                mb: mb !== undefined ? mb : 3,
+                borderBottom: underline ? 2 : 0,
+                borderBottomStyle: underline ? underline : 'inherit',
+                borderBottomColor: color,
+                color: color,
+                width: 'fit-content',
+                textAlign: align ? 'center' : 'start'
             }}
         >
             {title}
