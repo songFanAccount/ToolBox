@@ -62,7 +62,7 @@ function InfoPageBanner({path}) {
     const titleColor = dimX === 2 ? 'white' : '#05071f'
     const titleFS = getLinear(32, 70, 400, 1100, screenWidth)
     const miniTitleFS = getLinear(14, 28, 400, 1100, screenWidth)
-    const bannerHeight = getLinear(200, 580, 400, 1100, screenWidth)
+    const bannerHeight = getLinear(300, 580, 400, 1100, screenWidth)
     return (
         <Box
             sx={{
