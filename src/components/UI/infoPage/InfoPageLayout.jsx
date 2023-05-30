@@ -29,12 +29,12 @@ function InfoPageBanner() {
     const titleColor = dimX === 2 ? 'white' : '#05071f'
     const titleFS = getLinear(32, 70, 400, 1100, screenWidth)
     const miniTitleFS = getLinear(14, 28, 400, 1100, screenWidth)
-    const bannerHeight = getLinear(120, 430, 400, 1100, screenWidth)
+    const bannerHeight = getLinear(200, 580, 400, 1100, screenWidth)
     return (
         <Box
             sx={{
                 position: 'absolute',
-                top: -30,
+                top: -180,
                 left: 0,
                 width: '100vw',
                 height: bannerHeight,
@@ -50,7 +50,7 @@ function InfoPageBanner() {
                     sx={{
                         display: 'inline-block',
                         position: 'relative',
-                        top: -25,
+                        top: 50,
                         zIndex: 3,
                     }}
                 >
@@ -59,7 +59,7 @@ function InfoPageBanner() {
             }
             <Box
                 sx={{
-                    mt: 5,
+                    mt: 25,
                     minWidth: `calc(100vw - 2 * ${gifWidth}px)`,
                     width: `calc(100vw - 2 * ${gifWidth}px)`,
                     overflowX: 'visible'
