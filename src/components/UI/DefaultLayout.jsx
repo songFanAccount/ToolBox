@@ -47,9 +47,6 @@ function DefaultLayout() {
                 sx={{
                     position: 'absolute',
                     width: '100%',
-                    minHeight: '100vh',
-                    overflowX: 'hidden',
-                    overflowY: 'hidden',
                     top: 100,
                     zIndex: 3
                 }}
@@ -153,7 +150,7 @@ export function InfoPageTitle({title, color, fs}) {
     )
 }
 
-export function PageTitle({title, color, fs, underline, align, mb}) {
+export function PageTitle({title, color, fs, underline, align, mb, inline}) {
     return (
         <Typography
             id="The Tool"
@@ -166,7 +163,8 @@ export function PageTitle({title, color, fs, underline, align, mb}) {
                 borderBottomColor: color,
                 color: color,
                 width: 'fit-content',
-                textAlign: align ? 'center' : 'start'
+                textAlign: align ? 'center' : 'start',
+                display: inline ? 'inline' : 'block'
             }}
         >
             {title}

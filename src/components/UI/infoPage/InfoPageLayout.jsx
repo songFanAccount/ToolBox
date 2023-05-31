@@ -156,7 +156,10 @@ function InfoPageBanner({screenWidth, dimX, path}) {
                 display: 'flex',
                 alignItems: 'center',
                 zIndex: 2,
-                boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
+                boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
+                width: 1,
+                overflowX: 'hidden',
+                overflowY: 'hidden'
             }}
         >   
             <BannerContents/>
@@ -182,7 +185,7 @@ export default function InfoPageLayout() {
     if(screenWidth >= 1100) {
         dimX = 2
     }
-    const gap = screenWidth >= 900 ? 150 : 20
+    const gap = screenWidth >= 900 ? 200 : 20
     const path = useLocation().pathname
     return (
         <Box 
@@ -204,14 +207,21 @@ export default function InfoPageLayout() {
                 {screenWidth >= 900 &&
                     <Box
                         sx={{
-                            width: 150,
+                            width: 200,
                             zIndex: 3,
                         }}
                     >
                         <SideNavBar inHeader={false}/>
                     </Box>
                 }
-                <Box sx={{position: 'relative', left: screenWidth >= 900 ? 0 : gap, width: `calc(100vw - 2 * ${gap}px)`}}>
+                <Box 
+                    sx={{
+                        position: 'relative', 
+                        left: screenWidth >= 900 ? 0 : gap, 
+                        width: `calc(100vw - 2 * ${gap}px)`,
+                        mt: 3.5,
+                    }}
+                >
                     <Outlet/>
                 </Box>
             </Box>
