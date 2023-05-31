@@ -18,28 +18,27 @@ function InfoPageBanner({screenWidth, dimX, path}) {
     let textColor = ""
     switch (path) {
         case '/about':
-            if(dimX === 2) gifWidth = 340
-            gif = <iframe title="coding" src="https://giphy.com/embed/kbu8xsXRJZVtNqveKw" width={gifWidth} height="425" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
-            if(dimX === 2) gifWidth += 40 // Accounting for this gif's margin left
+            if(dimX === 2) gifWidth = 280
+            gif = <iframe title="jump"src="https://giphy.com/embed/Mcaiot7RKVU83dVcch" width={gifWidth} height="350" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
             title = "What is ToolBox?"
             miniTitle = "Who, where, when, why,"
             miniTitleMin = 12
             miniTitleMax = 24
             titleBoxSx = {
-                minWidth: `calc(100vw - 2 * ${gifWidth}px)`,
-                width: `calc(100vw - 2 * ${gifWidth}px)`,
+                minWidth: `fit-content`,
+                width: `fit-content`,
                 overflowX: 'visible',
                 mt: 25
             }
             gifSx = {
                 display: 'inline-block',
                 position: 'relative',
-                top: 75,
+                top: 30,
                 ml: '40px',
                 zIndex: 3,
             }
-            backgroundColor = '#0621f3'
-            textColor = 'white'
+            backgroundColor = '#faf5ec'
+            textColor = 'black'
             break
         case '/contact':
             if(dimX === 2) gifWidth = 260
@@ -93,7 +92,7 @@ function InfoPageBanner({screenWidth, dimX, path}) {
     const miniTitleFS = getLinear(miniTitleMin, miniTitleMax, 400, 1100, screenWidth)
     const bannerHeight = getLinear(300, 580, 400, 1100, screenWidth)
     function BannerContents() {
-        if(path === '/collab' || path === '/about') {
+        if(path === '/collab') {
             return (
                 <>
                     {dimX === 2 && gif &&
@@ -128,6 +127,22 @@ function InfoPageBanner({screenWidth, dimX, path}) {
                         </Box>
                     }
                     
+                </Box>
+            )
+        } else if (path === '/about') {
+            return (
+                <Box sx={{display: 'flex', mx: 'auto', alignItems: 'center'}}>
+                    {dimX === 2 && gif &&
+                        <Box sx={gifSx}>
+                            {gif}
+                        </Box>
+                    }
+                    <Box sx={titleBoxSx}>
+                        <Box sx={{width: 'fit-content', minWidth: 'fit-content', display:'flex', flexDirection: 'column', alignItems: 'start', whiteSpace: dimX === 0 ? 'normal' : 'nowrap'}}>
+                            {miniTitle !== "" && <PageTitle title={miniTitle} color={titleColor} fs={miniTitleFS} underline="dashed" mb={2}/>}
+                            <InfoPageTitle title={title} color={titleColor} fs={titleFS}/>  
+                        </Box>
+                    </Box>
                 </Box>
             )
         }
@@ -177,15 +192,17 @@ export default function InfoPageLayout() {
     return (
         <Box
         >
-            <Box
-                sx={{
-                    position: 'fixed',
-                    top: dimX === 2 ? 530 : 100,
-                    width: 'fit-content'
-                }}
-            >
-                {dimX > 0 && <SideNavBar inHeader={false}/>}
-            </Box>
+            {screenWidth >= 900 &&
+                <Box
+                    sx={{
+                        position: 'fixed',
+                        top: dimX === 2 ? 530 : 100,
+                        width: 'fit-content'
+                    }}
+                >
+                    <SideNavBar inHeader={false}/>
+                </Box>
+            }
             <InfoPageBanner screenWidth={screenWidth} dimX={dimX} path={path}/>
             <Box 
                 sx={{

@@ -46,8 +46,8 @@ function DefaultLayout() {
             <Box className="pageContent"
                 sx={{
                     position: 'absolute',
-                    width: 'calc(100vw - 17px)',
-                    overflowX: 'visible',
+                    width: '100vw',
+                    overflowX: 'clip',
                     top: 130,
                 }}
             >
