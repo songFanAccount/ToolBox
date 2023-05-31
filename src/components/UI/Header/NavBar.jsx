@@ -7,6 +7,7 @@ function NavBarLink({href, text}) {
         <Link 
             component={RouterLink}
             to={href}
+            onClick={() => window.scrollTo(0,0)}
             sx={{
                 mx: 2,
                 fontSize: 16,
@@ -58,8 +59,8 @@ function NavBar(props) {
                 return (
                     <>
                         <NavBarLink href="/" text="Home"/>
-                        <NavBarLink href="collab" text="Collaborate"/>
                         <NavBarLink href="about" text="About Us"/>
+                        <NavBarLink href="collab" text="Collaborate"/>
                         <NavBarLink href="contact" text="Contact Us"/>
                     </>
                 )
