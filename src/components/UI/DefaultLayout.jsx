@@ -48,7 +48,8 @@ function DefaultLayout() {
                     position: 'absolute',
                     width: '100vw',
                     overflowX: 'clip',
-                    top: 130,
+                    top: 100,
+                    zIndex: 3
                 }}
             >
                 <Outlet context={{dimX: dimX}}/>

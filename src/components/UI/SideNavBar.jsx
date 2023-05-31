@@ -476,6 +476,7 @@ function SideNavBar(props) {
 				mt: inHeader ? 0 : 3,
 				mb: inHeader ? 0 : 3,
 				borderRadius: 0,
+				zIndex: 10
 			}}
 		>
 			<ToolsIcon/>
@@ -497,6 +498,8 @@ function SideNavBar(props) {
 			<Box
 				sx={{
 					alignSelf: inHeader ? 'inherit' : 'start',
+					position: inHeader ? 'static' : 'sticky',
+					top: inHeader ? 0 : 100
 				}}
 			>
 				<ToolsButton/>

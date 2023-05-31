@@ -28,12 +28,12 @@ function InfoPageBanner({screenWidth, dimX, path}) {
                 minWidth: `fit-content`,
                 width: `fit-content`,
                 overflowX: 'visible',
-                mt: 25
+                mt: 5
             }
             gifSx = {
                 display: 'inline-block',
                 position: 'relative',
-                top: 30,
+                mb: 10,
                 ml: '40px',
                 zIndex: 3,
             }
@@ -51,20 +51,20 @@ function InfoPageBanner({screenWidth, dimX, path}) {
                 minWidth: `fit-content`,
                 width: `fit-content`,
                 overflowX: 'visible',
-                mt: 25
+                mt: 5
             }
             gifSx = {
                 display: 'inline-block',
                 position: 'relative',
-                top: 55,
+                mb: 5,
                 zIndex: 3,
             }
             backgroundColor = '#ebb63c'
             textColor = 'black'
             break
         case '/collab':
-            if(dimX === 2) gifWidth = 384
-            gif = <iframe title="thinking" src="https://giphy.com/embed/KD8cyaiEbZD0eKsA1J" width={gifWidth} height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+            if(dimX === 2) gifWidth = 320
+            gif = <iframe title="thinking" src="https://giphy.com/embed/KD8cyaiEbZD0eKsA1J" width={gifWidth} height="400" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
             title = "Collaborate with us!"
             miniTitle = "Got an idea?"
             miniTitleMin = 14
@@ -73,12 +73,12 @@ function InfoPageBanner({screenWidth, dimX, path}) {
                 minWidth: `calc(100vw - 2 * ${gifWidth}px)`,
                 width: `calc(100vw - 2 * ${gifWidth}px)`,
                 overflowX: 'visible',
-                mt: 25
+                mt: 5
             }
             gifSx = {
                 display: 'inline-block',
                 position: 'relative',
-                top: 50,
+                top: 25,
                 zIndex: 3,
             }
             backgroundColor = '#05071f'
@@ -90,7 +90,7 @@ function InfoPageBanner({screenWidth, dimX, path}) {
     const titleColor = dimX === 2 ? textColor : '#05071f'
     const titleFS = getLinear(32, 70, 400, 1100, screenWidth)
     const miniTitleFS = getLinear(miniTitleMin, miniTitleMax, 400, 1100, screenWidth)
-    const bannerHeight = getLinear(300, 580, 400, 1100, screenWidth)
+    const bannerHeight = getLinear(120, 450, 400, 1100, screenWidth)
     function BannerContents() {
         if(path === '/collab') {
             return (
@@ -138,7 +138,7 @@ function InfoPageBanner({screenWidth, dimX, path}) {
                         </Box>
                     }
                     <Box sx={titleBoxSx}>
-                        <Box sx={{width: 'fit-content', minWidth: 'fit-content', display:'flex', flexDirection: 'column', alignItems: 'start', whiteSpace: dimX === 0 ? 'normal' : 'nowrap'}}>
+                        <Box sx={{width: 'fit-content', minWidth: 'fit-content', display:'flex', flexDirection: 'column', alignItems: 'start', whiteSpace: 'nowrap'}}>
                             {miniTitle !== "" && <PageTitle title={miniTitle} color={titleColor} fs={miniTitleFS} underline="dashed" mb={2}/>}
                             <InfoPageTitle title={title} color={titleColor} fs={titleFS}/>  
                         </Box>
@@ -150,12 +150,6 @@ function InfoPageBanner({screenWidth, dimX, path}) {
     return (
         <Box
             sx={{
-                position: 'absolute',
-                top: -180,
-                left: 0,
-                width: 1,
-                maxWidth: 1,
-                overflowX: 'clip',
                 height: bannerHeight,
                 backgroundColor: dimX === 2 ? backgroundColor : 'inherit',
                 display: 'flex',
@@ -187,35 +181,36 @@ export default function InfoPageLayout() {
     if(screenWidth >= 1100) {
         dimX = 2
     }
-    const gap = dimX > 0 ? 160 : 20
+    const gap = screenWidth >= 900 ? 150 : 20
     const path = useLocation().pathname
     return (
-        <Box
+        <Box 
+            sx={{
+                display: 'flex', flexDirection: 'column',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: 1,
+                maxWidth: 1,
+            }}
         >
-            {screenWidth >= 900 &&
-                <Box
-                    sx={{
-                        position: 'fixed',
-                        top: dimX === 2 ? 530 : 100,
-                        width: 'fit-content'
-                    }}
-                >
-                    <SideNavBar inHeader={false}/>
-                </Box>
-            }
             <InfoPageBanner screenWidth={screenWidth} dimX={dimX} path={path}/>
             <Box 
                 sx={{
-                    position: 'relative',
-                    left: gap,
-                    width: `calc(100vw - 2*${gap}px)`,
+                    display: 'flex',
                 }}
             >
-                <Box
-                    sx={{
-                        mx: 5,
-                    }}
-                >
+                {screenWidth >= 900 &&
+                    <Box
+                        sx={{
+                            width: 150,
+                            zIndex: 3,
+                        }}
+                    >
+                        <SideNavBar inHeader={false}/>
+                    </Box>
+                }
+                <Box sx={{position: 'relative', left: screenWidth >= 900 ? 0 : gap, width: `calc(100vw - 2 * ${gap}px)`}}>
                     <Outlet/>
                 </Box>
             </Box>

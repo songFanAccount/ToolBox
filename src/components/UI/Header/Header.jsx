@@ -16,7 +16,6 @@ function Header(props) {
         top: 0,
         width: 1,
         height: 100,
-        zIndex: 200
     }
     let titleStyle = {
         color: '#fdfffc',
