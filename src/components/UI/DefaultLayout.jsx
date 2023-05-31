@@ -46,8 +46,10 @@ function DefaultLayout() {
             <Box className="pageContent"
                 sx={{
                     position: 'absolute',
-                    width: '100vw',
-                    overflowX: 'clip',
+                    width: '100%',
+                    minHeight: '100vh',
+                    overflowX: 'hidden',
+                    overflowY: 'hidden',
                     top: 100,
                     zIndex: 3
                 }}

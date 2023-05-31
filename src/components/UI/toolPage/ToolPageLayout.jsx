@@ -86,6 +86,7 @@ function ToolPageLayout() {
                 sx={{
                     zIndex: 7,
                     position: 'relative',
+                    top: 30,
                     left: dimX > 0 ? sideBarWidth + gap : gap,
                     width: dimX > 0 ? `calc(100% - ${sideBarWidth + gap}px)` : `calc(100% - ${gap}px)`,
                     maxWidth: 1200
