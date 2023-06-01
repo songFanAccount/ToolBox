@@ -73,11 +73,11 @@ export default function Collaborate() {
                     }
                 />
             </SectionBox>
-            <CollapseSectionBox title="Interested? Here's how it'll work..." usePageTitle>
+            <CollapseSectionBox title="Interested? Here's how it'll work..." usePageTitle startClosed={true}>
                 <PageSectionTitle title="Step 0: Brewing up an idea!"/>
                 <Box>
                     <PageParagraph text={
-                        `Obviously, start by having some idea. Think of all the times you were doing something and thought to yourself: "I wish there was `
+                        `Of course, start by having some idea. Think of all the times you thought to yourself: "I wish there was `
                         }
                     />
                     <PageParagraph text={`something`} bold/>
@@ -87,8 +87,8 @@ export default function Collaborate() {
                     }/>
                 </Box>
                 <PageParagraph text={
-                    `We are aware that nowadays there are already lots of online tools for lots of different problems. While it is not our 
-                    intention to compete with them, if there is room for lots of improvement (clearer working out, visualisation of solutions, 
+                    `We are aware that nowadays there are already lots of online tools for lots of different problems. That doesn't mean we can't make a new one!
+                    While it is not our intention to compete with them, if there is room for improvement (clearer working out, visualisation of solutions, 
                     advice and tips etc...), we will consider making our own variation of the tool.`
                 }/>
                 <PageSectionTitle title="Step 1: Sending us your proposal..."/>
@@ -103,15 +103,46 @@ export default function Collaborate() {
                     listName={`We want to know:`}
                     list={[
                         `What categories does it fall under? Try to be as specific as possible! For example, a tool for trapezoidal rule would be
-                        Maths -> Integration -> Estimation.`,
+                        Maths -> Integration -> Estimation techniques.`,
                         'Is this a serious or casual idea?',
+                        'What inspired you to want to make this?',
                         `A not too long but sufficient description of how you envision the tool to work.`,
                         `Are there anything about the topic that you wouldn't be 100% sure about? Don't worry, we don't expect you to know everything!`,
                         `Will you be able to stay responsive throughout the collaboration? Depending on the tool, we may need to occasionally discuss
-                        implementation details with you.`
+                        implementation details with you.`,
+                        'What app do you want to use to call for step 2?'
                     ]}
                 />
                 <PageSectionTitle title="Step 2: Getting on a call with us..."/>
+                <Box>
+                    <PageParagraph text={
+                        `If we're interested in your idea, we will invite you to join a call with us so we can discuss further. This will preferably be a call over 
+                        Discord, but Zoom works fine. We expect this call to be `
+                    }/>
+                    <PageParagraph text="roughly 1-2 hours," bold/>
+                    <PageParagraph text=" but special arrangements can be made."/>
+                </Box>
+                <PageTextList 
+                    listName={
+                        `The main parts of this call is...`
+                    }
+                    list={[
+                        "For you to demonstrate that you really know the ins and outs of your chosen topic, and if not, how can we compensate for what you don't know?",
+                        "For you to elaborate on your idea, going into more specific implementation details. What do you want the tool to look like?",
+                        "For us to provide feedback to your idea, and explain our plan and roadmap to tackle its development.",
+                        "For us to gauge the expected workload for the tool, and provide a rough ETA for its development."
+                    ]}
+                />
+                <PageParagraph text={
+                        `Additionally, this call is also a great opportunity for us to know if you will be fun to work with! Throughout our ToolBox project, 
+                        we hope to meet some interesting people along the way, and we want to make this collaboration enjoyable for both parties.`
+                    }
+                />
+                <PageSectionTitle title="Step 3: Let us cook..."/>
+                <PageParagraph text={
+                    `If the call goes well, we should be ready to start developing the tool! Throughout the development, you may expect occasional updates from us
+                    or questions on specific implementation details. We want to make sure you feel involved in every step of the way.`
+                }/>
             </CollapseSectionBox>
         </Box>
     )
