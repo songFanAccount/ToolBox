@@ -46,8 +46,7 @@ function DefaultLayout() {
             <Box className="pageContent"
                 sx={{
                     position: 'absolute',
-                    width: '100vw',
-                    overflowX: 'clip',
+                    width: '100%',
                     top: 100,
                     zIndex: 3
                 }}
@@ -82,16 +81,16 @@ function Contents({noBorder, children}) {
     )
 }
 
-export function SectionBox({title, noBorder, children}) {
+export function SectionBox({title, noBorder, children, usePageTitle}) {
     return (
         <Box>
-            {title && <PageSectionTitle title={title}/>}
+            {title && usePageTitle ? <PageTitle title={title}/> : <PageSectionTitle title={title}/>}
             <Contents noBorder={noBorder} children={children}/>
         </Box>
     )
 }
 
-export function CollapseSectionBox({title, children, startClosed}) {
+export function CollapseSectionBox({title, children, startClosed, usePageTitle}) {
     if(!title) {throw new Error("CollapseSectionBox: Cannot be collapsible without title!")}
     const [open, setOpen] = React.useState(startClosed ? false : true)
     function handleClick() {
@@ -107,6 +106,7 @@ export function CollapseSectionBox({title, children, startClosed}) {
         )
     }
     const CollapseTitle = () => {
+        const iconSx = {fontSize: 30, ml: 1, mb: usePageTitle ? 2 : 0}
         return (
             <Button
                 disableRipple
@@ -122,8 +122,8 @@ export function CollapseSectionBox({title, children, startClosed}) {
                     }
                 }}
             >
-                <PageSectionTitle title={title}/>
-                {open ? <KeyboardArrowUpIcon sx={{fontSize: 30, ml: 1}}/> : <KeyboardArrowDownIcon sx={{fontSize: 30, ml: 1}}/>}
+                {usePageTitle ? <PageTitle title={title}/> : <PageSectionTitle title={title}/>}
+                {open ? <KeyboardArrowUpIcon sx={iconSx}/> : <KeyboardArrowDownIcon sx={iconSx}/>}
             </Button>
         )
     }
@@ -151,7 +151,7 @@ export function InfoPageTitle({title, color, fs}) {
     )
 }
 
-export function PageTitle({title, color, fs, underline, align, mb}) {
+export function PageTitle({title, color, fs, underline, align, mb, inline}) {
     return (
         <Typography
             id="The Tool"
@@ -164,7 +164,8 @@ export function PageTitle({title, color, fs, underline, align, mb}) {
                 borderBottomColor: color,
                 color: color,
                 width: 'fit-content',
-                textAlign: align ? 'center' : 'start'
+                textAlign: align ? 'center' : 'start',
+                display: inline ? 'inline' : 'block'
             }}
         >
             {title}
@@ -230,7 +231,7 @@ export function PageEndSpace() {
     return (
         <Box
             sx={{
-                height: 50
+                height: 100
             }}
         />
     )
@@ -274,6 +275,10 @@ export function ExternalLink({href, target, children}) {
 Remember to update this every time a new tool is done.
 */
 const toolnameToPath = {
+    'home': '/',
+    'about': '/about',
+    'contact': '/contact',
+    'collab': '/collab',
     'latex converter': '/tools/maths/latex-converter',
     'maths expression parser': '/tools/compsci/parsing/maths-expression-parser'
 }
@@ -295,6 +300,7 @@ export function ToolLink({name, linkText}) {
         </Link>
     )
 }
+
 export function scrollWithOffset(el) {
     const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
     const yOffset = -100; 
