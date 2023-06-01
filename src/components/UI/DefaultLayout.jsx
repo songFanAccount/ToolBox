@@ -231,7 +231,7 @@ export function PageEndSpace() {
     return (
         <Box
             sx={{
-                height: 50
+                height: 100
             }}
         />
     )
@@ -275,6 +275,10 @@ export function ExternalLink({href, target, children}) {
 Remember to update this every time a new tool is done.
 */
 const toolnameToPath = {
+    'home': '/',
+    'about': '/about',
+    'contact': '/contact',
+    'collab': '/collab',
     'latex converter': '/tools/maths/latex-converter',
     'maths expression parser': '/tools/compsci/parsing/maths-expression-parser'
 }

@@ -185,7 +185,8 @@ export default function InfoPageLayout() {
     if(screenWidth >= 1100) {
         dimX = 2
     }
-    const gap = screenWidth >= 900 ? 200 : 20
+    const toolButtonWidth = 160
+    const gap = screenWidth >= 900 ? toolButtonWidth : 40
     const path = useLocation().pathname
     return (
         <Box 
@@ -207,7 +208,7 @@ export default function InfoPageLayout() {
                 {screenWidth >= 900 &&
                     <Box
                         sx={{
-                            width: 200,
+                            width: toolButtonWidth,
                             zIndex: 3,
                         }}
                     >

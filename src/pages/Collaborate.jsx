@@ -1,7 +1,7 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import { Box } from "@mui/material";
-import { CollapseSectionBox, ExternalLink, PageParagraph, PageSectionTitle, PageTextList, SectionBox } from "../components/UI/DefaultLayout";
+import { CollapseSectionBox, ExternalLink, PageParagraph, PageSectionTitle, PageTextList, SectionBox, ToolLink } from "../components/UI/DefaultLayout";
 
 export default function Collaborate() {
     return (
@@ -10,15 +10,18 @@ export default function Collaborate() {
                 <title>Collaborate</title>
             </Helmet>
             <SectionBox title="What ideas are we looking for?" usePageTitle>
-                <PageParagraph 
-                    text={
-                        `Does it have to be academic? Does it have to be professional? The answer to both of these questions is no. In fact, the tool doesn't even have
-                        to be useful! The purpose of ToolBox is to create a shared collection of tools across all sorts of topics and categories. The nature of the tools
-                        may vary greatly, some aim to share knowledge of how to solve a type of problem, some aim to provide convenience in otherwise very tedious tasks,
-                        and some may even be just for creating fun activities. The categories listed in our navigation bar show some of the paths we're thinking of exploring,
-                        but we're certainly not limited to only them.`
-                    }
-                />
+                <Box>
+                    <PageParagraph 
+                        text={
+                            `Does it have to be academic? Does it have to be professional? The answer to both of these questions is no. In fact, the tool doesn't even have
+                            to be useful! The purpose of ToolBox is to create a shared collection of tools across all sorts of topics and categories. The nature of the tools
+                            may vary greatly, some aim to share knowledge of how to solve a type of problem, some aim to provide convenience in otherwise very tedious tasks,
+                            and some may even be just for creating fun activities. You should check out our `
+                        }
+                    />
+                    <ToolLink name="about" linkText="About Us"/>
+                    <PageParagraph text=" page for a better understanding of the different type of tools."/>
+                </Box>
                 <Box>
                     <PageParagraph text="In short," bold/>
                     <PageParagraph 
@@ -31,8 +34,8 @@ export default function Collaborate() {
                 <PageParagraph 
                     text={
                         `As mentioned above, the tools do not have to be strictly academic, but they would typically be prioritised over casual ideas. The team consists of two uni friends
-                        wanting to make something cool of our own, while hopefully giving something good to the community. We don't plan on expanding in the foreseeable future, as such,
-                        we must pick and develop the ideas that seem the most worthwhile.`
+                        wanting to make something cool of our own, while hopefully giving something good to the community. As such, we are limited with time and must pick and develop 
+                        the ideas that seem the most worthwhile.`
                     }
                 />
             </SectionBox>
@@ -73,7 +76,7 @@ export default function Collaborate() {
                     }
                 />
             </SectionBox>
-            <CollapseSectionBox title="Interested? Here's how it'll work..." usePageTitle startClosed={true}>
+            <CollapseSectionBox title="Interested? Here's how it'll work..." usePageTitle>
                 <PageSectionTitle title="Step 0: Brewing up an idea!"/>
                 <Box>
                     <PageParagraph text={
@@ -93,7 +96,7 @@ export default function Collaborate() {
                 }/>
                 <PageSectionTitle title="Step 1: Sending us your proposal..."/>
                 <Box>
-                    <PageParagraph text={`Now that you've got your idea, we want you to explain to us what kind of tool you have in mind. Send us an email at `}/>
+                    <PageParagraph text={`Now that you've got your idea, we want you to explain it to us. Send us an email at `}/>
                     <ExternalLink href="mailto:toolbox.queries@gmail.com">
                         toolbox.queries@gmail.com
                     </ExternalLink>
@@ -138,12 +141,34 @@ export default function Collaborate() {
                         we hope to meet some interesting people along the way, and we want to make this collaboration enjoyable for both parties.`
                     }
                 />
-                <PageSectionTitle title="Step 3: Let us cook..."/>
+                <PageSectionTitle title="Step 3: Now we wait..."/>
                 <PageParagraph text={
                     `If the call goes well, we should be ready to start developing the tool! Throughout the development, you may expect occasional updates from us
                     or questions on specific implementation details. We want to make sure you feel involved in every step of the way.`
                 }/>
+                <PageSectionTitle title="Step 4: Done!"/>
+                <Box>
+                    <PageParagraph text={
+                        `Once the tool is developed, we will do a final check with you to make sure you're happy with the result. Then, once you provide us with what you
+                        want to show in your `
+                    }/>
+                    <PageParagraph text="Collaborator Info" bold/>
+                    <PageParagraph text={
+                        ` section (or remain anonymous), the tool will be ready to be published!`
+                    }/>
+                </Box>
             </CollapseSectionBox>
+            <SectionBox title="Future plans for the collab feature" usePageTitle>
+                <Box>
+                    <PageParagraph text={
+                        `We plan on making a better way for people to send us ideas, likely in the form of a forum for comments and a like/dislike system. This way we can also
+                        see what ideas interest the most people! For now, please send your ideas to our email at `
+                    }/>
+                    <ExternalLink href="mailto:toolbox.queries@gmail.com">
+                        toolbox.queries@gmail.com.
+                    </ExternalLink>
+                </Box>
+            </SectionBox>
         </Box>
     )
 }
