@@ -81,16 +81,16 @@ function Contents({noBorder, children}) {
     )
 }
 
-export function SectionBox({title, noBorder, children}) {
+export function SectionBox({title, noBorder, children, usePageTitle}) {
     return (
         <Box>
-            {title && <PageSectionTitle title={title}/>}
+            {title && usePageTitle ? <PageTitle title={title}/> : <PageSectionTitle title={title}/>}
             <Contents noBorder={noBorder} children={children}/>
         </Box>
     )
 }
 
-export function CollapseSectionBox({title, children, startClosed}) {
+export function CollapseSectionBox({title, children, startClosed, usePageTitle}) {
     if(!title) {throw new Error("CollapseSectionBox: Cannot be collapsible without title!")}
     const [open, setOpen] = React.useState(startClosed ? false : true)
     function handleClick() {
@@ -106,6 +106,7 @@ export function CollapseSectionBox({title, children, startClosed}) {
         )
     }
     const CollapseTitle = () => {
+        const iconSx = {fontSize: 30, ml: 1, mb: usePageTitle ? 2 : 0}
         return (
             <Button
                 disableRipple
@@ -121,8 +122,8 @@ export function CollapseSectionBox({title, children, startClosed}) {
                     }
                 }}
             >
-                <PageSectionTitle title={title}/>
-                {open ? <KeyboardArrowUpIcon sx={{fontSize: 30, ml: 1}}/> : <KeyboardArrowDownIcon sx={{fontSize: 30, ml: 1}}/>}
+                {usePageTitle ? <PageTitle title={title}/> : <PageSectionTitle title={title}/>}
+                {open ? <KeyboardArrowUpIcon sx={iconSx}/> : <KeyboardArrowDownIcon sx={iconSx}/>}
             </Button>
         )
     }
@@ -295,6 +296,7 @@ export function ToolLink({name, linkText}) {
         </Link>
     )
 }
+
 export function scrollWithOffset(el) {
     const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
     const yOffset = -100; 

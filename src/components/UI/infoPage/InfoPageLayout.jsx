@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { Outlet, useLocation } from "react-router-dom";
 import SideNavBar from "../SideNavBar";
 import React from "react";
-import { InfoPageTitle, PageTitle } from "../DefaultLayout";
+import { InfoPageTitle, PageEndSpace, PageTitle } from "../DefaultLayout";
 import { getLinear } from "../../../helpers/generalHelpers";
 
 function InfoPageBanner({screenWidth, dimX, path}) {
@@ -225,6 +225,7 @@ export default function InfoPageLayout() {
                     <Outlet/>
                 </Box>
             </Box>
+            <PageEndSpace/>
         </Box>
     )
 }
