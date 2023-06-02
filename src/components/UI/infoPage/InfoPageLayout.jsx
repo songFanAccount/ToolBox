@@ -21,7 +21,7 @@ function InfoPageBanner({screenWidth, dimX, path}) {
             if(dimX === 2) gifWidth = 200
             gif = <iframe title="jump"src="https://giphy.com/embed/Mcaiot7RKVU83dVcch" width={gifWidth} height="250" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
             title = "What is ToolBox?"
-            miniTitle = "Who, where, when, why,"
+            miniTitle = "Who, when, where, why,"
             miniTitleMin = 12
             miniTitleMax = 24
             titleBoxSx = {
