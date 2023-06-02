@@ -33,6 +33,26 @@ function AboutUs() {
                     <PageParagraph text=" here! All tools and services our website provide will be free for now, and forever."/>
                 </Box>
             </SectionBox>
+            <SectionBox title="Our motivation & values" usePageTitle>
+                <PageParagraph text={
+                    `Why did we make ToolBox? When we came up with the idea, the largest concern was the overwhelming amount of resources already existing on the internet.
+                    This meant that there already existed tools for the majority of ideas we've had in mind! However, we noticed some major flaws:`
+                }/>
+                <PageTextList 
+                    list={[
+                        'The tools were decentralised:'
+                    ]}
+                />
+            </SectionBox>
+            <SectionBox title="Meet the devs!" usePageTitle>
+
+            </SectionBox>
+            <SectionBox title="Meet the devs!" usePageTitle>
+
+            </SectionBox>
+            <SectionBox title="Meet the devs!" usePageTitle>
+
+            </SectionBox>
         </Box>  
     )
 }

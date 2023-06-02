@@ -44,9 +44,13 @@ export default function Collaborate() {
                 <PageParagraph 
                     text={
                         `However, in most cases you will need to demonstrate that you really do know your stuff. This may vary depending on the nature of the tool, but it is
-                        especially important for academic tools. We'd rather have no tool than make a broken one. The demonstration process is explained below.`
+                        especially important for academic tools. We'd rather have no tool than make a broken one. The demonstration process is part of the step 2
+                        in the how-to section below.`
                     }
                 />
+                <PageParagraph text={
+                    `Alternatively, if you have an idea but you're not confident in collaborating, you can still send us the idea!`
+                }/>
             </SectionBox>
             <SectionBox title="What's in it for you?" usePageTitle>
                 <Box>
