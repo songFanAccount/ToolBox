@@ -1,6 +1,6 @@
 import { Box } from "@mui/material"
 import { Helmet } from "react-helmet"
-import { CollapseSectionBox, PageParagraph, PageTextList, SectionBox, ToolLink } from "../components/UI/DefaultLayout"
+import { CollapseSectionBox, ExternalLink, PageParagraph, PageTextList, SectionBox, ToolLink } from "../components/UI/DefaultLayout"
 
 function AboutUs() {
     return (
@@ -27,10 +27,19 @@ function AboutUs() {
                 <Box>
                     <PageParagraph text={
                         `Our goal is to collaborate with the community to share what we know, so that ToolBox can become a reliable place for people in need of help.
-                        You can read more about how to `
+                        You can learn about how to `
                     }/>
                     <ToolLink name="collab" linkText="collaborate with us"/>
-                    <PageParagraph text=" here! All tools and services our website provide will be free for now, and forever."/>
+                    <PageParagraph text={
+                        ` here! `
+                    }/>
+                </Box>
+                <Box>
+                    <PageParagraph text={
+                        `All tools and services our website provide will be free for now, and forever. Additionally, for the developers, our code
+                        will remain open source on our `
+                    }/>
+                    <ExternalLink href="https://github.com/songFanAccount/ToolBox">GitHub.</ExternalLink>
                 </Box>
             </SectionBox>
             <CollapseSectionBox title="Our motivation & values" usePageTitle startClosed={true}>
