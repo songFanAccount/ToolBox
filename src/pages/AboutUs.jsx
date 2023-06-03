@@ -1,6 +1,6 @@
 import { Box } from "@mui/material"
 import { Helmet } from "react-helmet"
-import { PageParagraph, PageTextList, SectionBox, ToolLink } from "../components/UI/DefaultLayout"
+import { CollapseSectionBox, PageParagraph, PageTextList, SectionBox, ToolLink } from "../components/UI/DefaultLayout"
 
 function AboutUs() {
     return (
@@ -33,14 +33,21 @@ function AboutUs() {
                     <PageParagraph text=" here! All tools and services our website provide will be free for now, and forever."/>
                 </Box>
             </SectionBox>
-            <SectionBox title="Our motivation & values" usePageTitle>
+            <CollapseSectionBox title="Our motivation & values" usePageTitle startClosed={true}>
                 <PageParagraph text={
-                    `Why did we make ToolBox? When we came up with the idea, we the largest concern was the overwhelming amount of resources already existing on the internet.
-                    This meant that there already existed tools for a lot of ideas we've had in mind!`
+                    `Why did we make ToolBox? Let's break this down into academic and casual tools. `
                 }/>
                 <SectionBox title="Academic tools">
+                    <PageParagraph text={
+                        `As recent graduates ourselves, we understand very well the struggles of studying. While it is true that there are more resources online than ever
+                        before, the truth is a lot of it is decentralised and can be frustrating to navigate. The long term goal of ToolBox is to create a united collection of 
+                        tools for all categories so you don't have to wander around the web!`
+                    }/>
+                    <PageParagraph text={
+                        `When we came up with the idea, our largest concern was the overwhelming amount of resources already existing on the internet.
+                        This meant that there already existed tools for a lot of ideas we've had in mind! However, we noticed some major flaws in existing academic tools:`
+                    }/>
                     <PageTextList
-                        listName="However, we noticed some major flaws in existing academic tools:"
                         list={[
                             `Insufficient explanation: Many tools prioritised their basic functionality, which is to take user input and output the correct solution. But there
                             was very little explanation or working out.`,
@@ -74,23 +81,31 @@ function AboutUs() {
                                 }/>
                             </Box>,
                             <Box>
-                                <PageParagraph text="Provision of proofs: " bold/>
+                                <PageParagraph text="Provision of proofs wherever applicable: " bold/>
                                 <PageParagraph text={
-                                    ` Proofs have largely been taken for granted. When given a formula, we found it is uncommon that students are curious as to
-                                    why it works, `
+                                    ` Proofs have largely been taken for granted. When given a formula, we found it is rare for many students to think about
+                                    why it works, let alone putting in the effort to research it online. We want to encourage students to have the mindset of
+                                    wanting to know why formulae work. As such, we aim to either provide proofs in the tools ourselves, or if there already exist
+                                    such resources online, find and provide the best ones for you.`
                                 }/>
                             </Box>
                         ]}
                     />
                 </SectionBox>
+                <SectionBox title="Casual tools">
+                    <PageParagraph text={
+                        `By casual, really it means we want ToolBox to be "general purpose", so that you can come to us for help with anything, not just your studies.
+                        As of now, we think this idea is only applicable for video games and IRL games like board and card games. Overall, the goal of these tools is to
+                        make those experiences more enjoyable.`
+                    }/>
+                </SectionBox>
+            </CollapseSectionBox>
+            <SectionBox title="Our history" usePageTitle>
+                <PageParagraph text={
+                    `The development of ToolBox began in May, 2023. To be updated!`
+                }/>
             </SectionBox>
-            <SectionBox title="Meet the devs!" usePageTitle>
-
-            </SectionBox>
-            <SectionBox title="Meet the devs!" usePageTitle>
-
-            </SectionBox>
-            <SectionBox title="Meet the devs!" usePageTitle>
+            <SectionBox title="Meet the devs!" usePageTitle> 
 
             </SectionBox>
         </Box>  
