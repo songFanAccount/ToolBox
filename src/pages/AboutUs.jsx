@@ -36,13 +36,26 @@ function AboutUs() {
             <SectionBox title="Our motivation & values" usePageTitle>
                 <PageParagraph text={
                     `Why did we make ToolBox? When we came up with the idea, the largest concern was the overwhelming amount of resources already existing on the internet.
-                    This meant that there already existed tools for the majority of ideas we've had in mind! However, we noticed some major flaws:`
+                    This meant that there already existed tools for a lot of ideas we've had in mind!`
                 }/>
-                <PageTextList 
+                <PageTextList
+                    listName="However, we noticed some major flaws:"
                     list={[
-                        'The tools were decentralised:'
+                        `Insufficient explanation: Many tools prioritised their basic functionality, which is to take user input and output the correct solution. But there
+                        was very little explanation or working out.`,
+                        `Lack of visuals and animation: Certain topics are best explained in conjunction with a nice diagram. We noticed this was missing in a lot of existing
+                        tools, or typically, diagrams were static and did not change to reflect user inputs.`,
+                        <Box>
+                            <PageParagraph text={`Lack of proofs: Explanation and working out entails why we want to do step X, whereas proof explains `}/>
+                            <PageParagraph text="why" bold/>
+                            <PageParagraph text={` we're allowed to take step X. This was also typically missing.`}/>
+                        </Box>
                     ]}
                 />
+                <Box>
+                    <PageParagraph text="&#8756;" fs={30}/>
+                    <PageParagraph text="hello"/>
+                </Box>
             </SectionBox>
             <SectionBox title="Meet the devs!" usePageTitle>
 
