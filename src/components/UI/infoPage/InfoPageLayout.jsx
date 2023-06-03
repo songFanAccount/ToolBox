@@ -44,7 +44,7 @@ function InfoPageBanner({screenWidth, dimX, path}) {
         case '/contact':
             if(dimX === 2) gifWidth = 180
             gif = <iframe title="call" src="https://giphy.com/embed/jQbfr9B8wkM2y1cVBc" width={gifWidth} height="225" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
-            title = "Contact us!"
+            title = "Reach out to us!"
             miniTitle = "Got questions?"
             miniTitleMin = 14
             miniTitleMax = 22
