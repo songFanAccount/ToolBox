@@ -32,7 +32,7 @@ export function TBTextField({label, placeholder, onChange}) {
     )
 }
 
-export function TBSelect({label, onChange, list, value}) {
+export function TBSelect({label, onChange, list, value, maxWidth}) {
     if(!list) throw new Error("TBSelect: Undefined list!")
     if(!Array.isArray(list)) throw new Error("TBSelect: List is not of type array!")
     if(!onChange) throw new Error("TBSelect: Undefined onChange function, expects the setValue function from source!")
@@ -44,17 +44,17 @@ export function TBSelect({label, onChange, list, value}) {
             label={label}
             onChange={(e) => onChange(e.target.value)}
             variant="standard"
-            InputLabelProps={{
-                fontFamily: 'Verdana',
-                shrink: true
-            }}
-            InputProps={{
-                fontFamily: 'Verdana'
-            }}
             sx={{
-                width: 200,
+                minWidth: 200,
+                maxWidth: maxWidth ? maxWidth : 'fit-content',
+                '& .MuiInput-input': {
+                    fontFamily: 'Verdana'
+                },
                 '& .MuiInput-underline:after': {
                     borderBottomColor: '#011627'
+                },
+                '& label': {
+                    fontFamily: 'Verdana'
                 },
                 '& label.Mui-focused': {
                     color: '#011627'
