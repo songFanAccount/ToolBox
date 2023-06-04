@@ -1,12 +1,11 @@
 import { MenuItem, TextField } from "@mui/material";
-import React from "react";
 
 export function TBTextField({label, placeholder, onChange}) {
     return (
         <TextField
             label={label}
             placeholder={placeholder}
-            onChange={onChange}
+            onChange={(e) => {if (onChange) {onChange(e.target.value)}}}
             variant="standard"
             InputLabelProps={{
                 shrink: true,
@@ -33,35 +32,21 @@ export function TBTextField({label, placeholder, onChange}) {
     )
 }
 
-export function TBSelect({label, placeholder, onChange, children}) {
-    const [value, setValue] = React.useState('')
-    function onSelect(event) {
-        if(onChange) onChange()
-        setValue(event.target.value)
-        console.log(event.target.value)
-    }
-    const ListItem = ({valuePair}) => {
-        if(valuePair?.length !== 2) throw new Error("TBSelect: Invalid list item!")
-        return (
-            <MenuItem key={valuePair[0]} value={valuePair[0]}>
-                {valuePair[1]}
-            </MenuItem>
-        )
-    }
-    const ListItems = ({list}) => {
-        if(!list || !Array.isArray(list)) throw new Error("TBSelect: Invalid list!")
-        return list.map((el) => <ListItem valuePair={el}/>)
-    }
+export function TBSelect({label, onChange, list, value}) {
+    if(!list) throw new Error("TBSelect: Undefined list!")
+    if(!Array.isArray(list)) throw new Error("TBSelect: List is not of type array!")
+    if(!onChange) throw new Error("TBSelect: Undefined onChange function, expects the setValue function from source!")
+    /* Does not check for uniqueness in array, but should never be a problem since options should not include dups anyways */
     return (
         <TextField
             select
-            label={label}
-            placeholder={placeholder}
-            onChange={(event) => onSelect(event)}
-            variant="standard"
             value={value || ''}
+            label={label}
+            onChange={(e) => onChange(e.target.value)}
+            variant="standard"
             InputLabelProps={{
-                fontFamily: 'Verdana'
+                fontFamily: 'Verdana',
+                shrink: true
             }}
             InputProps={{
                 fontFamily: 'Verdana'
@@ -76,7 +61,7 @@ export function TBSelect({label, placeholder, onChange, children}) {
                 }
             }}
         >
-            <ListItems list={children}/>
+            {list.map((el) => <MenuItem value={el}>{el}</MenuItem>)}
         </TextField>
     )
 }

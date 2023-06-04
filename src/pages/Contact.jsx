@@ -1,9 +1,12 @@
 import { Box } from "@mui/material"
+import React from "react"
 import { Helmet } from "react-helmet"
 import { PageParagraph, SectionBox } from "../components/UI/DefaultLayout"
 import { TBSelect, TBTextField } from "../components/UI/Form"
 
 function Contact() {
+    const categories = ['-', 'Tool related', 'Collaborating', 'Website functionality', 'Ideas and suggestions', 'Others']
+    const [category, setCategory] = React.useState('-')
     return (
         <Box>
             <Helmet>
@@ -27,13 +30,9 @@ function Contact() {
                     />
                     <TBSelect
                         label="Category:"
-                        children={[
-                            ['None', 'None'],
-                            ['A', 'B'],
-                            ['C', 'D'],
-                            ['E', 'F'],
-                            ['G', 'H'],
-                        ]}
+                        list={categories}
+                        onChange={setCategory}
+                        value={category}
                     />
                 </Box>
             </SectionBox>
