@@ -1,4 +1,5 @@
-import { NativeSelect, TextField } from "@mui/material";
+import { MenuItem, TextField } from "@mui/material";
+import React from "react";
 
 export function TBTextField({label, placeholder, onChange}) {
     return (
@@ -33,18 +34,49 @@ export function TBTextField({label, placeholder, onChange}) {
 }
 
 export function TBSelect({label, placeholder, onChange, children}) {
+    const [value, setValue] = React.useState('')
+    function onSelect(event) {
+        if(onChange) onChange()
+        setValue(event.target.value)
+        console.log(event.target.value)
+    }
+    const ListItem = ({valuePair}) => {
+        if(valuePair?.length !== 2) throw new Error("TBSelect: Invalid list item!")
+        return (
+            <MenuItem key={valuePair[0]} value={valuePair[0]}>
+                {valuePair[1]}
+            </MenuItem>
+        )
+    }
+    const ListItems = ({list}) => {
+        if(!list || !Array.isArray(list)) throw new Error("TBSelect: Invalid list!")
+        return list.map((el) => <ListItem valuePair={el}/>)
+    }
     return (
-        <NativeSelect
+        <TextField
+            select
             label={label}
             placeholder={placeholder}
-            onChange={onChange}
+            onChange={(event) => onSelect(event)}
             variant="standard"
-            inputProps={{
-                name: label,
+            value={value || ''}
+            InputLabelProps={{
                 fontFamily: 'Verdana'
             }}
+            InputProps={{
+                fontFamily: 'Verdana'
+            }}
+            sx={{
+                width: 200,
+                '& .MuiInput-underline:after': {
+                    borderBottomColor: '#011627'
+                },
+                '& label.Mui-focused': {
+                    color: '#011627'
+                }
+            }}
         >
-            {children}
-        </NativeSelect>
+            <ListItems list={children}/>
+        </TextField>
     )
 }

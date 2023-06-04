@@ -23,16 +23,18 @@ function Contact() {
                 >
                     <TBTextField
                         label="Name:"
-                        variant="standard"
-                        InputLabelProps={{
-                            shrink: true
-                        }}
                         placeholder="Anonymous"
                     />
                     <TBSelect
                         label="Category:"
-                    >
-                    </TBSelect>
+                        children={[
+                            ['None', 'None'],
+                            ['A', 'B'],
+                            ['C', 'D'],
+                            ['E', 'F'],
+                            ['G', 'H'],
+                        ]}
+                    />
                 </Box>
             </SectionBox>
         </Box>  
