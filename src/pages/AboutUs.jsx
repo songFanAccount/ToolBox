@@ -69,8 +69,8 @@ function AboutUs() {
                             </Box>
                         ]}
                     />
+                    <PageParagraph text="And so, we committed ourselves to creating academic tools according to these values:"/>
                     <PageTextList
-                        listName="And so, we committed ourselves to creating academic tools according to these values:"
                         list={[
                             <Box>
                                 <PageParagraph text="Clear and concise working out: " bold/>

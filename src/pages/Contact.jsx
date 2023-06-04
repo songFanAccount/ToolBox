@@ -1,6 +1,7 @@
 import { Box } from "@mui/material"
 import { Helmet } from "react-helmet"
 import { PageParagraph, SectionBox } from "../components/UI/DefaultLayout"
+import { TBSelect, TBTextField } from "../components/UI/Form"
 
 function Contact() {
     return (
@@ -8,10 +9,31 @@ function Contact() {
             <Helmet>
                 <title>Contact Us</title>
             </Helmet>
-            <SectionBox title="Contact form" usePageTitle>
+            <SectionBox title="What's this for?" usePageTitle>
                 <PageParagraph text={
-                    `If you have something to ask or tell us, please fill out and submit the form below!`
+                    `If you have any questions, complaints or comments for any part of our website, here's where you can send them! In the form below, choose the appropriate
+                    category for your message and fill it out accordingly. After you submit the form, we will get back to you within 1-3 days.`
                 }/>
+            </SectionBox>
+            <SectionBox title="Contact form" usePageTitle>
+                <Box
+                    component="form"
+                    noValidate
+                    autoComplete="off"
+                >
+                    <TBTextField
+                        label="Name:"
+                        variant="standard"
+                        InputLabelProps={{
+                            shrink: true
+                        }}
+                        placeholder="Anonymous"
+                    />
+                    <TBSelect
+                        label="Category:"
+                    >
+                    </TBSelect>
+                </Box>
             </SectionBox>
         </Box>  
     )
