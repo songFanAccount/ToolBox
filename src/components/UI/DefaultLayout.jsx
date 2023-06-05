@@ -19,16 +19,6 @@ function DefaultLayout() {
     // MAYBE TODO: Add new dimX = 2 for min-width:900px
     return (
         <>
-            <Box className="Background"
-                sx={{
-                    position: 'fixed',
-                    width: 'calc(100vw + 10px)',
-                    overflowX: 'clip',
-                    height: '100vh',
-                    backgroundColor: '#eeeeee',
-                    zIndex: -1
-                }}
-            />
             <Box className="defaultLayout"
                 sx={{
                     display: 'flex',

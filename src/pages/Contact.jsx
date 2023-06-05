@@ -1,12 +1,15 @@
 import { Box } from "@mui/material"
-import React from "react"
+import { useState } from "react"
 import { Helmet } from "react-helmet"
 import { PageParagraph, SectionBox } from "../components/UI/DefaultLayout"
 import { TBFileUpload, TBSelect, TBTextField } from "../components/UI/Form"
 
 function Contact() {
+    const [name, setName] = useState(null)
+    const [email, setEmail] = useState('')
     const categories = ['-', 'Tool related', 'Collaborating', 'Website functionality', 'Ideas and suggestions', 'Others']
-    const [category, setCategory] = React.useState('-')
+    const [category, setCategory] = useState('-')
+    const [message, setMessage] = useState('')
     const categoryMsg = "Please select a category!"
     function changeCategory(newCategory) {
         setCategory(newCategory)
@@ -25,6 +28,19 @@ function Contact() {
                 break
             default:
                 throw new Error("Contact: Invalid category!")
+        }
+    }
+    function validEmail() {
+        return email !== '' // TODO
+    }
+    function generateForm() {
+        /* Validation */
+        if(!validEmail()) throw new Error("Invalid email!")
+        return {
+            from_name: name ? name : 'Anonymous',
+            from_email: email,
+            category: category,
+            message: message
         }
     }
     return (
@@ -47,10 +63,12 @@ function Contact() {
                     <TBTextField
                         label="Your name:"
                         placeholder="Anonymous"
+                        onChange={setName}
                     />
                     <TBTextField
                         label="Your email:"
                         required
+                        onChange={setEmail}
                     />
                     <TBSelect
                         label="Category:"
@@ -61,6 +79,14 @@ function Contact() {
                         helperText={category === '-' ? categoryMsg : null}
                     />
                 </Box>
+                <TBTextField
+                    label="Your message:"
+                    onChange={setMessage}
+                    variant="outlined"
+                    width={500}
+                    minWidth={200}
+                    rows={8}
+                />
                 <TBFileUpload />
             </SectionBox>
         </Box>  

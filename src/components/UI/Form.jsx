@@ -1,13 +1,18 @@
 import { Input, MenuItem, TextField } from "@mui/material";
 
-export function TBTextField({label, placeholder, onChange, required}) {
+export function TBTextField({label, placeholder, width, variant, onChange, required, rows, minRows, maxRows}) {
+    if(rows && (minRows || maxRows)) throw new Error("TBTextField: Rows is defined -> Don't input min/max rows!")
     return (
         <TextField
             label={label}
             required={required}
             placeholder={placeholder}
             onChange={(e) => {if (onChange) {onChange(e.target.value)}}}
-            variant="standard"
+            variant={variant ? variant : 'standard'}
+            multiline={rows || minRows || maxRows}
+            rows={rows}
+            minRows={minRows}
+            maxRows={maxRows}
             InputLabelProps={{
                 shrink: true,
                 sx: {
@@ -20,14 +25,20 @@ export function TBTextField({label, placeholder, onChange, required}) {
                 }
             }}
             sx={{
-                width: 200,
+                width: width ? width : 200,
+                height: 'fit-content',
                 mr: 5,
                 mb: 3,
                 '& .MuiInput-underline:after': {
-                    borderBottomColor: '#011627'
+                    borderColor: '#011627'
                 },
                 '& label.Mui-focused': {
                     color: '#011627'
+                },
+                '& .MuiOutlinedInput-root': {
+                    '&.Mui-focused fieldset': {
+                        borderColor: '#011627'
+                    }
                 }
             }}
         />
