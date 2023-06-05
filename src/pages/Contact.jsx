@@ -1,17 +1,20 @@
-import { Alert, Box } from "@mui/material"
+import { Box } from "@mui/material"
 import { useState } from "react"
 import { Helmet } from "react-helmet"
 import { PageParagraph, SectionBox } from "../components/UI/DefaultLayout"
-import { TBFileUpload, TBSelect, TBSubmitButton, TBTextField } from "../components/UI/Form"
+import { TBSelect, TBSubmitButton, TBTextField } from "../components/UI/Form"
 import emailjs from '@emailjs/browser';
+import isEmail from 'validator/lib/isEmail';
 
 function Contact() {
+    // TODO: Once we have our own website, get a recaptcha key and use it here https://www.youtube.com/watch?v=ht73aVlbNRI
     const [name, setName] = useState(null)
     const [email, setEmail] = useState('')
+    const emailErrorMsg = "Invalid email!"
     const categories = ['-', 'Tool related', 'Collaborating', 'Website functionality', 'Ideas and suggestions', 'Others']
     const [category, setCategory] = useState('-')
     const [message, setMessage] = useState('')
-    const categoryMsg = "Please select a category!"
+    const categoryErrorMsg = "Please select a category!"
     function changeCategory(newCategory) {
         setCategory(newCategory)
         switch(newCategory) {
@@ -31,12 +34,9 @@ function Contact() {
                 throw new Error("Contact: Invalid category!")
         }
     }
-    function validEmail() {
-        return email !== '' // TODO
-    }
     function generateForm() {
         /* Validation */
-        if(!validEmail() || category === '-') {
+        if(!isEmail(email) || category === '-') {
             return null
         }
         return {
@@ -52,7 +52,7 @@ function Contact() {
         const form = generateForm()
         console.log('Form generated')
         if(!form) {
-            Alert('sendEmail: Something wrong with the form!') // TODO
+            alert('sendEmail: Something wrong with the form!') // TODO
             return
         }
         emailjs.send('service_5bqfbot', 'template_rkcopqu', form, 'KeVm9KwyFgORXMAVD')
@@ -81,37 +81,51 @@ function Contact() {
                     onSubmit={(e) => sendEmail(e)}
                     sx={{
                         display: 'flex',
-                        flexDirection: 'column'
+                        flexDirection: 'column',
+                        rowGap: 4
                     }}
                 >
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            columnGap: 5,
+                            rowGap: 4
+                        }}
+                    >
+                        <TBTextField
+                            label="Your name:"
+                            placeholder="Anonymous"
+                            onChange={setName}
+                        />
+                        <TBTextField
+                            label="Your email:"
+                            required
+                            onChange={setEmail}
+                            error={!isEmail(email)}
+                            errorMsg={emailErrorMsg}
+                        />
+                        <TBSelect
+                            label="Category:"
+                            list={categories}
+                            onChange={changeCategory}
+                            value={category}
+                            required
+                            error={category === '-'}
+                            errorMsg={categoryErrorMsg}
+                        />
+                    </Box>
                     <TBTextField
-                        label="Your name:"
-                        placeholder="Anonymous"
-                        onChange={setName}
-                    />
-                    <TBTextField
-                        label="Your email:"
-                        required
-                        onChange={setEmail}
-                    />
-                    <TBSelect
-                        label="Category:"
-                        list={categories}
-                        onChange={changeCategory}
-                        value={category}
-                        required
-                        helperText={category === '-' ? categoryMsg : null}
-                    />
-                    <TBTextField
-                        label="Your message:"
+                        label="Your message (max 1000 characters):"
                         onChange={setMessage}
                         variant="outlined"
-                        width={500}
-                        minWidth={200}
+                        width={1}
                         rows={8}
+                        maxLength={1000}
                     />
-                    <TBFileUpload />
-                    <TBSubmitButton/>
+                    <Box sx={{display: 'flex', justifyContent: 'flex-end', flexWrap: 'wrap', rowGap: 4}}>
+                        <TBSubmitButton/>
+                    </Box>
                 </Box>
                 
             </SectionBox>
