@@ -1,5 +1,18 @@
-import { Input, MenuItem, TextField } from "@mui/material";
+import { Button, Input, MenuItem, TextField } from "@mui/material";
 
+export function TBSubmitButton() {
+    return (
+        <Button 
+            type="submit"
+            variant="contained"
+            sx={{
+                width: 100
+            }}
+        >
+            Submit
+        </Button>
+    )
+}
 export function TBTextField({label, placeholder, width, variant, onChange, required, rows, minRows, maxRows}) {
     if(rows && (minRows || maxRows)) throw new Error("TBTextField: Rows is defined -> Don't input min/max rows!")
     return (

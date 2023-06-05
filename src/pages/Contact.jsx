@@ -1,8 +1,9 @@
-import { Box } from "@mui/material"
+import { Alert, Box } from "@mui/material"
 import { useState } from "react"
 import { Helmet } from "react-helmet"
 import { PageParagraph, SectionBox } from "../components/UI/DefaultLayout"
-import { TBFileUpload, TBSelect, TBTextField } from "../components/UI/Form"
+import { TBFileUpload, TBSelect, TBSubmitButton, TBTextField } from "../components/UI/Form"
+import emailjs from '@emailjs/browser';
 
 function Contact() {
     const [name, setName] = useState(null)
@@ -35,13 +36,31 @@ function Contact() {
     }
     function generateForm() {
         /* Validation */
-        if(!validEmail()) throw new Error("Invalid email!")
+        if(!validEmail() || category === '-') {
+            return null
+        }
         return {
             from_name: name ? name : 'Anonymous',
             from_email: email,
             category: category,
             message: message
         }
+    }
+    function sendEmail(e) {
+        e.preventDefault() // Stops auto refresh, email actually doesn't send without this
+        console.log('In sendEmail')
+        const form = generateForm()
+        console.log('Form generated')
+        if(!form) {
+            Alert('sendEmail: Something wrong with the form!') // TODO
+            return
+        }
+        emailjs.send('service_5bqfbot', 'template_rkcopqu', form, 'KeVm9KwyFgORXMAVD')
+        .then((result) => {
+            console.log(result.text);
+        }, (error) => {
+            console.log(error.text);
+        });
     }
     return (
         <Box>
@@ -59,6 +78,11 @@ function Contact() {
                     component="form"
                     noValidate
                     autoComplete="off"
+                    onSubmit={(e) => sendEmail(e)}
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column'
+                    }}
                 >
                     <TBTextField
                         label="Your name:"
@@ -78,16 +102,18 @@ function Contact() {
                         required
                         helperText={category === '-' ? categoryMsg : null}
                     />
+                    <TBTextField
+                        label="Your message:"
+                        onChange={setMessage}
+                        variant="outlined"
+                        width={500}
+                        minWidth={200}
+                        rows={8}
+                    />
+                    <TBFileUpload />
+                    <TBSubmitButton/>
                 </Box>
-                <TBTextField
-                    label="Your message:"
-                    onChange={setMessage}
-                    variant="outlined"
-                    width={500}
-                    minWidth={200}
-                    rows={8}
-                />
-                <TBFileUpload />
+                
             </SectionBox>
         </Box>  
     )
