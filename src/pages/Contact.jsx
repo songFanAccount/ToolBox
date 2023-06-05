@@ -2,11 +2,31 @@ import { Box } from "@mui/material"
 import React from "react"
 import { Helmet } from "react-helmet"
 import { PageParagraph, SectionBox } from "../components/UI/DefaultLayout"
-import { TBSelect, TBTextField } from "../components/UI/Form"
+import { TBFileUpload, TBSelect, TBTextField } from "../components/UI/Form"
 
 function Contact() {
     const categories = ['-', 'Tool related', 'Collaborating', 'Website functionality', 'Ideas and suggestions', 'Others']
     const [category, setCategory] = React.useState('-')
+    const categoryMsg = "Please select a category!"
+    function changeCategory(newCategory) {
+        setCategory(newCategory)
+        switch(newCategory) {
+            case '-':
+                break
+            case 'Tool related':
+                break
+            case 'Collaborating':
+                break
+            case 'Website functionality':
+                break
+            case 'Ideas and suggestions':
+                break
+            case 'Others':
+                break
+            default:
+                throw new Error("Contact: Invalid category!")
+        }
+    }
     return (
         <Box>
             <Helmet>
@@ -25,16 +45,23 @@ function Contact() {
                     autoComplete="off"
                 >
                     <TBTextField
-                        label="Name:"
+                        label="Your name:"
                         placeholder="Anonymous"
+                    />
+                    <TBTextField
+                        label="Your email:"
+                        required
                     />
                     <TBSelect
                         label="Category:"
                         list={categories}
-                        onChange={setCategory}
+                        onChange={changeCategory}
                         value={category}
+                        required
+                        helperText={category === '-' ? categoryMsg : null}
                     />
                 </Box>
+                <TBFileUpload />
             </SectionBox>
         </Box>  
     )
