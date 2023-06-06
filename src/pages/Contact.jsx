@@ -56,7 +56,7 @@ function Contact() {
             </Helmet>
             <SectionBox title="What's this for?" usePageTitle>
                 <PageParagraph text={
-                    `If you have any questions, complaints or comments for any part of our website, here's where you can send them! In the form below, choose the appropriate
+                    `If you have any questions, comments, or issues with any part of our website, here's where you can send them! In the form below, choose the appropriate
                     category for your message and fill it out accordingly. After you submit the form, we will get back to you within 1-3 days.`
                 }/>
                 <Box>

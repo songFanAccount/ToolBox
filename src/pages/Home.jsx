@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet';
 import SideNavBar from '../components/UI/SideNavBar';
+import { PageParagraph } from '../components/UI/DefaultLayout';
 
 function Home() {
     return (
@@ -8,6 +9,7 @@ function Home() {
                 <title>ToolBox</title>
             </Helmet>
             <SideNavBar inHeader={false}/>
+            <PageParagraph text="//TODO 😴"/>
         </>  
     )
 }

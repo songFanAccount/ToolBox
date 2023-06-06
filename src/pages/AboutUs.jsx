@@ -50,7 +50,7 @@ function AboutUs() {
                     <PageParagraph text={
                         `As recent graduates ourselves, we understand very well the struggles of studying. While it is true that there are more resources online than ever
                         before, the truth is a lot of it is decentralised and can be frustrating to navigate. The long term goal of ToolBox is to create a united collection of 
-                        tools for all categories so you don't have to wander around the web!`
+                        tools for all categories so you don't have to wander around the web yourself!`
                     }/>
                     <PageParagraph text={
                         `When we came up with the idea, our largest concern was the overwhelming amount of resources already existing on the internet.
@@ -111,11 +111,11 @@ function AboutUs() {
             </CollapseSectionBox>
             <SectionBox title="Our history" usePageTitle>
                 <PageParagraph text={
-                    `The development of ToolBox began in May, 2023. To be updated!`
+                    `The development of ToolBox began in May, 2023. //TODO 😴`
                 }/>
             </SectionBox>
             <SectionBox title="Meet the devs!" usePageTitle> 
-
+                <PageParagraph text="//TODO 😴"/>
             </SectionBox>
         </Box>  
     )

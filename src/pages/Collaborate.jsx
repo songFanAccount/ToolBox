@@ -162,6 +162,12 @@ export default function Collaborate() {
                     }/>
                 </Box>
             </CollapseSectionBox>
+            <SectionBox title="Still have questions?" usePageTitle>
+                <Box>
+                    <PageParagraph text="If anything about this feature is still unclear, please send us a question via the form in "/>
+                    <ToolLink name="contact" linkText="Contact Us."/>
+                </Box>
+            </SectionBox>
             <SectionBox title="Future plans for the collab feature" usePageTitle>
                 <Box>
                     <PageParagraph text={
