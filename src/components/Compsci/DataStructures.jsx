@@ -63,6 +63,7 @@ export function TextArray({array}) {
     )
 }
 
+// https://www.framer.com/motion/animate-function/###at
 /* General tree wrapper, simply wrap each layer in a row-flexbox, then wrap the layers in a column flexbox */
 function Tree({layers, lines, name}) {
     const array = layers?.[0]
