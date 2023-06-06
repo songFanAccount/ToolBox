@@ -78,7 +78,7 @@ function Tree({layers, lines, name}) {
         </Box>
     )
     return (
-        <Box className={name} sx={{pb: 2, overflowX: 'scroll'}}>
+        <Box className={name} sx={{pb: 2, overflowX: 'auto'}}>
             <Xwrapper>
                 <Box 
                     sx={{
