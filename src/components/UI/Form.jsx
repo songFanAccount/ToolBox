@@ -1,10 +1,10 @@
-import { Checkbox, FormControlLabel, Input, MenuItem, TextField, Typography } from "@mui/material";
+import { Button, Checkbox, FormControlLabel, Input, MenuItem, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import LoadingButton from '@mui/lab/LoadingButton';
+// import LoadingButton from '@mui/lab/LoadingButton';
 
 export function TBSubmitButton({loading}) {
     return (
-        <LoadingButton 
+        <Button 
             type="submit"
             variant="contained"
             loading={loading}
@@ -18,7 +18,7 @@ export function TBSubmitButton({loading}) {
             }}
         >
             <Typography sx={{color: '#fdfffc', fontFamily: 'Verdana', fontSize: 14, fontWeight: 550}}>Submit</Typography>
-        </LoadingButton>
+        </Button>
     )
 }
 /*
