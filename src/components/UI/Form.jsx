@@ -1,24 +1,32 @@
-import { Button, Input, MenuItem, TextField, Typography } from "@mui/material";
+import { Checkbox, FormControlLabel, Input, MenuItem, TextField, Typography } from "@mui/material";
 import { useState } from "react";
+import LoadingButton from '@mui/lab/LoadingButton';
 
-export function TBSubmitButton() {
+export function TBSubmitButton({loading}) {
     return (
-        <Button 
+        <LoadingButton 
             type="submit"
             variant="contained"
+            loading={loading}
             sx={{
                 width: 100,
                 maxWidth: 1,
                 backgroundColor: '#011627',
                 '&:hover': {
                     backgroundColor: '#011627'
-                }
+                },
             }}
         >
             <Typography sx={{color: '#fdfffc', fontFamily: 'Verdana', fontSize: 14, fontWeight: 550}}>Submit</Typography>
-        </Button>
+        </LoadingButton>
     )
 }
+/*
+By default, text fields cannot start as an error, even if their default value is technically invalid.
+
+Visually, we don't want the form to look red/invalid at first glance. So, error detection takes place only after the field has been
+modified
+*/
 export function TBTextField({label, placeholder, width, variant, onChange, required, rows, minRows, maxRows, maxLength, error, errorMsg}) {
     if(rows && (minRows || maxRows)) throw new Error("TBTextField: Rows is defined -> Don't input min/max rows!")
     if(error !== undefined && errorMsg === undefined) throw new Error("TBTextField: If errors can occur, supply an error message!")
@@ -63,7 +71,7 @@ export function TBTextField({label, placeholder, width, variant, onChange, requi
                 },
                 '& .MuiOutlinedInput-root': {
                     '&.Mui-focused fieldset': {
-                        borderColor: '#011627'
+                        borderColor: (modified && error) ? 'error' : '#011627'
                     }
                 },
                 "& .MuiInputBase-input": {
@@ -75,6 +83,9 @@ export function TBTextField({label, placeholder, width, variant, onChange, requi
     )
 }
 
+/*
+Read TBTextField on error style handling
+*/
 export function TBSelect({label, onChange, list, value, maxWidth, error, errorMsg, required}) {
     if(!list) throw new Error("TBSelect: Undefined list!")
     if(!Array.isArray(list)) throw new Error("TBSelect: List is not of type array!")
@@ -117,6 +128,21 @@ export function TBSelect({label, onChange, list, value, maxWidth, error, errorMs
     )
 }
 
+export function TBCheckbox({label, checked, onChange}) {
+    return (
+        <FormControlLabel control={<Checkbox disableRipple checked={checked} onChange={(e) => onChange(e.target.checked)}/>} label={label}
+            sx={{
+                '& .MuiCheckbox-root.Mui-checked': {
+                    color: '#011627'
+                },
+                '& .MuiTypography-root': {
+                    fontFamily: 'Verdana',
+                    fontSize: 14
+                }
+            }}
+        />
+    )
+}
 // TODO: Implement once recaptcha acquired
 export function TBFileUpload() {
     return (
