@@ -1,6 +1,8 @@
 import React from 'react';
 import { Box, IconButton, Link, List, ListItemText, Collapse, Typography, useMediaQuery, Button } from '@mui/material';
 import { Outlet, Link as RouterLink } from 'react-router-dom';
+import { ToastContainer, Slide } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 import Header from './Header/Header';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -19,16 +21,6 @@ function DefaultLayout() {
     // MAYBE TODO: Add new dimX = 2 for min-width:900px
     return (
         <>
-            <Box className="Background"
-                sx={{
-                    position: 'fixed',
-                    width: 'calc(100vw + 10px)',
-                    overflowX: 'clip',
-                    height: '100vh',
-                    backgroundColor: '#eeeeee',
-                    zIndex: -1
-                }}
-            />
             <Box className="defaultLayout"
                 sx={{
                     display: 'flex',
@@ -53,6 +45,19 @@ function DefaultLayout() {
             >
                 <Outlet context={{dimX: dimX}}/>
             </Box>
+            <ToastContainer
+                position="bottom-center"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable={false}
+                pauseOnHover
+                theme="colored"
+                transition={Slide}
+            />
         </>
     )
 }
@@ -190,14 +195,15 @@ export function PageSectionTitle({title}) {
 /*
 By default, paragraphs are inline, since it is common to insert link or want to modify part of the paragraph.
 */
-export function PageParagraph({text, bold, block, color}) {
+export function PageParagraph({text, bold, block, color, fs}) {
     if(!text) {return <></>}
     return (
         <Typography display={block ? 'block' : 'inline'}
             sx={{
                 fontFamily: 'Verdana',
                 fontWeight: bold ? 'bold' : 'normal',
-                color: color ? color : 'inherit'
+                color: color ? color : 'inherit',
+                fontSize: fs ? fs : 'medium'
             }}
         >
             {text}
