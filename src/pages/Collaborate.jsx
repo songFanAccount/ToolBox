@@ -116,8 +116,7 @@ export default function Collaborate() {
                         `A not too long but sufficient description of how you envision the tool to work.`,
                         `Are there anything about the topic that you wouldn't be 100% sure about? Don't worry, we don't expect you to know everything!`,
                         `Will you be able to stay responsive throughout the collaboration? Depending on the tool, we may need to occasionally discuss
-                        implementation details with you.`,
-                        'What app do you want to use to call for step 2?'
+                        implementation details with you.`
                     ]}
                 />
                 <PageSectionTitle title="Step 2: Getting on a call with us..."/>
@@ -182,14 +181,3 @@ export default function Collaborate() {
         </Box>
     )
 }
-
-/* <Box 
-        sx={{
-            display: 'flex',
-            alignItems: 'flex-end',
-            columnGap: 2
-        }}
-    >
-        <PageTitle title="All ideas are equal! " inline mb={0}/>
-        <PageTitle fs={12} title="(kinda...)" inline mb={1.2}/>
-    </Box> */
