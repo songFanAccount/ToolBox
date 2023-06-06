@@ -1,8 +1,8 @@
 import { Box } from "@mui/material"
 import { useState } from "react"
 import { Helmet } from "react-helmet"
-import { ExternalLink, PageParagraph, SectionBox } from "../components/UI/DefaultLayout"
-import { TBCheckbox, TBSelect, TBSubmitButton, TBTextField } from "../components/UI/Form"
+import { PageParagraph, SectionBox } from "../components/UI/DefaultLayout"
+import { TBSelect, TBSubmitButton, TBTextField } from "../components/UI/Form"
 import emailjs from '@emailjs/browser';
 import isEmail from 'validator/lib/isEmail';
 
@@ -14,39 +14,52 @@ function Contact() {
     const categories = ['-', 'Tool related', 'Collaborating', 'Website functionality', 'Ideas and suggestions', 'Others']
     const [category, setCategory] = useState('-')
     const [message, setMessage] = useState('')
-    const messageErrorMsg = " Please enter at least 50 characters!"
     const categoryErrorMsg = "Please select a category!"
-    const [sending, setSending] = useState(false)
-    const[noReply, setNoReply] = useState(false)
+    function changeCategory(newCategory) {
+        setCategory(newCategory)
+        switch(newCategory) {
+            case '-':
+                break
+            case 'Tool related':
+                break
+            case 'Collaborating':
+                break
+            case 'Website functionality':
+                break
+            case 'Ideas and suggestions':
+                break
+            case 'Others':
+                break
+            default:
+                throw new Error("Contact: Invalid category!")
+        }
+    }
     function generateForm() {
         /* Validation */
-        if(!isEmail(email) || category === '-' || message.length < 50) {
+        if(!isEmail(email) || category === '-') {
             return null
         }
         return {
             from_name: name ? name : 'Anonymous',
             from_email: email,
             category: category,
-            message: message,
-            noReply: noReply ? '- NOREPLY' : ''
+            message: message
         }
     }
     function sendEmail(e) {
         e.preventDefault() // Stops auto refresh, email actually doesn't send without this
-        setSending(true)
+        console.log('In sendEmail')
         const form = generateForm()
+        console.log('Form generated')
         if(!form) {
             alert('sendEmail: Something wrong with the form!') // TODO
-            setSending(false)
             return
         }
         emailjs.send('service_5bqfbot', 'template_rkcopqu', form, 'KeVm9KwyFgORXMAVD')
         .then((result) => {
             console.log(result.text);
-            setSending(false)
         }, (error) => {
             console.log(error.text);
-            setSending(false)
         });
     }
     return (
@@ -59,13 +72,6 @@ function Contact() {
                     `If you have any questions, complaints or comments for any part of our website, here's where you can send them! In the form below, choose the appropriate
                     category for your message and fill it out accordingly. After you submit the form, we will get back to you within 1-3 days.`
                 }/>
-                <Box>
-                    <PageParagraph text={
-                        `NOTE: We currently cannot support file or image uploads via this form. If you wish to do so, please send them directly to `
-                    }/>
-                    <ExternalLink href="mailto:toolbox.queries@gmail.com">toolbox.queries@gmail.com</ExternalLink>
-                    <PageParagraph text="."/>
-                </Box>
             </SectionBox>
             <SectionBox title="Contact form" usePageTitle>
                 <Box
@@ -76,8 +82,7 @@ function Contact() {
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',
-                        rowGap: 4,
-                        ml: 1
+                        rowGap: 4
                     }}
                 >
                     <Box
@@ -103,7 +108,7 @@ function Contact() {
                         <TBSelect
                             label="Category:"
                             list={categories}
-                            onChange={setCategory}
+                            onChange={changeCategory}
                             value={category}
                             required
                             error={category === '-'}
@@ -114,16 +119,12 @@ function Contact() {
                         label="Your message (max 1000 characters):"
                         onChange={setMessage}
                         variant="outlined"
-                        required
-                        error={message.length < 50}
-                        errorMsg={messageErrorMsg}
                         width={1}
                         rows={8}
                         maxLength={1000}
                     />
-                    <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', rowGap: 4}}>
-                        <TBCheckbox label="I'm not expecting a reply" checked={noReply} onChange={setNoReply}/>
-                        <TBSubmitButton loading={sending}/>
+                    <Box sx={{display: 'flex', justifyContent: 'flex-end', flexWrap: 'wrap', rowGap: 4}}>
+                        <TBSubmitButton/>
                     </Box>
                 </Box>
                 
