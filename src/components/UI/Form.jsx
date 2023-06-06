@@ -1,10 +1,9 @@
-import { Checkbox, FormControlLabel, Input, MenuItem, TextField, Typography } from "@mui/material";
+import { Button, Checkbox, FormControlLabel, Input, MenuItem, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import LoadingButton from '@mui/lab/LoadingButton';
 
 export function TBSubmitButton({loading}) {
     return (
-        <LoadingButton 
+        <Button 
             type="submit"
             variant="contained"
             loading={loading}
@@ -18,7 +17,7 @@ export function TBSubmitButton({loading}) {
             }}
         >
             <Typography sx={{color: '#fdfffc', fontFamily: 'Verdana', fontSize: 14, fontWeight: 550}}>Submit</Typography>
-        </LoadingButton>
+        </Button>
     )
 }
 /*
@@ -27,13 +26,14 @@ By default, text fields cannot start as an error, even if their default value is
 Visually, we don't want the form to look red/invalid at first glance. So, error detection takes place only after the field has been
 modified
 */
-export function TBTextField({label, placeholder, width, variant, onChange, required, rows, minRows, maxRows, maxLength, error, errorMsg}) {
+export function TBTextField({value, label, placeholder, width, variant, onChange, required, rows, minRows, maxRows, maxLength, error, errorMsg}) {
     if(rows && (minRows || maxRows)) throw new Error("TBTextField: Rows is defined -> Don't input min/max rows!")
     if(error !== undefined && errorMsg === undefined) throw new Error("TBTextField: If errors can occur, supply an error message!")
     const [modified, setModified] = useState(false)
     return (
         <TextField
             type="text"
+            value={value || ''}
             label={label}
             required={required}
             placeholder={placeholder}
@@ -157,4 +157,15 @@ export function TBFileUpload() {
 
         </Input>
     )
+}
+
+export const toastStyle = {
+    position: "bottom-center",
+    autoClose: 2000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: false,
+    progress: undefined,
+    theme: "colored",
 }

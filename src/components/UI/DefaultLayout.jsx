@@ -1,6 +1,8 @@
 import React from 'react';
 import { Box, IconButton, Link, List, ListItemText, Collapse, Typography, useMediaQuery, Button } from '@mui/material';
 import { Outlet, Link as RouterLink } from 'react-router-dom';
+import { ToastContainer, Slide } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 import Header from './Header/Header';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -43,6 +45,19 @@ function DefaultLayout() {
             >
                 <Outlet context={{dimX: dimX}}/>
             </Box>
+            <ToastContainer
+                position="bottom-center"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable={false}
+                pauseOnHover
+                theme="colored"
+                transition={Slide}
+            />
         </>
     )
 }

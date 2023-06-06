@@ -2,9 +2,10 @@ import { Box } from "@mui/material"
 import { useState } from "react"
 import { Helmet } from "react-helmet"
 import { ExternalLink, PageParagraph, SectionBox } from "../components/UI/DefaultLayout"
-import { TBCheckbox, TBSelect, TBSubmitButton, TBTextField } from "../components/UI/Form"
+import { TBCheckbox, TBSelect, TBSubmitButton, TBTextField, toastStyle } from "../components/UI/Form"
 import emailjs from '@emailjs/browser';
 import isEmail from 'validator/lib/isEmail';
+import { toast } from 'react-toastify';
 
 function Contact() {
     // TODO: Once we have our own website, get a recaptcha key and use it here https://www.youtube.com/watch?v=ht73aVlbNRI
@@ -16,15 +17,14 @@ function Contact() {
     const [message, setMessage] = useState('')
     const messageErrorMsg = " Please enter at least 50 characters!"
     const categoryErrorMsg = "Please select a category!"
-    const [sending, setSending] = useState(false)
-    const[noReply, setNoReply] = useState(false)
+    const [noReply, setNoReply] = useState(false)
     function generateForm() {
         /* Validation */
         if(!isEmail(email) || category === '-' || message.length < 50) {
             return null
         }
         return {
-            from_name: name ? name : 'Anonymous',
+            from_name: name && name !== '' ? name : 'Anonymous',
             from_email: email,
             category: category,
             message: message,
@@ -33,21 +33,21 @@ function Contact() {
     }
     function sendEmail(e) {
         e.preventDefault() // Stops auto refresh, email actually doesn't send without this
-        setSending(true)
         const form = generateForm()
         if(!form) {
-            alert('sendEmail: Something wrong with the form!') // TODO
-            setSending(false)
+            toast.error('Error(s) found in form!', toastStyle);
             return
         }
-        emailjs.send('service_5bqfbot', 'template_rkcopqu', form, 'KeVm9KwyFgORXMAVD')
-        .then((result) => {
-            console.log(result.text);
-            setSending(false)
-        }, (error) => {
-            console.log(error.text);
-            setSending(false)
-        });
+        toast.promise(emailjs.send('service_5bqfbot', 'template_rkcopqu', form, 'KeVm9KwyFgORXMAVD')
+        .then(() => {
+            setTimeout(() => {window.scrollTo(0,0); window.location.reload(false)}, 1000)
+        }), 
+        {
+            pending: 'Sending the email...',
+            success: "Email sent successfully!",
+            error: "Unexpected error!",
+        }, toastStyle)
+        
     }
     return (
         <Box>
@@ -89,11 +89,13 @@ function Contact() {
                         }}
                     >
                         <TBTextField
+                            value={name}
                             label="Your name:"
                             placeholder="Anonymous"
                             onChange={setName}
                         />
                         <TBTextField
+                            value={email}
                             label="Your email:"
                             required
                             onChange={setEmail}
@@ -111,6 +113,7 @@ function Contact() {
                         />
                     </Box>
                     <TBTextField
+                        value={message}
                         label="Your message (max 1000 characters):"
                         onChange={setMessage}
                         variant="outlined"
@@ -123,10 +126,9 @@ function Contact() {
                     />
                     <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', rowGap: 4}}>
                         <TBCheckbox label="I'm not expecting a reply" checked={noReply} onChange={setNoReply}/>
-                        <TBSubmitButton loading={sending}/>
+                        <TBSubmitButton/>
                     </Box>
                 </Box>
-                
             </SectionBox>
         </Box>  
     )
