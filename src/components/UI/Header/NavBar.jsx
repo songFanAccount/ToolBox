@@ -1,7 +1,28 @@
-import { Box, IconButton } from '@mui/material';
+import { Box, IconButton, Link } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { NavBarLink } from '../Links';
+import { Link as RouterLink } from 'react-router-dom';
 
+function NavBarLink({href, text}) {
+    return (
+        <Link 
+            component={RouterLink}
+            to={href}
+            onClick={() => window.scrollTo(0,0)}
+            sx={{
+                mx: 2,
+                fontSize: 16,
+                fontFamily: 'Montserrat',
+                color: '#fdfffc',
+                textDecoration: 'none',
+                '&:hover': {
+                    color: '#ced4da'
+                }
+            }}
+        >
+            {text}
+        </Link>
+    )
+}
 function NavBar(props) {
     const dimX = props.dimX
 
@@ -39,6 +60,7 @@ function NavBar(props) {
                     <>
                         <NavBarLink href="/" text="Home"/>
                         <NavBarLink href="about" text="About Us"/>
+                        <NavBarLink href="collab" text="Collaborate"/>
                         <NavBarLink href="contact" text="Contact Us"/>
                     </>
                 )

@@ -1,6 +1,6 @@
-import { Box, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet';
 import SideNavBar from '../components/UI/SideNavBar';
+import { PageParagraph } from '../components/UI/DefaultLayout';
 
 function Home() {
     return (
@@ -8,17 +8,8 @@ function Home() {
             <Helmet>
                 <title>ToolBox</title>
             </Helmet>
-            <Box
-                sx={{
-                    position: 'absolute',
-                    top: 100
-                }}
-            >
-                <Box> 
-                    <Typography>Home Page</Typography>
-                </Box>
-                <SideNavBar inHeader={false}/>
-            </Box>
+            <SideNavBar inHeader={false}/>
+            <PageParagraph text="//TODO 😴"/>
         </>  
     )
 }

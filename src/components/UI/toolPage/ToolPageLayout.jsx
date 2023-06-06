@@ -55,7 +55,6 @@ function ToolPageLayout() {
     }
     const sideBarWidth = 320
     const gap = 20
-    const endGap = 20
     /*
     It is the responsibility of the layout to figure out the following info of the tool from the URL:
     - Chain of display names -> Page path display
@@ -83,32 +82,24 @@ function ToolPageLayout() {
             <Helmet>
                 <title>{curToolName}</title>
             </Helmet>
-            <Box className="pageContent"
+            <Box 
                 sx={{
-                    position: 'absolute',
-                    overflowX: 'clip',
-                    top: 130,
-                    width: `calc(100vw - ${gap}px)`,
+                    zIndex: 7,
+                    position: 'relative',
+                    top: 30,
+                    left: dimX > 0 ? sideBarWidth + gap : gap,
+                    width: dimX > 0 ? `calc(100% - ${sideBarWidth + gap}px)` : `calc(100% - ${gap}px)`,
+                    maxWidth: 1200
                 }}
             >
-                <Box 
-                    sx={{
-                        zIndex: 7,
-                        position: 'relative',
-                        left: dimX > 0 ? sideBarWidth + gap : gap,
-                        width: dimX > 0 ? `calc(100vw - ${sideBarWidth + gap + endGap}px)` : `calc(100vw - ${gap + endGap}px)`,
-                        maxWidth: 1200
-                    }}
-                >
-                    <Box sx={{mr: 5}}>
-                        <ToolPagePath urls={pathURLs} displayNames={displayNames}/>
-                        <PageTitle title={curToolName}/>
-                        <Outlet />
-                        <PageEndSpace/>
-                    </Box>
+                <Box sx={{mr: 5}}>
+                    <ToolPagePath urls={pathURLs} displayNames={displayNames}/>
+                    <PageTitle title={curToolName}/>
+                    <Outlet />
+                    <PageEndSpace/>
                 </Box>
-                {dimX > 0 && <SideBar toolName={curToolName} sections={sectionTitles}/>}
             </Box>
+            {dimX > 0 && <SideBar toolName={curToolName} sections={sectionTitles}/>}
         </>
     )
 }

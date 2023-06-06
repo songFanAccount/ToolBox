@@ -12,11 +12,9 @@ function Header(props) {
         justifyContent: 'space-between',
         backgroundColor: '#011627',
         position: 'fixed',
-        overflowX: 'clip',
         top: 0,
         width: 1,
         height: 100,
-        zIndex: 200
     }
     let titleStyle = {
         color: '#fdfffc',

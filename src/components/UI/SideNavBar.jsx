@@ -228,6 +228,10 @@ function SideNavBar(props) {
 			<Divider/>
 		</Box>
 	)
+	function clickTool() {
+		toggleOff()
+		window.scrollTo(0, 0)
+	}
 	const Tools = () => (
 		<>
 			<Box
@@ -253,7 +257,7 @@ function SideNavBar(props) {
 								to={`${newPath}/${entry[0]}`}
 								key={entry[0]}
 								id={entry[0]}
-								onClick={toggleOff}
+								onClick={clickTool}
 								sx={listItemStyle}
 							>
 								<RemoveIcon
@@ -472,6 +476,7 @@ function SideNavBar(props) {
 				mt: inHeader ? 0 : 3,
 				mb: inHeader ? 0 : 3,
 				borderRadius: 0,
+				zIndex: 10
 			}}
 		>
 			<ToolsIcon/>
@@ -493,6 +498,8 @@ function SideNavBar(props) {
 			<Box
 				sx={{
 					alignSelf: inHeader ? 'inherit' : 'start',
+					position: inHeader ? 'static' : 'sticky',
+					top: inHeader ? 0 : 100
 				}}
 			>
 				<ToolsButton/>
