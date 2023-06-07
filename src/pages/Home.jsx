@@ -8,7 +8,7 @@ function Home() {
             <Helmet>
                 <title>ToolBox</title>
             </Helmet>
-            <SideNavBar inHeader={false}/>
+            <SideNavBar inHeader={false}/> 
             <PageParagraph text="//TODO 😴"/>
         </>  
     )
