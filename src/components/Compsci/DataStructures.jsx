@@ -3,6 +3,8 @@ import { Box, Button, Typography } from "@mui/material"
 import Xarrow, { Xwrapper } from 'react-xarrows';
 import { PageParagraph } from '../UI/DefaultLayout';
 import { useAnimate, motion } from "framer-motion"
+import { useState } from 'react';
+import { useRef } from 'react';
 /*
 Use this for an input array of already created DOMs
 */
@@ -64,12 +66,10 @@ export function TextArray({array}) {
     )
 }
 
-// https://www.framer.com/motion/animate-function/###at
 /* General tree wrapper, simply wrap each layer in a row-flexbox, then wrap the layers in a column flexbox */
 function Tree({layers, lines, name, constructOrder}) {
     const array = layers?.[0]
     if(!array) {throw new Error("Tree: Not provided layers!")}
-    if(constructOrder) console.log(constructOrder)
     const Layer = ({layer, layerNum}) => (
         <Box
             className={`${name}-layer-${layerNum}`}
@@ -81,15 +81,13 @@ function Tree({layers, lines, name, constructOrder}) {
             {layer.map((e) => e)}
         </Box>
     )
-    const [scope, animate] = useAnimate()
-    function animateConstruction() {
+    function getConstructionAnims() {
         let anims = []
         function getAnim(id) {
             let anim
             let trans
             let countDash = 0
             for(let i = 0; i < id.length; i++) {if(id[i] === '-') countDash++}
-            console.log(countDash)
             if(countDash === 3) { // Is line
                 anim = {
                     opacity: [0,1]
@@ -120,7 +118,39 @@ function Tree({layers, lines, name, constructOrder}) {
             }
         }
         constructOrder.forEach((e) => getAnim(e))
-        animate(anims)
+        return anims
+    }
+    function getClearAnims() {
+        return constructOrder.map((id) => [`.${id}`, {opacity: [0,0]}])
+    }
+    const constructionAnimation = getConstructionAnims()
+    const clearAnimation = getClearAnims()
+    const [scope, animate] = useAnimate()
+    const step = useRef(-1)
+    function fullConstruction() {
+        step.current = -1
+        animate(constructionAnimation)
+    }
+    function stepConstruction() {
+        /* First step only consists of 2 animations instead of 3, since root node has no parent line to animate */
+        function animateFirstNode() {
+            animate(clearAnimation)
+            animate([constructionAnimation[0], constructionAnimation[1]])
+            step.current = 2
+        }
+        /* If not already in step mode, make everything disappear, then play first step */
+        if(step.current === -1) {
+            animateFirstNode()
+            return
+        }
+        /* If we've already completed the final step, restart */
+        if(step.current >= constructionAnimation.length) {
+            animateFirstNode()
+            return
+        }
+        /* Otherwise, just animate next step -> each step consist of 3 animations: line from parent, new node and its coloring */
+        animate([constructionAnimation[step.current], constructionAnimation[step.current+1], constructionAnimation[step.current+2]])
+        step.current += 3
     }
     return (
         <Box className={name} ref={scope} sx={{pb: 2, overflowX: 'auto'}}>
@@ -142,8 +172,11 @@ function Tree({layers, lines, name, constructOrder}) {
                 </Box>
                 
             </Xwrapper>
-            <Button onClick={() => animateConstruction()}>
+            <Button onClick={fullConstruction}>
                 Animate Construction
+            </Button>
+            <Button onClick={stepConstruction}>
+                Increment step
             </Button>
         </Box>
     )
