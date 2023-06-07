@@ -1,9 +1,8 @@
 import React from 'react';
 import { Box, Button, Typography } from "@mui/material"
 import Xarrow, { Xwrapper } from 'react-xarrows';
-import { PageParagraph } from '../UI/DefaultLayout';
+import { PageParagraph, TBButton } from '../UI/DefaultLayout';
 import { useAnimate, motion } from "framer-motion"
-import { useState } from 'react';
 import { useRef } from 'react';
 /*
 Use this for an input array of already created DOMs
@@ -172,12 +171,8 @@ function Tree({layers, lines, name, constructOrder}) {
                 </Box>
                 
             </Xwrapper>
-            <Button onClick={fullConstruction}>
-                Animate Construction
-            </Button>
-            <Button onClick={stepConstruction}>
-                Increment step
-            </Button>
+            <TBButton onClick={fullConstruction} buttonText="Animate Construction"/>
+            <TBButton onClick={stepConstruction} buttonText="Increment step"/>
         </Box>
     )
 }

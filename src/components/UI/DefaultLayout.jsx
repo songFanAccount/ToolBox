@@ -263,6 +263,28 @@ export function CopyableParagraph({preText, copyableText, copyable}) {
     )
 }
 
+export function TBButton({buttonText, onClick}) {
+    return (
+        <Button 
+            variant="outlined"
+            onClick={onClick}
+            disableRipple
+            sx={{
+                width: 'fit-content',
+                p:1,
+                m:2,
+                backgroundColor: '#011627',
+                borderColor: '#011627',
+                '&:hover': {
+                    backgroundColor: '#011627',
+                    borderColor: '#011627'
+                },
+            }}
+        >
+            <Typography sx={{color: '#fdfffc', fontFamily: 'Verdana', fontSize: 14, fontWeight: 550}}>{buttonText}</Typography>
+        </Button>
+    )
+}
 export function ExternalLink({href, target, children}) {
     return (
         <Link href={href} target={target ? target : '_blank'}
