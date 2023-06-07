@@ -1,7 +1,8 @@
 import React from 'react';
-import { Box, Typography } from "@mui/material"
+import { Box, Button, Typography } from "@mui/material"
 import Xarrow, { Xwrapper } from 'react-xarrows';
 import { PageParagraph } from '../UI/DefaultLayout';
+import { useAnimate, motion } from "framer-motion"
 /*
 Use this for an input array of already created DOMs
 */
@@ -69,20 +70,62 @@ function Tree({layers, lines, name, constructOrder}) {
     const array = layers?.[0]
     if(!array) {throw new Error("Tree: Not provided layers!")}
     if(constructOrder) console.log(constructOrder)
-    const Layer = ({layer}) => (
+    const Layer = ({layer, layerNum}) => (
         <Box
+            className={`${name}-layer-${layerNum}`}
             sx={{
                 display: 'flex',
                 alignItems: 'center'
             }}
         >
-            {layer}
+            {layer.map((e) => e)}
         </Box>
     )
+    const [scope, animate] = useAnimate()
+    function animateConstruction() {
+        let anims = []
+        function getAnim(id) {
+            let anim
+            let trans
+            let countDash = 0
+            for(let i = 0; i < id.length; i++) {if(id[i] === '-') countDash++}
+            console.log(countDash)
+            if(countDash === 3) { // Is line
+                anim = {
+                    opacity: [0,1]
+                }
+                trans = {
+                    duration: 0.001,
+                    delay: 0.2
+                }
+                anims.push([`.${id}`, anim, trans])
+            } else { // Is node
+                anim = {
+                    opacity: [0,1]
+                }
+                trans = {
+                    duration: 0.001,
+                    delay: 0.2,
+                    at: "<"
+                }
+                anims.push([`.${id}`, anim, trans])
+                anim = {
+                    backgroundColor: ['#00D100', '#fdfffc']
+                }
+                trans = {
+                    duration: 0.8,
+                    at: "<"
+                }
+                anims.push([`.${id}`, anim, trans])
+            }
+        }
+        constructOrder.forEach((e) => getAnim(e))
+        animate(anims)
+    }
     return (
-        <Box className={name} sx={{pb: 2, overflowX: 'auto'}}>
+        <Box className={name} ref={scope} sx={{pb: 2, overflowX: 'auto'}}>
             <Xwrapper>
-                <Box 
+                <Box
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',
@@ -92,13 +135,16 @@ function Tree({layers, lines, name, constructOrder}) {
                         zIndex: 5
                     }}
                 >
-                    {array.map((e) => (<Layer layer={e}/>))}
+                    {array.map((element, index) => (<Layer layer={element} layerNum={index}/>))}
                 </Box>
                 <Box sx={{position: 'relative'}}>
-                    {lines}
+                    {lines.map((e) => e)}
                 </Box>
                 
             </Xwrapper>
+            <Button onClick={() => animateConstruction()}>
+                Animate Construction
+            </Button>
         </Box>
     )
 }
@@ -178,8 +224,11 @@ export function BinaryTree({tree, name, maxLayers, constructOrder}) {
     let nullMarginLeft = [] 
     const Node = ({value, ml, mr, color, nodeName}) => (
         <Box
+            className={nodeName}
             id={nodeName}
+            component={motion.div}
             sx={{
+                zIndex: 1,
                 width: nodeRadius * 2 - 2,
                 maxWidth: nodeRadius * 2 - 2,
                 height: nodeRadius * 2 - 2,
@@ -189,7 +238,7 @@ export function BinaryTree({tree, name, maxLayers, constructOrder}) {
                 mr: `${mr}px`,
                 display: 'flex',
                 alignItems: 'center',
-                backgroundColor: 'white',
+                backgroundColor: '#fdfffc',
                 overflow: 'hidden',
                 whiteSpace: 'nowrap',
                 textOverflow: 'ellipsis'
@@ -201,7 +250,9 @@ export function BinaryTree({tree, name, maxLayers, constructOrder}) {
         </Box>
     )
     const Arrow = ({start, end, lineID}) => (
-        <Xarrow id={lineID} zIndex={-1} strokeWidth={2} color="black" start={start} end={end} path="straight" showHead={false} startAnchor="middle" endAnchor="middle"/>
+        <Box zIndex={-1} className={lineID}>
+            <Xarrow zIndex={-1} strokeWidth={2} color="black" start={start} end={end} path="straight" showHead={false} startAnchor="middle" endAnchor="middle"/>
+        </Box>
     )
     /* 
     Returns the width of the node including its subtrees, used to provide parent nodes their margins
@@ -232,7 +283,7 @@ export function BinaryTree({tree, name, maxLayers, constructOrder}) {
             lines.push(<Arrow lineID={leftLineID} zIndex={5} start={nodeName} end={left.nodeName}/>)
         }
         if(right.nodeName) {
-            const rightLineID = `${name}-${curLayerNum}-${arrayInd}-${left.arrayInd}`
+            const rightLineID = `${name}-${curLayerNum}-${arrayInd}-${right.arrayInd}`
             lines.push(<Arrow lineID={rightLineID} zIndex={5} start={nodeName} end={right.nodeName}/>)
         }
         return {width: Math.max(widthLeft, nodeRadius / 2) + Math.max(widthRight, nodeRadius / 2) + nodeRadius, nodeName: nodeName, arrayInd: arrayInd}
@@ -277,6 +328,6 @@ export function BinaryTree({tree, name, maxLayers, constructOrder}) {
     }
     const constructOrderIDs = generateConstructIDs()
     return (
-        <Tree layers={[layers]} lines={lines} constructOrder={constructOrderIDs}/>
+        <Tree layers={[layers]} lines={lines} name={name} constructOrder={constructOrderIDs}/>
     )
 }
