@@ -168,8 +168,7 @@ export default function MathsExpressionParser() {
                                           leaf nodes of the tree.`}/>
                 </Box>
                 <PageParagraph text="Tree (showing up to 10 layers):"/>
-                <BinaryTree tree={[latexObj.current?.tree]} name="tree"/>
-                <PageParagraph text="//TODO 😴: Implementing an animated binary tree to show its order of construction."/>
+                <BinaryTree tree={[latexObj.current?.tree]} name="tree" constructOrder="DRL"/>
             </SectionBox>
             <SectionBox title="Limitations">
                 <PageParagraph text="//TODO 😴"/>

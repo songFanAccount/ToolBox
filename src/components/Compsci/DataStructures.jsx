@@ -65,9 +65,10 @@ export function TextArray({array}) {
 
 // https://www.framer.com/motion/animate-function/###at
 /* General tree wrapper, simply wrap each layer in a row-flexbox, then wrap the layers in a column flexbox */
-function Tree({layers, lines, name}) {
+function Tree({layers, lines, name, constructOrder}) {
     const array = layers?.[0]
     if(!array) {throw new Error("Tree: Not provided layers!")}
+    if(constructOrder) console.log(constructOrder)
     const Layer = ({layer}) => (
         <Box
             sx={{
@@ -101,6 +102,22 @@ function Tree({layers, lines, name}) {
         </Box>
     )
 }
+/* Wrapper tree traversal functions
+
+Main functionality and supplied parameters are controlled by source caller
+
+- Takes in a node, apply the supplied function to it with the current layer.
+- Recursively call self according to specified traversal order
+- Call postNodeFunc to process any variable changes at the end
+*/
+function DRL(node, func, postNodeFunc, curLayerNum, ...rest) {
+    if(!node) return
+    console.log(rest)
+    func(node, curLayerNum, ...rest)
+    DRL(node.right, func, postNodeFunc, curLayerNum + 1, ...rest)
+    DRL(node.left, func, postNodeFunc, curLayerNum + 1, ...rest)
+    postNodeFunc(node, curLayerNum, ...rest)
+}
 /*
 Input:
 Object nested with nodes having value, left, and right.
@@ -125,7 +142,7 @@ Layer 3: ...
 ML-> To position the root node itself
 MR-> To help position the root node's node on the right, in the same layer
 */
-export function BinaryTree({tree, name, maxLayers}) {
+export function BinaryTree({tree, name, maxLayers, constructOrder}) {
     const inputTree = tree?.[0]
     if(!inputTree) {return <></>}
     if(maxLayers === 0) {throw new Error("BinaryTree: maxLayers of 0 doesn't make sense!")}
@@ -183,8 +200,8 @@ export function BinaryTree({tree, name, maxLayers}) {
             </Typography>
         </Box>
     )
-    const Arrow = ({start, end}) => (
-        <Xarrow zIndex={-1} strokeWidth={2} color="black" start={start} end={end} path="straight" showHead={false} startAnchor="middle" endAnchor="middle"/>
+    const Arrow = ({start, end, lineID}) => (
+        <Xarrow id={lineID} zIndex={-1} strokeWidth={2} color="black" start={start} end={end} path="straight" showHead={false} startAnchor="middle" endAnchor="middle"/>
     )
     /* 
     Returns the width of the node including its subtrees, used to provide parent nodes their margins
@@ -207,13 +224,18 @@ export function BinaryTree({tree, name, maxLayers}) {
         const right = generateNode(node.right, curLayerNum + 1)
         const widthRight = right.width
         const marginRight = Math.max(0, widthRight - nodeRadius / 2) + nodeRadius
-        const nodeName = `${name}-${curLayerNum}-${layers[curLayerNum].length}`
+        const arrayInd = layers[curLayerNum].length
+        const nodeName = `${name}-${curLayerNum}-${arrayInd}`
         layers[curLayerNum].push(<Node value={node.value.token} color={node.value.autoAdded ? 'red' : 'inherit'} ml={marginLeft} mr={marginRight} nodeName={nodeName}/>)
         if(left.nodeName) {
-            lines.push(<Arrow zIndex={5} start={nodeName} end={left.nodeName}/>)
+            const leftLineID = `${name}-${curLayerNum}-${arrayInd}-${left.arrayInd}`
+            lines.push(<Arrow lineID={leftLineID} zIndex={5} start={nodeName} end={left.nodeName}/>)
         }
-        if(right.nodeName) {lines.push(<Arrow zIndex={5} start={nodeName} end={right.nodeName}/>)}
-        return {width: Math.max(widthLeft, nodeRadius / 2) + Math.max(widthRight, nodeRadius / 2) + nodeRadius, nodeName: nodeName}
+        if(right.nodeName) {
+            const rightLineID = `${name}-${curLayerNum}-${arrayInd}-${left.arrayInd}`
+            lines.push(<Arrow lineID={rightLineID} zIndex={5} start={nodeName} end={right.nodeName}/>)
+        }
+        return {width: Math.max(widthLeft, nodeRadius / 2) + Math.max(widthRight, nodeRadius / 2) + nodeRadius, nodeName: nodeName, arrayInd: arrayInd}
     }
     function generateTree(tree) {
         let i
@@ -225,9 +247,36 @@ export function BinaryTree({tree, name, maxLayers}) {
         /* Initiating recursive logic */
         generateNode(tree, 0)
     }
-
     generateTree(inputTree)
+    function generateConstructIDs() {
+        if(!constructOrder) return null
+        let indexArray
+        let idArray = []
+        function postNodeProc(_, curLayerNum, ...rest) {
+            rest[0][curLayerNum]--
+        }
+        function generateID(_, curLayerNum, indexArray, idArray) {
+            /* Add lineID if a parent exist -> Should exist as long as not root node */
+            if(curLayerNum > 0) {
+                const prevLayerNum = curLayerNum - 1
+                const lineFromParentID = `${name}-${prevLayerNum}-${indexArray[prevLayerNum]}-${indexArray[curLayerNum]}`
+                idArray.push(lineFromParentID)
+            }
+            const currentNodeID = `${name}-${curLayerNum}-${indexArray[curLayerNum]}`
+            idArray.push(currentNodeID)
+        }
+        switch(constructOrder) {
+            case "DRL":
+                indexArray = layers.map((layer) => layer.length - 1)
+                DRL(inputTree, generateID, postNodeProc, 0, indexArray, idArray)
+                break
+            default:
+                throw new Error("Currently cannot support")
+        }
+        return idArray
+    }
+    const constructOrderIDs = generateConstructIDs()
     return (
-        <Tree layers={[layers]} lines={lines}/>
+        <Tree layers={[layers]} lines={lines} constructOrder={constructOrderIDs}/>
     )
 }
