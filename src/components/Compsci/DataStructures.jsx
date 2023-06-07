@@ -1,9 +1,10 @@
 import React from 'react';
 import { Box, Typography } from "@mui/material"
 import Xarrow, { Xwrapper } from 'react-xarrows';
-import { PageParagraph, TBButton } from '../UI/DefaultLayout';
+import { PageParagraph } from '../UI/DefaultLayout';
 import { useAnimate, motion } from "framer-motion"
 import { useRef } from 'react';
+import { ControlBoard } from '../UI/Animation';
 /*
 Use this for an input array of already created DOMs
 */
@@ -171,8 +172,12 @@ function Tree({layers, lines, name, constructOrder}) {
                 </Box>
                 
             </Xwrapper>
-            <TBButton onClick={fullConstruction} buttonText="Animate Construction"/>
-            <TBButton onClick={stepConstruction} buttonText="Increment step"/>
+            <ControlBoard play={fullConstruction} next={stepConstruction}
+                tooltips={{
+                    play: 'Show full construction',
+                    next: 'Show next step'
+                }}
+            />
         </Box>
     )
 }
@@ -279,7 +284,7 @@ export function BinaryTree({tree, name, maxLayers, constructOrder}) {
     )
     const Arrow = ({start, end, lineID}) => (
         <Box zIndex={-1} className={lineID}>
-            <Xarrow zIndex={-1} strokeWidth={2} color="black" start={start} end={end} path="straight" showHead={false} startAnchor="middle" endAnchor="middle"/>
+            <Xarrow zIndex={-1} strokeWidth={1} color="black" start={start} end={end} path="straight" showHead={false} startAnchor="middle" endAnchor="middle"/>
         </Box>
     )
     /* 
