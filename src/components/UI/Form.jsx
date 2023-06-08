@@ -1,12 +1,11 @@
 import { Button, Checkbox, FormControlLabel, Input, MenuItem, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 
-export function TBSubmitButton({loading}) {
+export function TBSubmitButton() {
     return (
         <Button 
             type="submit"
             variant="contained"
-            loading={loading}
             sx={{
                 width: 100,
                 maxWidth: 1,
@@ -26,7 +25,7 @@ By default, text fields cannot start as an error, even if their default value is
 Visually, we don't want the form to look red/invalid at first glance. So, error detection takes place only after the field has been
 modified
 */
-export function TBTextField({value, label, placeholder, width, variant, onChange, required, rows, minRows, maxRows, maxLength, error, errorMsg}) {
+export function TBTextField({value, label, placeholder, width=200, variant = 'standard', onChange, required, rows, minRows, maxRows, maxLength = 50, error, errorMsg}) {
     if(rows && (minRows || maxRows)) throw new Error("TBTextField: Rows is defined -> Don't input min/max rows!")
     if(error !== undefined && errorMsg === undefined) throw new Error("TBTextField: If errors can occur, supply an error message!")
     const [modified, setModified] = useState(false)
@@ -38,7 +37,7 @@ export function TBTextField({value, label, placeholder, width, variant, onChange
             required={required}
             placeholder={placeholder}
             onChange={(e) => {setModified(true); if (onChange) {onChange(e.target.value)}}}
-            variant={variant ? variant : 'standard'}
+            variant={variant}
             multiline={rows !== undefined || minRows !== undefined || maxRows !== undefined}
             rows={rows}
             minRows={minRows}
@@ -52,7 +51,7 @@ export function TBTextField({value, label, placeholder, width, variant, onChange
                 }
             }}
             inputProps={{
-                maxLength: maxLength ? maxLength : 50
+                maxLength: maxLength
             }}
             InputProps={{
                 sx: {
@@ -60,7 +59,7 @@ export function TBTextField({value, label, placeholder, width, variant, onChange
                 }
             }}
             sx={{
-                width: width ? width : 200,
+                width: width,
                 maxWidth: 1,
                 height: 'fit-content',
                 '& .MuiInput-underline:after': {
@@ -86,7 +85,7 @@ export function TBTextField({value, label, placeholder, width, variant, onChange
 /*
 Read TBTextField on error style handling
 */
-export function TBSelect({label, onChange, list, value, maxWidth, error, errorMsg, required}) {
+export function TBSelect({label, onChange, list, value, maxWidth = 1, error, errorMsg, required}) {
     if(!list) throw new Error("TBSelect: Undefined list!")
     if(!Array.isArray(list)) throw new Error("TBSelect: List is not of type array!")
     if(list.length === 0) throw new Error("TBSelect: Include at least 1 option!")
@@ -108,7 +107,7 @@ export function TBSelect({label, onChange, list, value, maxWidth, error, errorMs
             }}
             sx={{
                 width: 200,
-                maxWidth: maxWidth ? maxWidth : 1,
+                maxWidth: maxWidth,
                 '& .MuiInput-input': {
                     fontFamily: 'Verdana'
                 },

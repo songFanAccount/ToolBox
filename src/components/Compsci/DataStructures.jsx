@@ -174,7 +174,7 @@ function Tree({layers, lines, name, constructOrder}) {
             </Xwrapper>
             <ControlBoard play={fullConstruction} next={stepConstruction}
                 tooltips={{
-                    play: 'Show full construction',
+                    play: 'Show ordered construction',
                     next: 'Show next step'
                 }}
             />

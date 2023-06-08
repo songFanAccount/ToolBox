@@ -55,3 +55,7 @@ function CBIconButton({icon, label, onClick, tooltip}) {
         </Tooltip>
     )
 }
+
+export function SequentialLetters({letters : array}) {
+    
+}

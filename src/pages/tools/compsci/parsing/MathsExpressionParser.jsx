@@ -140,7 +140,7 @@ export default function MathsExpressionParser() {
                     <PageParagraph text='red' color='red'/>
                     <PageParagraph text={` is auto-added according to the listed rules. You may also notice a `}/>
                     <PageParagraph text='?' color='red'/>
-                    <PageParagraph text=" in the tokens, this is because the parser is expecting a number/variable there, so it uses a placeholder there to validify the otherwise invalid expression."/>
+                    <PageParagraph text=" near the end of the tokens, this is because the parser is expecting a number/variable there, so it uses a placeholder there to validify the otherwise invalid expression."/>
                 </Box>
                 <PageParagraph text='Tokens (showing up to the first 40):'/>
                 <Tokens/>
@@ -169,6 +169,17 @@ export default function MathsExpressionParser() {
                 </Box>
                 <PageParagraph text="Tree (showing up to 10 layers):"/>
                 <BinaryTree tree={[latexObj.current?.tree]} name="tree" constructOrder="DRL"/>
+                <Box>
+                    <PageParagraph text="Step 4. " bold/>
+                    <PageParagraph text={
+                        `An inorder traversal (LDR) of this expression tree then generates the expression in the appropriate sequence.
+                        In this process, you may modify the output nodes however you wish to, for example, if you wanted to generate the appropriate LaTeX
+                        code, all we need to do is match the correct LaTeX syntax e.g. * -> \\cdot, wrapping {} to ensure exponents like a^(2x) translate
+                        correctly to {a}^{2x}. You can see this in action in our `
+                    }/>
+                    <ToolLink name="latex converter" linkText="LaTeX converter"/>
+                    <PageParagraph text="."/>
+                </Box>
             </SectionBox>
             <SectionBox title="Limitations">
                 <PageParagraph text="//TODO 😴"/>

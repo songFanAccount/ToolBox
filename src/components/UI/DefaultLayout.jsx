@@ -156,16 +156,16 @@ export function InfoPageTitle({title, color, fs}) {
     )
 }
 
-export function PageTitle({title, color, fs, underline, align, mb, inline}) {
+export function PageTitle({title, color, fs=30, underline='inherit', align, mb, inline}) {
     return (
         <Typography
             id="The Tool"
             sx={{
-                fontSize: fs ? fs : 30,
+                fontSize: fs,
                 fontFamily: 'Montserrat',
                 mb: mb !== undefined ? mb : 3,
                 borderBottom: underline ? 2 : 0,
-                borderBottomStyle: underline ? underline : 'inherit',
+                borderBottomStyle: underline,
                 borderBottomColor: color,
                 color: color,
                 width: 'fit-content',
@@ -195,15 +195,15 @@ export function PageSectionTitle({title}) {
 /*
 By default, paragraphs are inline, since it is common to insert link or want to modify part of the paragraph.
 */
-export function PageParagraph({text, bold, block, color, fs}) {
+export function PageParagraph({text, bold, block, color='inherit', fs='medium'}) {
     if(!text) {return <></>}
     return (
         <Typography display={block ? 'block' : 'inline'}
             sx={{
                 fontFamily: 'Verdana',
                 fontWeight: bold ? 'bold' : 'normal',
-                color: color ? color : 'inherit',
-                fontSize: fs ? fs : 'medium'
+                color: color,
+                fontSize: fs
             }}
         >
             {text}
