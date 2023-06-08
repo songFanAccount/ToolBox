@@ -41,7 +41,7 @@ export default function MathsExpressionParser() {
             )
         } else {
             return(
-                <DisplayError errorMsg="Could not generate tokens!"/>
+                <DisplayError errorMsg="Invalid input!"/>
             )
         }   
     }
@@ -70,7 +70,7 @@ export default function MathsExpressionParser() {
             <SectionBox title="How it works">
                 <PageParagraph text="Enter an expression to begin:"/>
                 <MEPTextField onChange={handleChange} expr={expr}/>
-                <SectionBox title="Step 1:">
+                <SectionBox title="Step 1:" mb={0}>
                     <PageParagraph text={`The parser first processes the input string, character by character, left to right, and produces an array of tokens.
                                             The parser needs to follow the set of rules listed below and make modifications to the input expression wherever necessary.`}/>
                     <CollapseSectionBox title="Rules:" startClosed={true}>
@@ -145,7 +145,7 @@ export default function MathsExpressionParser() {
                     <PageParagraph text='Tokens (showing up to the first 40):'/>
                     <Tokens/>
                 </SectionBox>
-                <SectionBox title="Step 2: ">
+                <SectionBox title="Step 2: " mb={0}>
                     <Box>
                         <PageParagraph text={`With these tokens, we apply the `}/>
                         <ExternalLink 
@@ -160,7 +160,7 @@ export default function MathsExpressionParser() {
                     <PageParagraph text="Postfix tokens:"/>
                     <PostfixTokens/>
                 </SectionBox>
-                <SectionBox title="Step 3: ">
+                <SectionBox title="Step 3: " mb={0}>
                     <Box>
                         <PageParagraph text={`We can then generate a binary expression tree. The method I used can be followed from `}/>
                         <ExternalLink href="https://youtu.be/J8Ht91eeR0E">ComputerAdx's video on Youtube</ExternalLink>
@@ -172,7 +172,7 @@ export default function MathsExpressionParser() {
                     <PageParagraph text="Tree (showing up to 10 layers):"/>
                     <BinaryTree tree={[latexObj.current?.tree]} name="tree" constructOrder="DRL"/>
                 </SectionBox>
-                <SectionBox title="Step 4: ">
+                <SectionBox title="Step 4: " mb={0}>
                     <PageParagraph text={
                         `An inorder traversal (LDR) of this expression tree then generates the expression in the appropriate sequence.`
                         

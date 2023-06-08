@@ -245,7 +245,7 @@ MR-> To help position the root node's node on the right, in the same layer
 */
 export function BinaryTree({tree, name, maxLayers, constructOrder}) {
     const inputTree = tree?.[0]
-    if(!inputTree) {return (<DisplayError errorMsg="No valid tree provided!"/>)}
+    if(!inputTree) {return (<DisplayError errorMsg="Invalid input!"/>)}
     if(maxLayers === 0) {throw new Error("BinaryTree: maxLayers of 0 doesn't make sense!")}
     const nodeRadius = 16 // in px
     const defaultMaxLayers = 10
