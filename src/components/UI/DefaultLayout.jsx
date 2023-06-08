@@ -64,12 +64,12 @@ function DefaultLayout() {
 
 export default DefaultLayout
 
-function Contents({noBorder, children}) {
+function Contents({noBorder, children, mb=3}) {
     return(
         <Box
             sx={{
                 ml: noBorder ? 0 : 1.5,
-                mb: 1,
+                mb: mb,
                 pl: noBorder ? 0 : 2,
                 py: noBorder ? 0 : 1.5,
                 borderLeft: noBorder ? 0 : 2,
@@ -86,11 +86,11 @@ function Contents({noBorder, children}) {
     )
 }
 
-export function SectionBox({title, noBorder, children, usePageTitle}) {
+export function SectionBox({title, noBorder, children, usePageTitle, mb}) {
     return (
         <Box>
             {title && usePageTitle ? <PageTitle title={title}/> : <PageSectionTitle title={title}/>}
-            <Contents noBorder={noBorder} children={children}/>
+            <Contents noBorder={noBorder} children={children} mb={mb}/>
         </Box>
     )
 }
