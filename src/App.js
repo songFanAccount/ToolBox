@@ -30,8 +30,8 @@ function App() {
 					</Route>
 						
 					<Route path="*" element={<NotFound />} />
-					<Route path="tools" element={<Tools/>}/>
 					<Route path="tools" element={<DynamicPageLayout/>}>
+						<Route index element={<Tools/>}/>
 						<Route path="maths">
 							<Route index element={<Maths/>}/>
 							<Route path="latex-converter" element={<LatexConverter/>}/>
