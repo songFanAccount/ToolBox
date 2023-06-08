@@ -5,6 +5,9 @@ import { PageParagraph } from '../UI/DefaultLayout';
 import { useAnimate, motion } from "framer-motion"
 import { useRef } from 'react';
 import { ControlBoard } from '../UI/Animation';
+export function DisplayError({errorMsg}) {
+    return <PageParagraph text={`>> ${errorMsg}`} bold/>
+}
 /*
 Use this for an input array of already created DOMs
 */
@@ -60,7 +63,7 @@ export function ElementArray({array, maxLength}) {
     )
 }
 export function TextArray({array}) {
-    if(!array || array.length === 0) {throw new Error("TextArray: Input array is undefined or is empty!")}
+    if(!array || array.length === 0) return <DisplayError errorMsg="Empty or undefined array!"/>
     return (
         <ElementArray array={array.map((e) => <Typography>{e}</Typography>)}/>
     )
@@ -138,13 +141,12 @@ function Tree({layers, lines, name, constructOrder}) {
             animate([constructionAnimation[0], constructionAnimation[1]])
             step.current = 2
         }
-        /* If not already in step mode, make everything disappear, then play first step */
-        if(step.current === -1) {
-            animateFirstNode()
-            return
-        }
-        /* If we've already completed the final step, restart */
-        if(step.current >= constructionAnimation.length) {
+        /* 
+        If not already in step mode, make everything disappear, then play first step 
+        or
+        If we've already completed the final step, restart
+        */
+        if(step.current === -1 || step.current >= constructionAnimation.length) {
             animateFirstNode()
             return
         }
@@ -191,7 +193,6 @@ Main functionality and supplied parameters are controlled by source caller
 */
 function DRL(node, func, postNodeFunc, curLayerNum, ...rest) {
     if(!node) return
-    console.log(rest)
     func(node, curLayerNum, ...rest)
     DRL(node.right, func, postNodeFunc, curLayerNum + 1, ...rest)
     DRL(node.left, func, postNodeFunc, curLayerNum + 1, ...rest)
@@ -223,7 +224,7 @@ MR-> To help position the root node's node on the right, in the same layer
 */
 export function BinaryTree({tree, name, maxLayers, constructOrder}) {
     const inputTree = tree?.[0]
-    if(!inputTree) {return <></>}
+    if(!inputTree) {return (<DisplayError errorMsg="No valid tree provided!"/>)}
     if(maxLayers === 0) {throw new Error("BinaryTree: maxLayers of 0 doesn't make sense!")}
     const nodeRadius = 16 // in px
     const defaultMaxLayers = 10

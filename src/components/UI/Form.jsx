@@ -26,7 +26,7 @@ Visually, we don't want the form to look red/invalid at first glance. So, error 
 modified
 */
 export function TBTextField({value, label, placeholder, width=200, variant = 'standard', onChange, required, rows, minRows, maxRows, maxLength = 50, error, errorMsg}) {
-    if(rows && (minRows || maxRows)) throw new Error("TBTextField: Rows is defined -> Don't input min/max rows!")
+    if(rows && (minRows || maxRows)) throw new Error("TBTextField: Rows is defined -> Don't input min/max rows!") // May need to change this restraint
     if(error !== undefined && errorMsg === undefined) throw new Error("TBTextField: If errors can occur, supply an error message!")
     const [modified, setModified] = useState(false)
     return (

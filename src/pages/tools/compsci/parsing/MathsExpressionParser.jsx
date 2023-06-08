@@ -2,13 +2,10 @@ import React from 'react';
 import { Box, Typography } from "@mui/material";
 import { CollapseSectionBox, ExternalLink, PageParagraph, PageTextList, SectionBox, ToolLink } from "../../../../components/UI/DefaultLayout";
 import { exprToLatex } from '../../../../components/Maths/LatexDisplay';
-import { BinaryTree, ElementArray } from '../../../../components/Compsci/DataStructures';
+import { BinaryTree, DisplayError, ElementArray } from '../../../../components/Compsci/DataStructures';
 import { MEPTextField } from '../../../../components/Maths/GeneralComponents';
 
 export default function MathsExpressionParser() {
-    const TokenError = ({errorMsg}) => (
-        <PageParagraph text={`>> ${errorMsg}`} bold/>
-    )
     const [expr, setExpr] = React.useState('')
     const latexObj = React.useRef(null)
     const ArrayElement = ({token}) => {
@@ -28,12 +25,12 @@ export default function MathsExpressionParser() {
         if(latexObj.current) {
             return(
                 <>
-                    {latexObj.current.success ? <ElementArray maxLength={40} array={latexObj.current.tokens.map((e) => <ArrayElement token={e}/>)}/> : <TokenError errorMsg={latexObj.current.errorMsg}/>}
+                    {latexObj.current.success ? <ElementArray maxLength={40} array={latexObj.current.tokens.map((e) => <ArrayElement token={e}/>)}/> : <DisplayError errorMsg={latexObj.current.errorMsg}/>}
                 </>
             )
         } else {
             return(
-                <TokenError errorMsg="Empty input!"/>
+                <DisplayError errorMsg="Empty input!"/>
             )
         }   
     }
@@ -44,15 +41,13 @@ export default function MathsExpressionParser() {
             )
         } else {
             return(
-                <TokenError errorMsg="Could not generate tokens!"/>
+                <DisplayError errorMsg="Could not generate tokens!"/>
             )
         }   
     }
-    function handleChange(event) {
-        const newExpr = event.target.value
-        setExpr(newExpr)
-        latexObj.current = exprToLatex(newExpr)
-        return newExpr
+    function handleChange(value) {
+        setExpr(value)
+        latexObj.current = exprToLatex(value)
     }
     return (
         <Box>
@@ -67,7 +62,7 @@ export default function MathsExpressionParser() {
             </SectionBox>
             <SectionBox title="How it works">
                 <PageParagraph text="Enter an expression to begin:"/>
-                <MEPTextField handleChange={handleChange} expr={expr}/>
+                <MEPTextField onChange={handleChange} expr={expr}/>
                 <Box>
                     <PageParagraph text="Step 1. " bold/>
                     <PageParagraph text={`The parser first processes the input string, character by character, left to right, and produces an array of tokens.

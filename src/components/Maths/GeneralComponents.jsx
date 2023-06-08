@@ -1,13 +1,14 @@
-import { TextField } from "@mui/material";
+import { TBTextField } from "../UI/Form";
 
-export function MEPTextField({handleChange, expr}) {
+export function MEPTextField({onChange, expr}) {
     return (
-        <TextField
+        <TBTextField
             placeholder="e.g. ax^2 + bx + c"
-            sx={{maxWidth: 500,}}
-            inputProps={{ maxLength: 150, autoCapitalize: 'none' }}
-            onChange={(e) => handleChange(e)}
+            width={500}
+            maxLength={150}
+            onChange={onChange}
             value={expr}
+            variant="outlined"
         />
     )
 }

@@ -419,11 +419,12 @@ function treeToLatex(tree, msgArray, controlNegate) {
             return needNegate
         case tokenTypes.function:
             // Current implementation ensures left will be null
-            // Get the Latex string of the function, and wrap the arguments in parenthese
+            // Get the Latex string of the function, and wrap the arguments in parenthese if need
             msgArray[0] += supportedFunctions[curToken.token] + '{'
-            msgArray[0] += '('
+            const needParentheses = curToken.token !== 'sqrt'
+            if(needParentheses) msgArray[0] += '('
             treeToLatex(right, msgArray, false)
-            msgArray[0] += ')'
+            if(needParentheses) msgArray[0] += ')'
             msgArray[0] += '}'
             return needNegate
         case tokenTypes.operator:
