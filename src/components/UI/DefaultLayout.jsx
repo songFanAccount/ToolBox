@@ -69,7 +69,7 @@ function Contents({noBorder, children}) {
         <Box
             sx={{
                 ml: noBorder ? 0 : 1.5,
-                mb: 3,
+                mb: 1,
                 pl: noBorder ? 0 : 2,
                 py: noBorder ? 0 : 1.5,
                 borderLeft: noBorder ? 0 : 2,
@@ -156,16 +156,16 @@ export function InfoPageTitle({title, color, fs}) {
     )
 }
 
-export function PageTitle({title, color, fs, underline, align, mb, inline}) {
+export function PageTitle({title, color, fs=30, underline='inherit', align, mb, inline}) {
     return (
         <Typography
             id="The Tool"
             sx={{
-                fontSize: fs ? fs : 30,
+                fontSize: fs,
                 fontFamily: 'Montserrat',
                 mb: mb !== undefined ? mb : 3,
                 borderBottom: underline ? 2 : 0,
-                borderBottomStyle: underline ? underline : 'inherit',
+                borderBottomStyle: underline,
                 borderBottomColor: color,
                 color: color,
                 width: 'fit-content',
@@ -195,15 +195,15 @@ export function PageSectionTitle({title}) {
 /*
 By default, paragraphs are inline, since it is common to insert link or want to modify part of the paragraph.
 */
-export function PageParagraph({text, bold, block, color, fs}) {
+export function PageParagraph({text, bold, block, color='inherit', fs='medium'}) {
     if(!text) {return <></>}
     return (
         <Typography display={block ? 'block' : 'inline'}
             sx={{
                 fontFamily: 'Verdana',
                 fontWeight: bold ? 'bold' : 'normal',
-                color: color ? color : 'inherit',
-                fontSize: fs ? fs : 'medium'
+                color: color,
+                fontSize: fs
             }}
         >
             {text}
@@ -242,6 +242,15 @@ export function PageEndSpace() {
         />
     )
 }
+export function CopyButton({copyableText}) {
+    return (
+        <IconButton sx={{ml: .5}} onClick={() => navigator.clipboard.writeText(copyableText)}>
+            <ContentCopyIcon
+                sx={{fontSize: 20, color: 'black'}}
+            />
+        </IconButton>
+    )
+}
 export function CopyableParagraph({preText, copyableText, copyable}) {
     return (
         <Box
@@ -253,16 +262,34 @@ export function CopyableParagraph({preText, copyableText, copyable}) {
                 {preText + copyableText}
             </Typography>
             {copyable && 
-                <IconButton sx={{ml: .5}} onClick={() => navigator.clipboard.writeText(copyableText)}>
-                    <ContentCopyIcon
-                        sx={{fontSize: 20, color: 'black'}}
-                    />
-                </IconButton>
+                <CopyButton copyableText={copyableText}/>
             }
         </Box>
     )
 }
 
+export function TBButton({buttonText, onClick}) {
+    return (
+        <Button 
+            variant="outlined"
+            onClick={onClick}
+            disableRipple
+            sx={{
+                width: 'fit-content',
+                p:1,
+                m:2,
+                backgroundColor: '#011627',
+                borderColor: '#011627',
+                '&:hover': {
+                    backgroundColor: '#011627',
+                    borderColor: '#011627'
+                },
+            }}
+        >
+            <Typography sx={{color: '#fdfffc', fontFamily: 'Verdana', fontSize: 14, fontWeight: 550}}>{buttonText}</Typography>
+        </Button>
+    )
+}
 export function ExternalLink({href, target, children}) {
     return (
         <Link href={href} target={target ? target : '_blank'}
