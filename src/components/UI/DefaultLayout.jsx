@@ -69,7 +69,7 @@ function Contents({noBorder, children}) {
         <Box
             sx={{
                 ml: noBorder ? 0 : 1.5,
-                mb: 3,
+                mb: 1,
                 pl: noBorder ? 0 : 2,
                 py: noBorder ? 0 : 1.5,
                 borderLeft: noBorder ? 0 : 2,
@@ -242,6 +242,15 @@ export function PageEndSpace() {
         />
     )
 }
+export function CopyButton({copyableText}) {
+    return (
+        <IconButton sx={{ml: .5}} onClick={() => navigator.clipboard.writeText(copyableText)}>
+            <ContentCopyIcon
+                sx={{fontSize: 20, color: 'black'}}
+            />
+        </IconButton>
+    )
+}
 export function CopyableParagraph({preText, copyableText, copyable}) {
     return (
         <Box
@@ -253,11 +262,7 @@ export function CopyableParagraph({preText, copyableText, copyable}) {
                 {preText + copyableText}
             </Typography>
             {copyable && 
-                <IconButton sx={{ml: .5}} onClick={() => navigator.clipboard.writeText(copyableText)}>
-                    <ContentCopyIcon
-                        sx={{fontSize: 20, color: 'black'}}
-                    />
-                </IconButton>
+                <CopyButton copyableText={copyableText}/>
             }
         </Box>
     )

@@ -414,85 +414,108 @@ function treeToStrs(tree, msgArray, controlNegate, getExpr, getLatex) {
         case tokenTypes.number:
             if(!controlNegate && needNegate) {
                 if(getLatex) msgArray[0] += '-'
+                if(getExpr) msgArray[1] += '-'
             }
             if(getLatex) msgArray[0] += curToken.fillArg ? '?' : curToken.token
+            if(getExpr) msgArray[1] += curToken.fillArg ? '?' : curToken.token
             return needNegate
         case tokenTypes.function:
             // Current implementation ensures left will be null
             // Get the Latex string of the function, and wrap the arguments in parenthese if need
             if(getLatex) msgArray[0] += supportedFunctions[curToken.token] + '{'
+            if(getExpr) msgArray[1] += curToken.token
             const needParentheses = curToken.token !== 'sqrt'
             if(needParentheses) {
                 if(getLatex) msgArray[0] += '('
             }
+            if(getExpr) msgArray[1] += '('
             treeToStrs(right, msgArray, false, getExpr, getLatex)
             if(needParentheses) {
                 if(getLatex) msgArray[0] += ')'
             }
+            if(getExpr) msgArray[1] += ')'
             if(getLatex) msgArray[0] += '}'
             return needNegate
         case tokenTypes.operator:
             let addParenthesesLeft
             let addParenthesesRight
             let insertIndex
+            let exprInsertIndex
             let sign
             let subExprNegate
             let negateIndex
+            let exprNegateIndex
             switch(curToken.token) {
                 case '+': // Dont need to do anything fancy
                     treeToStrs(left, msgArray, false, getExpr, getLatex)
                     insertIndex = msgArray[0].length
+                    exprInsertIndex = msgArray[1].length
                     subExprNegate = treeToStrs(right, msgArray, true, getExpr, getLatex)
                     sign = subExprNegate ? '-' : '+'
                     if(getLatex) msgArray[0] = insertStr(msgArray[0], insertIndex, sign)
+                    if(getExpr) msgArray[1] = insertStr(msgArray[1], exprInsertIndex, sign)
                     return subExprNegate
                 case '-': // Dont need to do anything to left side, but if right is +/-, will need to wrap in parentheses
                     treeToStrs(left, msgArray, false, getExpr, getLatex)
                     insertIndex = msgArray[0].length
+                    exprInsertIndex = msgArray[1].length
                     addParenthesesRight = right?.value?.token === '+' || right?.value?.token === '-'
                     if(addParenthesesRight) {
                         if(getLatex) msgArray[0] += '('
+                        if(getExpr) msgArray[1] += '('
                     }
                     subExprNegate = treeToStrs(right, msgArray, true, getExpr, getLatex)
                     if(addParenthesesRight) {
                         if(getLatex) msgArray[0] += ')'
+                        if(getExpr) msgArray[1] += ')'
                     }
                     sign = subExprNegate ? '+' : '-'
                     if(getLatex) msgArray[0] = insertStr(msgArray[0], insertIndex, sign)
+                    if(getExpr) msgArray[1] = insertStr(msgArray[1], exprInsertIndex, sign)
                     return subExprNegate
                 case '@':
                     negateIndex = msgArray[0].length
+                    exprNegateIndex = msgArray[1].length
                     addParenthesesRight = precedence['*'] > precedence[right?.value.token]
                     if(addParenthesesRight) {
                         if(getLatex) msgArray[0] += '('
+                        if(getExpr) msgArray[1] += '('
                     }
                     subExprNegate = !treeToStrs(right, msgArray, true, getExpr, getLatex)
                     if(addParenthesesRight) {
                         if(getLatex) msgArray[0] += ')'
+                        if(getExpr) msgArray[1] += ')'
                     }
                     if(!controlNegate && subExprNegate) {
                         if(getLatex) msgArray[0] = insertStr(msgArray[0], negateIndex, '-')
+                        if(getExpr) msgArray[1] = insertStr(msgArray[1], exprNegateIndex, '-')
                     }
                     return subExprNegate
                 case '*': // In all scenarios, a multiply sign is only needed if the beginning of the right expression is a number
                     negateIndex = msgArray[0].length
+                    exprNegateIndex = msgArray[1].length
                     addParenthesesLeft = precedence[curToken.token] > precedence[left?.value.token]
                     if(addParenthesesLeft) {
                         if(getLatex) msgArray[0] += '('
+                        if(getExpr) msgArray[1] += '('
                     }
                     subExprNegate = treeToStrs(left, msgArray, true, getExpr, getLatex)
                     if(addParenthesesLeft) {
                         if(getLatex) msgArray[0] += ')'
+                        if(getExpr) msgArray[1] += ')'
                     }
                     // Store current index in the message for \cdot insertion later
                     insertIndex = msgArray[0].length
+                    if(getExpr && !left?.value.negate) msgArray[1] += '*'
                     addParenthesesRight = precedence[curToken.token] > precedence[right?.value.token]
                     if(addParenthesesRight) {
                         if(getLatex) msgArray[0] += '('
+                        if(getExpr) msgArray[1] += '('
                     }
                     if(treeToStrs(right, msgArray, true, getExpr, getLatex)) {subExprNegate = !subExprNegate}
                     if(addParenthesesRight) {
                         if(getLatex) msgArray[0] += ')'
+                        if(getExpr) msgArray[1] += ')'
                     }
                     if(msgArray[0].length < insertIndex) {
                         throw new Error("Invalid expression: Nothing on the right of *?")
@@ -512,17 +535,36 @@ function treeToStrs(tree, msgArray, controlNegate, getExpr, getLatex) {
                     }
                     if(!controlNegate && subExprNegate) {
                         if(getLatex) msgArray[0] = insertStr(msgArray[0], negateIndex, '-')
+                        if(getExpr) msgArray[1] = insertStr(msgArray[1], exprNegateIndex, '-')
                     }
                     return subExprNegate
                 case '/': // Using dfrac: \dfrac{left}{right}
                     negateIndex = msgArray[0].length
+                    console.log(left?.value)
+                    addParenthesesLeft = precedence[curToken.token] > precedence[left?.value.token]
+                    if(addParenthesesLeft) {
+                        if(getExpr) msgArray[1] += '('
+                    }
+                    exprNegateIndex = msgArray[1].length
                     if(getLatex) msgArray[0] += supportedOperators['/'] + '{'
-                    subExprNegate = treeToStrs(left, msgArray, true)
+                    subExprNegate = treeToStrs(left, msgArray, true, getExpr, getLatex)
+                    if(addParenthesesLeft) {
+                        if(getExpr) msgArray[1] += ')'
+                    }
+                    if(getExpr) msgArray[1] += '/'
                     if(getLatex) msgArray[0] += '}{'
+                    addParenthesesRight = precedence[curToken.token] >= precedence[right?.value.token]
+                    if(addParenthesesRight) {
+                        if(getExpr) msgArray[1] += '('
+                    }
                     if(treeToStrs(right, msgArray, true, getExpr, getLatex)) {subExprNegate = !subExprNegate}
+                    if(addParenthesesRight) {
+                        if(getExpr) msgArray[1] += ')'
+                    }
                     if(getLatex) msgArray[0] += '}'
                     if(!controlNegate && subExprNegate) {
                         if(getLatex) msgArray[0] = insertStr(msgArray[0], negateIndex, '-')
+                        if(getExpr) msgArray[1] = insertStr(msgArray[1], exprNegateIndex, '-')
                     }
                     return subExprNegate
                 case '^': // Wrap left in parentheses if needed, wrap right in braces for Latex
@@ -530,13 +572,19 @@ function treeToStrs(tree, msgArray, controlNegate, getExpr, getLatex) {
                     if(getLatex) msgArray[0] += '{'
                     if(addParenthesesLeft) {
                         if(getLatex) msgArray[0] += '('
+                        if(getExpr) msgArray[1] += '('
                     }
                     treeToStrs(left, msgArray, false, getExpr, getLatex)
                     if(addParenthesesLeft) {
                         if(getLatex) msgArray[0] += ')'
+                        if(getExpr) msgArray[1] += ')'
                     }
                     if(getLatex) msgArray[0] += '}^{'
+                    if(getExpr) msgArray[1] += '^'
+                    addParenthesesRight = precedence[curToken.token] > precedence[right?.value.token] || right?.value.negate
+                    if(addParenthesesRight && getExpr) msgArray[1] += '('
                     treeToStrs(right, msgArray, false, getExpr, getLatex)
+                    if(addParenthesesRight && getExpr) msgArray[1] += ')'
                     if(getLatex) msgArray[0] += '}'
                     return subExprNegate
                 default:

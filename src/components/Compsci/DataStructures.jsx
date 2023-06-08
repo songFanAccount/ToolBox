@@ -1,7 +1,7 @@
 import React from 'react';
-import { Box, Typography } from "@mui/material"
+import { Box, Stack, Typography } from "@mui/material"
 import Xarrow, { Xwrapper } from 'react-xarrows';
-import { PageParagraph } from '../UI/DefaultLayout';
+import { CopyButton, PageParagraph } from '../UI/DefaultLayout';
 import { useAnimate, motion } from "framer-motion"
 import { useRef } from 'react';
 import { ControlBoard, commonAnims } from '../UI/Animation';
@@ -11,7 +11,7 @@ export function DisplayError({errorMsg}) {
 /*
 Use this for an input array of already created DOMs
 */
-export function ElementArray({array, maxLength}) {
+export function ElementArray({array, maxLength, copyText}) {
     if(maxLength < 0) {throw new Error("ElementArray: Negative maxLength not allowed!")}
     const Elements = () => {
         let generatedArray = []
@@ -48,24 +48,31 @@ export function ElementArray({array, maxLength}) {
         )
     }
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                width: 'fit-content',
-                maxWidth: 1,
-                flexWrap: 'wrap'
-            }}
+        <Stack
+            direction="row"
+            alignItems="center"
+            columnGap={2}
         >
-            <Elements array={array}/>
-        </Box>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    width: 'fit-content',
+                    maxWidth: 1,
+                    flexWrap: 'wrap'
+                }}
+            >
+                <Elements array={array}/>
+            </Box>
+            {copyText && <CopyButton copyableText={copyText}/>}
+        </Stack>
     )
 }
-export function TextArray({array}) {
+export function TextArray({array, copyable}) {
     if(!array || array.length === 0) return <DisplayError errorMsg="Empty or undefined array!"/>
     return (
-        <ElementArray array={array.map((e) => <Typography>{e}</Typography>)}/>
+        <ElementArray copyText={copyable ? array.join(copyable) : null} array={array.map((e) => <Typography>{e}</Typography>)}/>
     )
 }
 
@@ -325,7 +332,7 @@ export function BinaryTree({tree, name, maxLayers, constructOrder}) {
         const marginRight = Math.max(0, widthRight - nodeRadius / 2) + nodeRadius
         const arrayInd = layers[curLayerNum].length
         const nodeName = `${name}-${curLayerNum}-${arrayInd}`
-        layers[curLayerNum].push(<Node value={node.value.token} color={node.value.autoAdded ? 'red' : 'inherit'} ml={marginLeft} mr={marginRight} nodeName={nodeName}/>)
+        layers[curLayerNum].push(<Node value={`${node.value.negate ? '-' : ''}${node.value.token}`} color={node.value.autoAdded ? 'red' : 'inherit'} ml={marginLeft} mr={marginRight} nodeName={nodeName}/>)
         if(left.nodeName) {
             const leftLineID = `${name}-${curLayerNum}-${arrayInd}-${left.arrayInd}`
             lines.push(<Arrow lineID={leftLineID} zIndex={5} start={nodeName} end={left.nodeName}/>)
