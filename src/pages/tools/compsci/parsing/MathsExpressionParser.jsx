@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography } from "@mui/material";
 import { CollapseSectionBox, ExternalLink, PageParagraph, PageTextList, SectionBox, ToolLink } from "../../../../components/UI/DefaultLayout";
-import { exprToLatex } from '../../../../components/Maths/LatexDisplay';
+import { processExpr } from '../../../../components/Maths/LatexDisplay';
 import { BinaryTree, DisplayError, ElementArray } from '../../../../components/Compsci/DataStructures';
 import { MEPTextField } from '../../../../components/Maths/GeneralComponents';
 
@@ -47,7 +47,7 @@ export default function MathsExpressionParser() {
     }
     function handleChange(value) {
         setExpr(value)
-        latexObj.current = exprToLatex(value)
+        latexObj.current = processExpr(value, true, false)
     }
     return (
         <Box>

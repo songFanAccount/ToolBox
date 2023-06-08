@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import React from 'react';
 import { MEPTextField } from '../../../components/Maths/GeneralComponents';
-import { exprToLatex } from '../../../components/Maths/LatexDisplay';
+import { processExpr } from '../../../components/Maths/LatexDisplay';
 import { CopyableParagraph, ExternalLink, PageParagraph, PageTextList, SectionBox, ToolLink } from '../../../components/UI/DefaultLayout';
 import { DisplayError } from '../../../components/Compsci/DataStructures';
 
@@ -53,7 +53,7 @@ function LatexConverter() {
     }
     function handleChange(value) {
         setExpr(value)
-        latexObj.current = exprToLatex(value)
+        latexObj.current = processExpr(value, false, true)
     }
     return (
         <Box>
