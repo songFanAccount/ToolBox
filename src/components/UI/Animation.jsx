@@ -4,17 +4,17 @@ import { motion } from 'framer-motion';
 
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import FastForwardIcon from '@mui/icons-material/FastForward';
+import { PageParagraph } from './DefaultLayout';
 
-export function ControlBoard({play, next, tooltips}) {
+export function ControlBoard({label, play, back, next, skipToEnd, tooltips}) {
     return (
-        <Stack 
-            direction="row"
+        <Stack
+            direction="column"
+            rowGap={1.5}
             alignItems="center"
-            flexWrap="wrap"
-            rowGap={3}
-            columnGap={3}
             sx={{
-                mt: 3,
                 p: 1.5,
                 width: 'fit-content',
                 border:5,
@@ -23,8 +23,19 @@ export function ControlBoard({play, next, tooltips}) {
                 borderColor: '#011627',
             }}
         >
-            {play && <CBIconButton tooltip={tooltips?.play ? tooltips.play : "Play animation"} onClick={play} icon={<PlayArrowIcon />}/>}
-            {next && <CBIconButton tooltip={tooltips?.next ? tooltips.next : "Increment animation"} onClick={next} icon={<ArrowForwardIcon />}/>}
+            <PageParagraph text={label}/>
+            <Stack
+                direction="row"
+                alignItems="center"
+                flexWrap="wrap"
+                rowGap={3}
+                columnGap={3}
+            >
+                {play && <CBIconButton tooltip={tooltips?.play ? tooltips.play : "Play animation"} onClick={play} icon={<PlayArrowIcon />}/>}
+                {back && <CBIconButton tooltip={tooltips?.back ? tooltips.back : "Decrement animation"} onClick={back} icon={<ArrowBackIcon />}/>}
+                {next && <CBIconButton tooltip={tooltips?.next ? tooltips.next : "Increment animation"} onClick={next} icon={<ArrowForwardIcon />}/>}
+                {skipToEnd && <CBIconButton tooltip={tooltips?.skipToEnd ? tooltips.skipToEnd : "Skip to end state"} onClick={skipToEnd} icon={<FastForwardIcon />}/>}
+            </Stack>
         </Stack>
     )
 }
@@ -58,4 +69,11 @@ function CBIconButton({icon, label, onClick, tooltip}) {
 
 export function SequentialLetters({letters : array}) {
     
+}
+
+export const commonAnims = {
+    hide: {opacity: [0, 0]},
+    show: {opacity: [1, 1]},
+    reveal: {opacity: [0, 1]},
+    conceal: {opacity: [1, 0]},
 }

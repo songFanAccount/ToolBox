@@ -4,7 +4,7 @@ import Xarrow, { Xwrapper } from 'react-xarrows';
 import { PageParagraph } from '../UI/DefaultLayout';
 import { useAnimate, motion } from "framer-motion"
 import { useRef } from 'react';
-import { ControlBoard } from '../UI/Animation';
+import { ControlBoard, commonAnims } from '../UI/Animation';
 export function DisplayError({errorMsg}) {
     return <PageParagraph text={`>> ${errorMsg}`} bold/>
 }
@@ -92,18 +92,14 @@ function Tree({layers, lines, name, constructOrder}) {
             let countDash = 0
             for(let i = 0; i < id.length; i++) {if(id[i] === '-') countDash++}
             if(countDash === 3) { // Is line
-                anim = {
-                    opacity: [0,1]
-                }
+                anim = commonAnims.reveal
                 trans = {
                     duration: 0.001,
                     delay: 0.2
                 }
                 anims.push([`.${id}`, anim, trans])
             } else { // Is node
-                anim = {
-                    opacity: [0,1]
-                }
+                anim = commonAnims.reveal
                 trans = {
                     duration: 0.001,
                     delay: 0.2,
@@ -124,15 +120,23 @@ function Tree({layers, lines, name, constructOrder}) {
         return anims
     }
     function getClearAnims() {
-        return constructOrder.map((id) => [`.${id}`, {opacity: [0,0]}])
+        return constructOrder.map((id) => [`.${id}`, commonAnims.hide, {at: "<"}])
+    }
+    function getShowAllAnims() {
+        return constructOrder.map((id) => [`.${id}`, commonAnims.show, {at: "<"}])
     }
     const constructionAnimation = getConstructionAnims()
     const clearAnimation = getClearAnims()
+    const skipToEndAnim = getShowAllAnims()
     const [scope, animate] = useAnimate()
     const step = useRef(-1)
     function fullConstruction() {
         step.current = -1
         animate(constructionAnimation)
+    }
+    function skipToEndState() {
+        step.current = -1
+        animate(skipToEndAnim)
     }
     function stepConstruction() {
         /* First step only consists of 2 animations instead of 3, since root node has no parent line to animate */
@@ -154,33 +158,43 @@ function Tree({layers, lines, name, constructOrder}) {
         animate([constructionAnimation[step.current], constructionAnimation[step.current+1], constructionAnimation[step.current+2]])
         step.current += 3
     }
+    function stepBack() {
+        if(step.current <= 2) return // Should only do something if in step mode
+        const lastNodeID = constructionAnimation[step.current - 1][0]
+        step.current -= 3
+        const lastLineID = constructionAnimation[step.current][0]
+        animate([[lastNodeID, commonAnims.hide], [lastLineID, commonAnims.hide, {at: "<"}]])
+    }
     return (
-        <Box className={name} ref={scope} sx={{pb: 2, overflowX: 'auto'}}>
-            <Xwrapper>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        rowGap: 5,
-                        minWidth: 'fit-content',
-                        width: 'fit-content',
-                        zIndex: 5
-                    }}
-                >
-                    {array.map((element, index) => (<Layer layer={element} layerNum={index}/>))}
-                </Box>
-                <Box sx={{position: 'relative'}}>
-                    {lines.map((e) => e)}
-                </Box>
-                
-            </Xwrapper>
-            <ControlBoard play={fullConstruction} next={stepConstruction}
+        <>
+            <Box className={name} ref={scope} sx={{ pb: 2, overflowX: 'auto' }}>
+                <Xwrapper>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            rowGap: 5,
+                            minWidth: 'fit-content',
+                            width: 'fit-content',
+                            zIndex: 5
+                        }}
+                    >
+                        {array.map((element, index) => (<Layer layer={element} layerNum={index} />))}
+                    </Box>
+                    <Box sx={{ position: 'relative' }}>
+                        {lines.map((e) => e)}
+                    </Box>
+
+                </Xwrapper>
+            </Box>
+            <ControlBoard label="Construction" play={fullConstruction} back={stepBack} next={stepConstruction} skipToEnd={skipToEndState}
                 tooltips={{
                     play: 'Show ordered construction',
-                    next: 'Show next step'
-                }}
+                    next: 'Show next step',
+                    back: 'Go back one step'
+                }} 
             />
-        </Box>
+        </>
     )
 }
 /* Wrapper tree traversal functions
