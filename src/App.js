@@ -11,7 +11,7 @@ import StationaryPoints from './pages/tools/maths/differentiation/StationaryPoin
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LatexConverter from './pages/tools/maths/LatexConverter';
-import ToolPageLayout from './components/UI/toolPage/ToolPageLayout';
+import DynamicPageLayout from './components/UI/dynamicPage/DynamicPageLayout';
 import Compsci from './pages/tools/compsci/Compsci';
 import Parsing from './pages/tools/compsci/parsing/Parsing';
 import MathsExpressionParser from './pages/tools/compsci/parsing/MathsExpressionParser';
@@ -31,7 +31,7 @@ function App() {
 						
 					<Route path="*" element={<NotFound />} />
 					<Route path="tools" element={<Tools/>}/>
-					<Route path="tools" element={<ToolPageLayout/>}>
+					<Route path="tools" element={<DynamicPageLayout/>}>
 						<Route path="maths">
 							<Route index element={<Maths/>}/>
 							<Route path="latex-converter" element={<LatexConverter/>}/>

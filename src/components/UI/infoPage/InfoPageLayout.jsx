@@ -165,7 +165,7 @@ function InfoPageBanner({screenWidth, dimX, path}) {
             <BannerContents/>
         </Box>
     )
-}
+} 
 export default function InfoPageLayout() {
     const [screenWidth, setScreenWidth] = React.useState(window.innerWidth)
     React.useEffect(() => {
