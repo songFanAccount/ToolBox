@@ -11,7 +11,7 @@ function AboutUs() {
             <SectionBox title="What is ToolBox?" usePageTitle>
                 <PageParagraph 
                     text={
-                        `ToolBox is a collection of tools for all sorts of categories, from algorithmic maths calculators to even helping you out with video games. 
+                        `ToolBox is a collection of tools for all sorts of categories, from algorithmic maths calculators to helping you out with video games. 
                         But what exactly is a tool here in ToolBox? Our tools can vary greatly in nature and aim to achieve different goals, but
                         generally speaking, each tool will fall under one of these categories:`
                     }
@@ -48,7 +48,7 @@ function AboutUs() {
                 }/>
                 <SectionBox title="Academic tools">
                     <PageParagraph text={
-                        `As recent graduates ourselves, we understand very well the struggles of studying. While it is true that there are more resources online than ever
+                        `As recent graduates ourselves, we understand the struggles of studying very well. While it is true that there are more resources online than ever
                         before, the truth is a lot of it is decentralised and can be frustrating to navigate. The long term goal of ToolBox is to create a united collection of 
                         tools for all categories so you don't have to wander around the web yourself!`
                     }/>
