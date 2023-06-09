@@ -17,7 +17,7 @@ import Parsing from './pages/tools/compsci/parsing/Parsing';
 import MathsExpressionParser from './pages/tools/compsci/parsing/MathsExpressionParser';
 import InfoPageLayout from './components/UI/infoPage/InfoPageLayout';
 import Collaborate from './pages/Collaborate';
-import ChemExpressionParser from './pages/tools/chemistry/ChemExpressionParser';
+import ChemEquationBalancer from './pages/tools/chemistry/ChemEquationBalancer';
 import Chemistry from './pages/tools/chemistry/Chemistry';
 function App() {
 	return (
@@ -44,13 +44,13 @@ function App() {
 						</Route>
 						<Route path="chemistry">
 							<Route index element={<Chemistry/>}/>
+							<Route path="chem-equation-balancer" element={<ChemEquationBalancer/>}/>
 						</Route>
 						<Route path="compsci">
 							<Route index element={<Compsci/>}/>
 							<Route path="parsing">
 								<Route index element={<Parsing/>}/>
 								<Route path="maths-expression-parser" element={<MathsExpressionParser/>}/>
-								<Route path="chem-expression-parser" element={<ChemExpressionParser/>}/>
 							</Route>
 						</Route>
 					</Route>

@@ -27,7 +27,7 @@ export function CEPTextField({onChange, expr}) {
         <ParserTextField 
             onChange={onChange}
             expr={expr}
-            placeholder="e.g. CH3COOH"
+            placeholder="e.g. 2H2 + O2 {->} 2H2O"
         />
     )
 }

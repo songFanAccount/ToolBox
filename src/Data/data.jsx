@@ -31,7 +31,12 @@ const mathsTools = {
 
 const chemistryTools = {
     displayName: 'Chemistry',
-    tools: null,
+    tools: {
+        'chem-equation-balancer': {
+            displayName: 'Chemistry Equation Balancer',
+            sectionTitles: ['The Tool']
+        }
+    },
     subCategories: null
 }
 const physicsTools = {
@@ -116,10 +121,6 @@ const compsciTools = {
                 'maths-expression-parser': {
                     displayName: 'Maths expression parser',
                     sectionTitles: ['The Tool', 'How it works', 'Limitations']
-                },
-                'chem-expression-parser': {
-                    displayName: 'Chemistry expression parser',
-                    sectionTitles: ['The Tool']
                 }
             },
             subCategories: null

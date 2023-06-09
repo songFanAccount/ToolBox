@@ -3,7 +3,7 @@ import { CEPTextField } from '../../../components/GeneralComponents'
 import { PageParagraph, SectionBox } from '../../../components/UI/DefaultLayout'
 import { Box } from '@mui/material'
 
-export default function ChemExpressionParser() {
+export default function ChemEquationBalancer() {
     const [expr, setExpr] = useState('')
     function handleChange(value) {
         setExpr(value)

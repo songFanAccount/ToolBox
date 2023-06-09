@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, useMediaQuery } from "@mui/material"
 import { Outlet, useLocation } from "react-router-dom"
-import { tools } from "../../../data"
+import { tools } from "../../../Data/data"
 import { PageEndSpace, PageTitle } from "../DefaultLayout"
 import SideBar from "./SideBar"
 import ToolPagePath from "./ToolPagePath"
