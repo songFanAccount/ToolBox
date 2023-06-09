@@ -32,19 +32,7 @@ const mathsTools = {
 const chemistryTools = {
     displayName: 'Chemistry',
     tools: null,
-    subCategories: {
-        integration: {
-            displayName: 'Chem Category 1',
-            tools: null,
-            subCategories:  {
-                TEMPORARY: {
-                    displayName: 'Chem Category 11',
-                    tools: null,
-                    subCategories: null
-                }
-            }
-        }
-    }
+    subCategories: null
 }
 const physicsTools = {
     displayName: 'Physics',
@@ -128,6 +116,10 @@ const compsciTools = {
                 'maths-expression-parser': {
                     displayName: 'Maths expression parser',
                     sectionTitles: ['The Tool', 'How it works', 'Limitations']
+                },
+                'chem-expression-parser': {
+                    displayName: 'Chemistry expression parser',
+                    sectionTitles: ['The Tool']
                 }
             },
             subCategories: null

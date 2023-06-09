@@ -17,6 +17,8 @@ import Parsing from './pages/tools/compsci/parsing/Parsing';
 import MathsExpressionParser from './pages/tools/compsci/parsing/MathsExpressionParser';
 import InfoPageLayout from './components/UI/infoPage/InfoPageLayout';
 import Collaborate from './pages/Collaborate';
+import ChemExpressionParser from './pages/tools/chemistry/ChemExpressionParser';
+import Chemistry from './pages/tools/chemistry/Chemistry';
 function App() {
 	return (
     	<BrowserRouter>
@@ -40,11 +42,15 @@ function App() {
 								<Route path="stationary-points" element={<StationaryPoints/>}/>
 							</Route>
 						</Route>
+						<Route path="chemistry">
+							<Route index element={<Chemistry/>}/>
+						</Route>
 						<Route path="compsci">
 							<Route index element={<Compsci/>}/>
 							<Route path="parsing">
 								<Route index element={<Parsing/>}/>
 								<Route path="maths-expression-parser" element={<MathsExpressionParser/>}/>
+								<Route path="chem-expression-parser" element={<ChemExpressionParser/>}/>
 							</Route>
 						</Route>
 					</Route>
