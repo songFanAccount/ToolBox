@@ -11,25 +11,25 @@ export default function DynamicPageLayout() {
     const pathname = location.pathname
     
     let page
+    let firstCat
     if (pathname.startsWith('/tools')) {
         const routes = pathname.split("/")
         let cat = tools
-        let name
         for(let i = 2; i < routes.length; i++) {
             const newCat = cat.subCategories?.[routes[i]]
             if(newCat) { // Valid subcategory case
                 cat = newCat
-                name = cat.displayName
+                if (i === 2) {firstCat = cat}
             } else { // Not subcategory, check if it is a tool
                 const tool = cat.tools?.[routes[i]]
                 if(tool) {
-                    name = tool.displayName
                     isCategory = false
                 }
                 break
             }
         }
-        page = isCategory ? <CategoryPageLayout name={name}/> : <ToolPageLayout/>
+        console.log(firstCat)
+        page = isCategory ? <CategoryPageLayout category={firstCat}/> : <ToolPageLayout/>
     }
 
     return (
