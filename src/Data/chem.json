@@ -9,509 +9,584 @@
         "name": "helium",
         "atomicWeight": 4.003       
     },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008       
-    },
-    "H": {
-        "atomicNumber": 1,
-        "name": "hydrogen",
-        "atomicWeight": 1.008
+    "Li": {
+        "atomicNumber": 3,
+        "name": "lithium",
+        "atomicWeight": 6.941       
+    },
+    "Be": {
+        "atomicNumber": 4,
+        "name": "beryllium",
+        "atomicWeight": 9.012       
+    },
+    "B": {
+        "atomicNumber": 5,
+        "name": "boron",
+        "atomicWeight": 10.81       
+    },
+    "C": {
+        "atomicNumber": 6,
+        "name": "carbon",
+        "atomicWeight": 12.01       
+    },
+    "N": {
+        "atomicNumber": 7,
+        "name": "nitrogen",
+        "atomicWeight": 14.01      
+    },
+    "O": {
+        "atomicNumber": 8,
+        "name": "oxygen",
+        "atomicWeight": 16.00       
+    },
+    "F": {
+        "atomicNumber": 9,
+        "name": "fluorine",
+        "atomicWeight": 19.00       
+    },
+    "Ne": {
+        "atomicNumber": 10,
+        "name": "neon",
+        "atomicWeight": 20.18      
+    },
+    "Na": {
+        "atomicNumber": 11,
+        "name": "sodium",
+        "atomicWeight": 22.99       
+    },
+    "Mg": {
+        "atomicNumber": 12,
+        "name": "magnesium",
+        "atomicWeight": 24.31    
+    },
+    "Al": {
+        "atomicNumber": 13,
+        "name": "aluminium",
+        "atomicWeight": 26.98       
+    },
+    "Si": {
+        "atomicNumber": 14,
+        "name": "silicon",
+        "atomicWeight": 28.09      
+    },
+    "P": {
+        "atomicNumber": 15,
+        "name": "phosphorus",
+        "atomicWeight": 30.97      
+    },
+    "S": {
+        "atomicNumber": 16,
+        "name": "sulfur",
+        "atomicWeight": 32.07       
+    },
+    "Cl": {
+        "atomicNumber": 17,
+        "name": "chlorine",
+        "atomicWeight": 35.45       
+    },
+    "Ar": {
+        "atomicNumber": 18,
+        "name": "argon",
+        "atomicWeight": 39.95      
+    },
+    "K": {
+        "atomicNumber": 19,
+        "name": "potassium",
+        "atomicWeight": 39.10      
+    },
+    "Ca": {
+        "atomicNumber": 20,
+        "name": "calcium",
+        "atomicWeight": 40.08       
+    },
+    "Sc": {
+        "atomicNumber": 21,
+        "name": "scandium",
+        "atomicWeight": 44.96       
+    },
+    "Ti": {
+        "atomicNumber": 22,
+        "name": "titanium",
+        "atomicWeight": 47.87      
+    },
+    "V": {
+        "atomicNumber": 23,
+        "name": "vanadium",
+        "atomicWeight": 50.94       
+    },
+    "Cr": {
+        "atomicNumber": 24,
+        "name": "chromium",
+        "atomicWeight": 52.00       
+    },
+    "Mn": {
+        "atomicNumber": 25,
+        "name": "manganese",
+        "atomicWeight": 54.94     
+    },
+    "Fe": {
+        "atomicNumber": 26,
+        "name": "iron",
+        "atomicWeight": 55.85       
+    },
+    "Co": {
+        "atomicNumber": 27,
+        "name": "cobalt",
+        "atomicWeight": 58.93       
+    },
+    "Ni": {
+        "atomicNumber": 28,
+        "name": "nickel",
+        "atomicWeight": 58.69       
+    },
+    "Cu": {
+        "atomicNumber": 29,
+        "name": "copper",
+        "atomicWeight": 63.55       
+    },
+    "Zn": {
+        "atomicNumber": 30,
+        "name": "zinc",
+        "atomicWeight": 65.38       
+    },
+    "Ga": {
+        "atomicNumber": 31,
+        "name": "gallium",
+        "atomicWeight": 69.72       
+    },
+    "Ge": {
+        "atomicNumber": 32,
+        "name": "germanium",
+        "atomicWeight": 72.64       
+    },
+    "As": {
+        "atomicNumber": 33,
+        "name": "arsenic",
+        "atomicWeight": 74.92       
+    },
+    "Se": {
+        "atomicNumber": 34,
+        "name": "selenium",
+        "atomicWeight": 78.96       
+    },
+    "Br": {
+        "atomicNumber": 35,
+        "name": "bromine",
+        "atomicWeight": 79.90       
+    },
+    "Kr": {
+        "atomicNumber": 36,
+        "name": "krypton",
+        "atomicWeight": 83.80       
+    },
+    "Rb": {
+        "atomicNumber": 37,
+        "name": "rubidium",
+        "atomicWeight": 85.47       
+    },
+    "Sr": {
+        "atomicNumber": 38,
+        "name": "strontium",
+        "atomicWeight": 87.61       
+    },
+    "Y": {
+        "atomicNumber": 39,
+        "name": "yttrium",
+        "atomicWeight": 88.91       
+    },
+    "Zr": {
+        "atomicNumber": 40,
+        "name": "zirconium",
+        "atomicWeight": 91.22       
+    },
+    "Nb": {
+        "atomicNumber": 41,
+        "name": "niobium",
+        "atomicWeight": 92.91       
+    },
+    "Mo": {
+        "atomicNumber": 42,
+        "name": "molybdenum",
+        "atomicWeight": 95.96       
+    },
+    "Tc": {
+        "atomicNumber": 43,
+        "name": "technetium",
+        "atomicWeight": 98      
+    },
+    "Ru": {
+        "atomicNumber": 44,
+        "name": "ruthenium",
+        "atomicWeight": 101.1       
+    },
+    "Rh": {
+        "atomicNumber": 45,
+        "name": "rhodium",
+        "atomicWeight": 102.9       
+    },
+    "Pd": {
+        "atomicNumber": 46,
+        "name": "palladium",
+        "atomicWeight": 106.4       
+    },
+    "Ag": {
+        "atomicNumber": 47,
+        "name": "silver",
+        "atomicWeight": 107.9       
+    },
+    "Cd": {
+        "atomicNumber": 48,
+        "name": "cadmium",
+        "atomicWeight": 112.4       
+    },
+    "In": {
+        "atomicNumber": 49,
+        "name": "indium",
+        "atomicWeight": 114.8       
+    },
+    "Sn": {
+        "atomicNumber": 50,
+        "name": "tin",
+        "atomicWeight": 118.7       
+    },
+    "Sb": {
+        "atomicNumber": 51,
+        "name": "antimony",
+        "atomicWeight": 121.8       
+    },
+    "Te": {
+        "atomicNumber": 52,
+        "name": "tellurium",
+        "atomicWeight": 127.6       
+    },
+    "I": {
+        "atomicNumber": 53,
+        "name": "iodine",
+        "atomicWeight": 126.9       
+    },
+    "Xe": {
+        "atomicNumber": 54,
+        "name": "xenon",
+        "atomicWeight": 131.3       
+    },
+    "Cs": {
+        "atomicNumber": 55,
+        "name": "caesium",
+        "atomicWeight": 132.9       
+    },
+    "Ba": {
+        "atomicNumber": 56,
+        "name": "barium",
+        "atomicWeight": 137.3       
+    },
+    "La": {
+        "atomicNumber": 57,
+        "name": "lanthanum",
+        "atomicWeight": 138.9       
+    },
+    "Ce": {
+        "atomicNumber": 58,
+        "name": "cerium",
+        "atomicWeight": 140.1       
+    },
+    "Pr": {
+        "atomicNumber": 59,
+        "name": "praseodymium",
+        "atomicWeight": 140.9       
+    },
+    "Nd": {
+        "atomicNumber": 60,
+        "name": "neodymium",
+        "atomicWeight": 144.2       
+    },
+    "Pm": {
+        "atomicNumber": 61,
+        "name": "promethium",
+        "atomicWeight": 145       
+    },
+    "Sm": {
+        "atomicNumber": 62,
+        "name": "samarium",
+        "atomicWeight": 150.4       
+    },
+    "Eu": {
+        "atomicNumber": 63,
+        "name": "europium",
+        "atomicWeight": 152.0       
+    },
+    "Gd": {
+        "atomicNumber": 64,
+        "name": "gadolinium",
+        "atomicWeight": 157.3       
+    },
+    "Tb": {
+        "atomicNumber": 65,
+        "name": "terbium",
+        "atomicWeight": 158.9       
+    },
+    "Dy": {
+        "atomicNumber": 66,
+        "name": "dysprosium",
+        "atomicWeight": 162.5       
+    },
+    "Ho": {
+        "atomicNumber": 67,
+        "name": "holmium",
+        "atomicWeight": 164.9       
+    },
+    "Er": {
+        "atomicNumber": 68,
+        "name": "erbium",
+        "atomicWeight": 167.3       
+    },
+    "Tm": {
+        "atomicNumber": 69,
+        "name": "ethulium",
+        "atomicWeight": 168.9       
+    },
+    "Yb": {
+        "atomicNumber": 70,
+        "name": "ytterbium",
+        "atomicWeight": 173.1       
+    },
+    "Lu": {
+        "atomicNumber": 71,
+        "name": "lutetium",
+        "atomicWeight": 175.0       
+    },
+    "Hf": {
+        "atomicNumber": 72,
+        "name": "hafnium",
+        "atomicWeight": 178.5       
+    },
+    "Ta": {
+        "atomicNumber": 73,
+        "name": "tantalum",
+        "atomicWeight": 180.9       
+    },
+    "W": {
+        "atomicNumber": 74,
+        "name": "tungsten", 
+        "atomicWeight": 183.9       
+    },
+    "Re": {
+        "atomicNumber": 75,
+        "name": "rhenium",
+        "atomicWeight": 186.2       
+    },
+    "Os": {
+        "atomicNumber": 76,
+        "name": "osmium",
+        "atomicWeight": 190.2       
+    },
+    "Ir": {
+        "atomicNumber": 77,
+        "name": "iridium",
+        "atomicWeight": 192.2       
+    },
+    "Pt": {
+        "atomicNumber": 78,
+        "name": "platinum",
+        "atomicWeight": 195.1       
+    },
+    "Au": {
+        "atomicNumber": 79,
+        "name": "gold",
+        "atomicWeight": 197.0      
+    },
+    "Hg": {
+        "atomicNumber": 80,
+        "name": "mercury",
+        "atomicWeight": 200.6       
+    },
+    "Tl": {
+        "atomicNumber": 81,
+        "name": "Thallium",
+        "atomicWeight": 204.4       
+    },
+    "Pb": {
+        "atomicNumber": 82,
+        "name": "lead",
+        "atomicWeight": 207.2      
+    },
+    "Bi": {
+        "atomicNumber": 83,
+        "name": "bismuth",
+        "atomicWeight": 209.0       
+    },
+    "Po": {
+        "atomicNumber": 84,
+        "name": "polonium",
+        "atomicWeight": 209      
+    },
+    "At": {
+        "atomicNumber": 85,
+        "name": "astatine",
+        "atomicWeight": 210      
+    },
+    "Rn": {
+        "atomicNumber": 86,
+        "name": "radon",
+        "atomicWeight": 222       
+    },
+    "Fr": {
+        "atomicNumber": 87,
+        "name": "francium",
+        "atomicWeight": 223       
+    },
+    "Ra": {
+        "atomicNumber": 88,
+        "name": "radium",
+        "atomicWeight": 226       
+    },
+    "Ac": {
+        "atomicNumber": 89,
+        "name": "actinium",
+        "atomicWeight": 227       
+    },
+    "Th": {
+        "atomicNumber": 90,
+        "name": "thorium",
+        "atomicWeight": 232       
+    },
+    "Pa": {
+        "atomicNumber": 91,
+        "name": "protactinium",
+        "atomicWeight": 231       
+    },
+    "U": {
+        "atomicNumber": 92,
+        "name": "uranium",
+        "atomicWeight": 238       
+    },
+    "Np": {
+        "atomicNumber": 93,
+        "name": "neptunium",
+        "atomicWeight": 237.0482       
+    },
+    "Pu": {
+        "atomicNumber": 94,
+        "name": "plutonium",
+        "atomicWeight": 244      
+    },
+    "Am": {
+        "atomicNumber": 95,
+        "name": "americium",
+        "atomicWeight": 243      
+    },
+    "Cm": {
+        "atomicNumber": 96,
+        "name": "curium",
+        "atomicWeight": 247      
+    },
+    "Bk": {
+        "atomicNumber": 97,
+        "name": "berkelium",
+        "atomicWeight": 247     
+    },
+    "Cf": {
+        "atomicNumber": 98,
+        "name": "californium",
+        "atomicWeight": 251     
+    },
+    "Es": {
+        "atomicNumber": 99,
+        "name": "einsteinium",
+        "atomicWeight": 252       
+    },
+    "Fm": {
+        "atomicNumber": 100,
+        "name": "fermium",
+        "atomicWeight": 257     
+    },
+    "Md": {
+        "atomicNumber": 101,
+        "name": "mendelevium",
+        "atomicWeight": 258     
+    },
+    "No": {
+        "atomicNumber": 102,
+        "name": "nobelium",
+        "atomicWeight": 259     
+    },
+    "Lr": {
+        "atomicNumber": 103,
+        "name": "lawrencium",
+        "atomicWeight": 262     
+    },
+    "Rf": {
+        "atomicNumber": 104,
+        "name": "rutherfordium",
+        "atomicWeight": 267      
+    },
+    "Db": {
+        "atomicNumber": 105,
+        "name": "dubnium",
+        "atomicWeight": 262      
+    },
+    "Sg": {
+        "atomicNumber": 106,
+        "name": "seaborgium",
+        "atomicWeight": 269      
+    },
+    "Bh": {
+        "atomicNumber": 107,
+        "name": "bohrium",
+        "atomicWeight": 264       
+    },
+    "Hs": {
+        "atomicNumber": 108,
+        "name": "hassium",
+        "atomicWeight": 269      
+    },
+    "Mt": {
+        "atomicNumber": 109,
+        "name": "meitnerium",
+        "atomicWeight": 278      
+    },
+    "Ds": {
+        "atomicNumber": 110,
+        "name": "darmstadtium",
+        "atomicWeight": 281      
+    },
+    "Rg": {
+        "atomicNumber": 111,
+        "name": "roentgenium",
+        "atomicWeight": 282       
+    },
+    "Cn": {
+        "atomicNumber": 112,
+        "name": "copernicium",
+        "atomicWeight": 285       
+    },
+    "Nh": {
+        "atomicNumber": 113,
+        "name": "nihonium",
+        "atomicWeight": 286     
+    },
+    "Fl": {
+        "atomicNumber": 114,
+        "name": "flerovium",
+        "atomicWeight": 289       
+    },
+    "Mc": {
+        "atomicNumber": 115,
+        "name": "moscovium",
+        "atomicWeight": 289       
+    },
+    "Lv": {
+        "atomicNumber": 116,
+        "name": "livermorium",
+        "atomicWeight": 293       
+    },
+    "Ts": {
+        "atomicNumber": 117,
+        "name": "tennessine",
+        "atomicWeight": 294      
+    },
+    "Og": {
+        "atomicNumber": 118,
+        "name": "oganesson",
+        "atomicWeight": 294     
     }
 }
