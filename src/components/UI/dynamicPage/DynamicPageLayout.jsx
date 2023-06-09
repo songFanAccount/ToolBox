@@ -1,52 +1,40 @@
 import React from "react"
 import { Box } from "@mui/material"
-import { Outlet, useLocation } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 import ToolPageLayout from "../toolPage/ToolPageLayout"
 import CategoryPageLayout from "../categoryPage/CategoryPageLayout";
-import { useState } from "react";
 import { tools } from "../../../data"
 
 export default function DynamicPageLayout() {
     let isCategory = true
-    const [curPath, setCurPath] = useState("")
     const location = useLocation()
+    const pathname = location.pathname
     
-    React.useEffect(() => {
-		setCurPath(location.pathname)
-	}, [location])
     let page
-    if (curPath.startsWith('/tools')) {
-        const routes = curPath.split("/")
+    if (pathname.startsWith('/tools')) {
+        const routes = pathname.split("/")
         let cat = tools
-        let names = ['Categories']
-        let path = '/tools'
-        let urls = ['/tools']
+        let name
         for(let i = 2; i < routes.length; i++) {
             const newCat = cat.subCategories?.[routes[i]]
             if(newCat) { // Valid subcategory case
                 cat = newCat
-                path += `/${routes[i]}`
-                urls.push(path)
-                names.push(cat.displayName)
+                name = cat.displayName
             } else { // Not subcategory, check if it is a tool
                 const tool = cat.tools?.[routes[i]]
                 if(tool) {
-                    names.push(tool.displayName)
-                    path += `/${routes[i]}`
-                    urls.push(path)
+                    name = tool.displayName
                     isCategory = false
                 }
                 break
             }
         }
-        page = isCategory ? <CategoryPageLayout url={urls.at(-1)} name={names.at(-1)}/> : <ToolPageLayout/>
+        page = isCategory ? <CategoryPageLayout name={name}/> : <ToolPageLayout/>
     }
 
     return (
-        <>
-            <Box>This is dynamic page layout</Box>
+        <Box>
             {page}
-            <Outlet />
-        </>
+        </Box>
     )
 }
