@@ -22,6 +22,7 @@ export function getChemEqnInfo(eqn) {
     let bracesMode = false
     let lastChar = ''
     let arrow = '', arrowMode = false
+    let compoundStorage = [] // Used for the purpose of processing nested parentheses
     const allowedArrows = ['->', '<=>', '<->', '<-']
     const allowedArrowsMsg = allowedArrows.join(', ')
     function resetElementVars() {
@@ -85,6 +86,15 @@ export function getChemEqnInfo(eqn) {
         if(!allowedArrows.includes(arrow)) throw new Error("Invalid arrow: " + arrow + ". Allowed arrows are " + allowedArrowsMsg)
         arrowMode = false
         onProductsSide = true
+    }
+    function storeLastCompound() {
+        if(lastCompoundSubscript !== '') throw new Error("ALERT DEVS: storeLastCompound")
+        compoundStorage.push({
+            coefficient: lastCoefficient,
+            compound: lastCompound
+        })
+        console.log(compoundStorage)
+        resetCompoundVars()
     }
     function processChar(char) {
         if(arrowMode && !['<', '>', '-', '='].includes(char)) processArrow()
@@ -172,6 +182,13 @@ export function getChemEqnInfo(eqn) {
                     break
                 case '(':
                     numOpenParens++
+                    if(lastElement === '') break // No compound to store before these parentheses 
+                    /*
+                    Opening a bracket should 1. temporarily terminate the current compound 2. Store in somewhere accessible later 3. Reset element/compound vars for
+                    the compound inside the parentheses
+                    */
+                    processLastElement()
+                    storeLastCompound()
                     break
                 case ')':
                     numOpenParens--
