@@ -12,11 +12,6 @@ export default function ChemEquationBalancer() {
     const chemObj = useRef(null)
     const delay = useRef(1000)
     useEffect(() => {
-        window.MathJax = {
-            ...window.MathJax,
-            loader: {load: ['[tex]/mhchem']},
-            tex: {packages: {'[+]': ['mhchem']}}
-        };
         function typeset() {
             if(window?.MathJax !== undefined){
                 window.MathJax.typeset()

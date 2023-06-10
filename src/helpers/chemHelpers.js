@@ -68,7 +68,6 @@ export function getChemEqnInfo(eqn) {
     }
     function addCompleteCompound() {
         onProductsSide ? products.push(additionCompounds) : reactants.push(additionCompounds)
-        console.log(additionCompounds)
         additionCompounds = []
     }
     function addLastCharToLatex() {
@@ -81,8 +80,9 @@ export function getChemEqnInfo(eqn) {
         }
     }
     function processArrow() {
-        arrowMode = false
         if(!allowedArrows.includes(arrow)) throw new Error("Invalid arrow: " + arrow)
+        arrowMode = false
+        onProductsSide = true
     }
     function processChar(char) {
         if(arrowMode && !['<', '>', '-', '='].includes(char)) processArrow()
@@ -153,7 +153,12 @@ export function getChemEqnInfo(eqn) {
                     Enter arrow mode if possible
                     */
                     if(!arrowMode) {
-                        if(arrow === '') arrowMode = true
+                        if(arrow === '') {
+                            arrowMode = true; 
+                            processLastElement()
+                            processLastCompound()
+                            addCompleteCompound()
+                        }
                         else throw new Error("Only one reaction arrow expected!")
                     }
                     /*
@@ -168,6 +173,14 @@ export function getChemEqnInfo(eqn) {
         addLastCharToLatex()
         lastChar = char
     }
+    function processLastChar(char) {
+        processLastElement()
+        processLastCompound()
+        addCompleteCompound()
+        if((char >= 'A' && char <= 'Z') || (char >= 'a' && char <= 'z') || (char >= '0' && char <= '9')) {
+            addLastCharToLatex()
+        }
+    }
     for(let i = 0; i < eqnLen; i++) {
         try {
             processChar(eqn[i])
@@ -178,6 +191,16 @@ export function getChemEqnInfo(eqn) {
             }
         }
     }
+    try {
+        processLastChar(lastChar)
+    } catch (err) {
+        return {
+            success: false,
+            errorMsg: err.message
+        }
+    }
+    console.log(reactants)
+    console.log(products)
     return {
         success: true,
         reactants: reactants,
@@ -185,3 +208,5 @@ export function getChemEqnInfo(eqn) {
         latex: latex
     }
 }
+
+// FOR TESTING PURPOSES: 3HCL + 2As2O3 + 7NaNO3 + 4H2O -> 2NO + 2H3AsO4 + 9NaCl
