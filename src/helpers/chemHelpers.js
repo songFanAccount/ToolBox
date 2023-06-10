@@ -182,6 +182,10 @@ export function getChemEqnInfo(eqn) {
             if(lastElement === '') throw new Error("Compound cannot be just a single number: " + char) //
             else addLastCharToLatex()
         }
+        if(['<', '>', '-', '='].includes(char)) {
+            addLastCharToLatex()
+            return // Don't need to do the processing below, this arrow already took care of that
+        }
         processLastElement()
         processLastCompound()
         addCompleteCompound()
