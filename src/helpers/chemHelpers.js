@@ -18,6 +18,7 @@ export function getChemEqnInfo(eqn) {
     let additionCompounds = []
     let lastCompound = [], lastCoefficient = '', lastCompoundSubscript = ''
     let lastElement = '', lastElementSubscript = ''
+    let numOpenParens = 0
     let bracesMode = false
     let lastChar = ''
     let arrow = '', arrowMode = false
@@ -128,6 +129,7 @@ export function getChemEqnInfo(eqn) {
         } else { // Account for other symbols
             switch(char) {
                 case '+':
+                    if(numOpenParens) throw new Error("Must close all parentheses before '+'!")
                     if(lastElement === '') throw new Error("Invalid usage of '+'!")
                     /*
                     + should terminate the last element along with the last compound
@@ -150,6 +152,7 @@ export function getChemEqnInfo(eqn) {
                 case '<':
                 case '>':
                 case '=':
+                    if(numOpenParens) throw new Error("Must close all parentheses before reaction arrow!")
                     /*
                     Enter arrow mode if possible
                     */
@@ -166,6 +169,12 @@ export function getChemEqnInfo(eqn) {
                     Potential arrow detected, enter arrow mode which is just arrow !== ''
                     */
                     arrow += char
+                    break
+                case '(':
+                    numOpenParens++
+                    break
+                case ')':
+                    numOpenParens--
                     break
                 case '/':
                     if(lastElement === '' && lastCoefficient !== '') throw new Error("Cannot support fractional coefficients! You can convert all coefficients to integers by multiplying every term by the lowest common denominator.")
