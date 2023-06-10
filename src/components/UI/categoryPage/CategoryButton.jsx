@@ -1,7 +1,7 @@
 import React from "react"
 import { Button } from "@mui/material"
 
-export default function CategoryButton({categoryName, selected, handleClick}) {
+export default function CategoryButton({category, selected, handleClick}) {
 
     return (
         <Button
@@ -9,10 +9,10 @@ export default function CategoryButton({categoryName, selected, handleClick}) {
             sx={{
                 margin: "5px"
             }}
-            onClick={() => handleClick(categoryName)}
+            onClick={() => handleClick(category)}
             color={selected ? "success" : "primary"}
         >
-            {categoryName}
+            {category.displayName}
         </Button>
     )
 }
