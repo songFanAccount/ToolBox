@@ -22,6 +22,7 @@ export function getChemEqnInfo(eqn) {
     let lastChar = ''
     let arrow = '', arrowMode = false
     const allowedArrows = ['->', '<=>', '<->', '<-']
+    const allowedArrowsMsg = allowedArrows.join(', ')
     function resetElementVars() {
         lastElement = ''
         lastElementSubscript = ''
@@ -80,7 +81,7 @@ export function getChemEqnInfo(eqn) {
         }
     }
     function processArrow() {
-        if(!allowedArrows.includes(arrow)) throw new Error("Invalid arrow: " + arrow)
+        if(!allowedArrows.includes(arrow)) throw new Error("Invalid arrow: " + arrow + ". Allowed arrows are " + allowedArrowsMsg)
         arrowMode = false
         onProductsSide = true
     }
@@ -137,7 +138,7 @@ export function getChemEqnInfo(eqn) {
                     break
                 case '.':
                     /* Should only be allowed if lastElement is not empty, since . must follow another compound */
-                    if(lastElement === '') throw new Error("Invalid usage of '.'!")
+                    if(lastElement === '') throw new Error("Cannot support decimal coefficients!")
                     /*
                     . should terminate the last element along with the last compound, 
                     but should not complete the compound as it should indicate more addition compounds are expected
@@ -166,6 +167,9 @@ export function getChemEqnInfo(eqn) {
                     */
                     arrow += char
                     break
+                case '/':
+                    if(lastElement === '' && lastCoefficient !== '') throw new Error("Cannot support fractional coefficients! You can convert all coefficients to integers by multiplying every term by the lowest common denominator.")
+                    throw new Error("Invalid character: " + char)
                 default:
                     throw new Error("Invalid character: " + char)
             }
@@ -209,4 +213,4 @@ export function getChemEqnInfo(eqn) {
     }
 }
 
-// FOR TESTING PURPOSES: 3HCL + 2As2O3 + 7NaNO3 + 4H2O -> 2NO + 2H3AsO4 + 9NaCl
+// FOR TESTING PURPOSES: 3HCl + 2As2O3 + 7NaNO3 + 4H2O -> 2NO + 2H3AsO4 + 9NaCl
