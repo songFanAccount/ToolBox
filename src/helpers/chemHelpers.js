@@ -12,19 +12,24 @@ export function getChemEqnInfo(eqn) {
     /* Initialising return values */
     let reactants = []
     let products = []
+    let latex = ''
     /* Initialising variables for parsing */
     let onProductsSide = false
-    let lastCompound = []
-    let lastCoefficient = ''
-    let lastElement = ''
-    let lastChar = ''
-    let lastSubscript = ''
+    let additionCompounds = []
+    let lastCompound = [], lastCoefficient = '', lastCompoundSubscript = ''
+    let lastElement = '', lastElementSubscript = ''
     let bracesMode = false
-    function resetVars() {
-        lastCoefficient = ''
+    let lastChar = ''
+    let arrow = '', arrowMode = false
+    const allowedArrows = ['->', '<=>', '<->', '<-']
+    function resetElementVars() {
         lastElement = ''
-        lastChar = ''
-        lastSubscript = ''
+        lastElementSubscript = ''
+    }
+    function resetCompoundVars() {
+        lastCompound = []
+        lastCoefficient = ''
+        lastCompoundSubscript = ''
     }
     function processLastElement() {
         if(lastElement === '') return
@@ -42,19 +47,45 @@ export function getChemEqnInfo(eqn) {
 
         Subscript is guaranteed to be a positive integer
         */
-        if(lastCoefficient === '') lastCoefficient = '1' // Defaults to 1
-        if(lastSubscript === '') lastSubscript = '1' // Defaults to 1
+        if(lastElementSubscript === '') lastElementSubscript = '1' // Defaults to 1
         lastCompound.push({
             ...matchingElement,
             symbol: lastElement,
-            subscript: lastSubscript,
-            coefficient: lastCoefficient
+            subscript: parseInt(lastElementSubscript)
         })
-        console.log(lastCompound)
         /* Reset all pushed values for new elements */
-        resetVars()
+        resetElementVars()
+    }
+    function processLastCompound() {
+        if(lastCoefficient === '') lastCoefficient = '1' // Defaults to 1
+        if(lastCompoundSubscript === '') lastCompoundSubscript = '1' // Defaults to 1
+        additionCompounds.push({
+            compound: lastCompound,
+            coefficient: lastCoefficient,
+            subscript: parseInt(lastCompoundSubscript)
+        })
+        resetCompoundVars()
+    }
+    function addCompleteCompound() {
+        onProductsSide ? products.push(additionCompounds) : reactants.push(additionCompounds)
+        console.log(additionCompounds)
+        additionCompounds = []
+    }
+    function addLastCharToLatex() {
+        switch (lastChar) {
+            case '+':
+                latex += ' + '
+                break
+            default:
+                latex += lastChar
+        }
+    }
+    function processArrow() {
+        arrowMode = false
+        if(!allowedArrows.includes(arrow)) throw new Error("Invalid arrow: " + arrow)
     }
     function processChar(char) {
+        if(arrowMode && !['<', '>', '-', '='].includes(char)) processArrow()
         if(char >= 'A' && char <= 'Z') {
             /* 
             Capital letter, should:
@@ -77,8 +108,8 @@ export function getChemEqnInfo(eqn) {
             /*
             Number, few cases where this occurs, break them down.
             - lastElement !== '' -> Currently processing a new element, seeing a number means it has to be part of this elements subscript:
-                - If lastSubscript === '': The new number becomes the subscript, unless if it's 0. Design choice to disallow 0 starting subscript
-                - Else: Simply concatenate it with lastSubscript. Design choice to disallow length > 2
+                - If lastElementSubscript === '': The new number becomes the subscript, unless if it's 0. Design choice to disallow 0 starting subscript
+                - Else: Simply concatenate it with lastElementSubscript. Design choice to disallow length > 2
             - lastElement === '' -> lastElement is cleared either because of a +, ->, .
                 - In all cases, this number is concatenated to the coefficient. Design choice to disallow length > 2 as well as starting 0
             - Braces mode -> Using numbers in braces like {3+} may be enabled in the future, but disallow it for now
@@ -89,18 +120,52 @@ export function getChemEqnInfo(eqn) {
                 if(lastCoefficient.length >= 2) throw new Error("Cannot support coefficients with 3 or more digits: " + lastCoefficient + char)
                 lastCoefficient += char
             } else {
-                if(char === '0' && lastSubscript === '') throw new Error("Subscript must not start with 0!")
-                if(lastSubscript.length >= 2) throw new Error("Cannot support subscripts with 3 or more digits: " + lastSubscript + char)
-                lastSubscript += char
+                if(char === '0' && lastElementSubscript === '') throw new Error("Subscript must not start with 0!")
+                if(lastElementSubscript.length >= 2) throw new Error("Cannot support subscripts with 3 or more digits: " + lastElementSubscript + char)
+                lastElementSubscript += char
             }
         } else { // Account for other symbols
             switch(char) {
                 case '+':
+                    if(lastElement === '') throw new Error("Invalid usage of '+'!")
+                    /*
+                    + should terminate the last element along with the last compound
+                    */
+                    processLastElement()
+                    processLastCompound()
+                    addCompleteCompound()
+                    break
+                case '.':
+                    /* Should only be allowed if lastElement is not empty, since . must follow another compound */
+                    if(lastElement === '') throw new Error("Invalid usage of '.'!")
+                    /*
+                    . should terminate the last element along with the last compound, 
+                    but should not complete the compound as it should indicate more addition compounds are expected
+                    */
+                    processLastElement()
+                    processLastCompound()
+                    break
+                case '-': 
+                case '<':
+                case '>':
+                case '=':
+                    /*
+                    Enter arrow mode if possible
+                    */
+                    if(!arrowMode) {
+                        if(arrow === '') arrowMode = true
+                        else throw new Error("Only one reaction arrow expected!")
+                    }
+                    /*
+                    Potential arrow detected, enter arrow mode which is just arrow !== ''
+                    */
+                    arrow += char
                     break
                 default:
-                    break
+                    throw new Error("Invalid character: " + char)
             }
         }
+        addLastCharToLatex()
         lastChar = char
     }
     for(let i = 0; i < eqnLen; i++) {
@@ -116,6 +181,7 @@ export function getChemEqnInfo(eqn) {
     return {
         success: true,
         reactants: reactants,
-        products: products
+        products: products,
+        latex: latex
     }
 }

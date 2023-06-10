@@ -32,7 +32,7 @@ export default function ChemEquationBalancer() {
     }, [expr])
     const EquationDisplay = () => {
         if(chemObj.current?.success) {
-            return <Typography>{`$\\ce{${expr}}$`}</Typography>
+            return <Typography>{`$\\ce{${chemObj.current.latex}}$`}</Typography>
         } else {
             const errorMsg = chemObj.current ? chemObj.current.errorMsg : "Empty input!"
             return <DisplayError errorMsg={errorMsg}/>
