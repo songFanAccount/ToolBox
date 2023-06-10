@@ -35,13 +35,11 @@ export default function CategoryPageLayout({category}) {
 }
 
 function generateCategoryButtonObjectList(categoryName) {
-    const categories = Object.keys(tools.subCategories)
+    const categories = Object.values(tools.subCategories).map(tool => tool.displayName)
     let categoriesObjectList = []
     if (categoryName) {
         for (let i = 0; i < categories.length; i++) {
-            categoriesObjectList.push({id: categories[i], selected: categoryName.toLowerCase() === categories[i] ? true : false})
-            console.log(categoryName)
-            console.log(categories[i])
+            categoriesObjectList.push({id: categories[i], selected: categoryName === categories[i] ? true : false})
         }
     }
     else {
