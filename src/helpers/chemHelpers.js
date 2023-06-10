@@ -178,10 +178,14 @@ export function getChemEqnInfo(eqn) {
         lastChar = char
     }
     function processLastChar(char) {
+        if(char >= '0' && char <= '9') {
+            if(lastElement === '') throw new Error("Compound cannot be just a single number: " + char) //
+            else addLastCharToLatex()
+        }
         processLastElement()
         processLastCompound()
         addCompleteCompound()
-        if((char >= 'A' && char <= 'Z') || (char >= 'a' && char <= 'z') || (char >= '0' && char <= '9')) {
+        if((char >= 'A' && char <= 'Z') || (char >= 'a' && char <= 'z')) {
             addLastCharToLatex()
         }
     }
