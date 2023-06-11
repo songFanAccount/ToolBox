@@ -10,7 +10,9 @@ const mathsTools = {
         differentiation: {
             displayName: 'Differentiation',
             tools: {
-                'stationary-points': 'Stationary points'
+                'stationary-points': {
+                    displayName: 'Stationary points'
+                }
             },
             subCategories:  {
                 estimation: {
@@ -27,7 +29,7 @@ const mathsTools = {
             }
         }
     },
-    description : "This is math category."
+    description : <p>This is <strong>Maths</strong> Category</p>
 }
 
 const chemistryTools = {
@@ -46,7 +48,7 @@ const chemistryTools = {
             }
         }
     },
-    description : "This is chemistry category."
+    description : <p>This is <strong>Chemistry</strong> Category</p>
 }
 const physicsTools = {
     displayName: 'Physics',
@@ -64,7 +66,7 @@ const physicsTools = {
             }
         }
     },
-    description : "This is physics category."
+    description : <p>This is <strong>Physics</strong> Category</p>
 }
 
 const engineeringTools = {
@@ -83,7 +85,7 @@ const engineeringTools = {
             }
         }
     },
-    description : "This is engineering category."
+    description : <p>This is <strong>Engineering</strong> Category</p>
 }
 
 const irlGamesTools = {
@@ -102,7 +104,7 @@ const irlGamesTools = {
             }
         }
     },
-    description : "This is irl games category."
+    description : <p>This is <strong>IRL Games</strong> Category</p>
 }
 
 const videoGamesTools = {
@@ -121,7 +123,7 @@ const videoGamesTools = {
             }
         }
     },
-    description : "This is video games category."
+    description : <p>This is <strong>Video Games</strong> Category</p>
 }
 
 const compsciTools = {
@@ -139,8 +141,9 @@ const compsciTools = {
             subCategories: null
         }
     },
-    description : "This is computer science category."
+    description : <p>This is <strong>Computer Science</strong> Category</p>
 }
+
 export const tools = {
     displayName: "All categories",
     subCategories: {
@@ -152,5 +155,5 @@ export const tools = {
         irlGames: irlGamesTools,
         videoGames: videoGamesTools
     },
-    description : "Everything you want is in here!"
+    description : <p>This is <strong>All Category</strong></p>
 }
