@@ -285,3 +285,4 @@ export function getChemEqnInfo(eqn) {
 
 // FOR TESTING PURPOSES: 3HCl + 2As2O3 + 7NaNO3 + 4H2O -> 2NO + 2H3AsO4 + 9NaCl
 // (((NH3)2N)4.KOH)8
+// (((NH3)2N)4KOH)8 +2(2(3NH3)4(MgSO4)2)5 +(((((K)3 )2)3)4)7
