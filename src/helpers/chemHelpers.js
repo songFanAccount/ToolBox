@@ -17,7 +17,6 @@ export function getChemEqnInfo(eqn) {
     let onProductsSide = false
     let additionCompounds = []
     let lastCompound = [], lastCoefficient = '', lastCompoundSubscript = '', compoundSubscriptMode = false
-
     let lastElement = '', lastElementSubscript = ''
     let numOpenParens = 0
     let bracesMode = false
@@ -66,14 +65,14 @@ export function getChemEqnInfo(eqn) {
         if(lastCompoundSubscript === '') lastCompoundSubscript = '1' // Defaults to 1
         additionCompounds.push({
             compound: lastCompound,
-            coefficient: lastCoefficient,
+            coefficient: parseInt(lastCoefficient),
             subscript: parseInt(lastCompoundSubscript)
         })
         resetCompoundVars()
     }
     function addCompleteCompound() {
         if(!additionCompounds.length) return
-        onProductsSide ? products.push(additionCompounds) : reactants.push(additionCompounds)
+        onProductsSide ? products.push(additionCompounds[0]) : reactants.push(additionCompounds[0]) // Buggy with addition compounds and IDK WHY????
         additionCompounds = []
     }
     function addLastCharToLatex() {
@@ -96,7 +95,6 @@ export function getChemEqnInfo(eqn) {
             coefficient: lastCoefficient,
             compound: lastCompound
         })
-        console.log(compoundStorage)
         resetCompoundVars()
     }
     function processCompoundSubcript(char) {
@@ -106,10 +104,6 @@ export function getChemEqnInfo(eqn) {
         } else {
             /* Disallow empty subscripts if parentheses are used */
             if(lastCompoundSubscript === '') throw new Error("Parentheses must be followed with a valid subscript!")
-            console.log(lastElement)
-            console.log(lastCompound)
-            /* Terminating compound wrapped in parentheses */
-            processLastElement()
             processLastCompound()
             /* need to concatenate with previous compound from storage if there are any */
             compoundSubscriptMode = false
@@ -180,15 +174,16 @@ export function getChemEqnInfo(eqn) {
                     addCompleteCompound()
                     break
                 case '.':
-                    /* Should only be allowed if lastElement is not empty, since . must follow another compound */
-                    if(lastElement === '' && !lastCompound.length) throw new Error("Cannot support decimal coefficients!")
-                    /*
-                    . should terminate the last element along with the last compound, 
-                    but should not complete the compound as it should indicate more addition compounds are expected
-                    */
-                    processLastElement()
-                    processLastCompound()
-                    break
+                    throw new Error("Cannot support decimals or addition compounds!")
+                    // /* Should only be allowed if lastElement is not empty, since . must follow another compound */
+                    // if(lastElement === '' && !lastCompound.length) throw new Error("Cannot support decimal coefficients!")
+                    // /*
+                    // . should terminate the last element along with the last compound, 
+                    // but should not complete the compound as it should indicate more addition compounds are expected
+                    // */
+                    // processLastElement()
+                    // processLastCompound()
+                    // break
                 case '-': 
                 case '<':
                 case '>':
@@ -213,7 +208,6 @@ export function getChemEqnInfo(eqn) {
                     break
                 case '(':
                     numOpenParens++
-                    if(lastElement === '' && !lastCompound.length) break // No compound to store before these parentheses 
                     /*
                     Opening a bracket should 1. temporarily terminate the current compound 2. Store in somewhere accessible later 3. Reset element/compound vars for
                     the compound inside the parentheses
@@ -222,6 +216,7 @@ export function getChemEqnInfo(eqn) {
                     storeLastCompound()
                     break
                 case ')':
+                    if(lastElement === '' && !lastCompound.length) throw new Error("Invalid use of parentheses!")
                     numOpenParens--
                     if(numOpenParens < 0) throw new Error("Too many closing parentheses!")
                     /*
@@ -230,6 +225,8 @@ export function getChemEqnInfo(eqn) {
                     compound
                     */
                     compoundSubscriptMode = true
+                    /* Terminating compound wrapped in parentheses */
+                    processLastElement()
                     break
                 case '/':
                     if(lastElement === '' && lastCoefficient !== '') throw new Error("Cannot support fractional coefficients! You can convert all coefficients to integers by multiplying every term by the lowest common denominator.")
@@ -243,6 +240,7 @@ export function getChemEqnInfo(eqn) {
     }
     function processLastChar(char) {
         if(numOpenParens) throw new Error("Invalid equation, must close all parentheses with subscripts!")
+        if(compoundSubscriptMode && lastCompoundSubscript === '') throw new Error("Parentheses must be followed with a valid subscript!")
         if(char >= '0' && char <= '9') {
             if(lastElement === '' && !lastCompound.length && !compoundSubscriptMode) throw new Error("Compound cannot be just a single number: " + char) //
             else addLastCharToLatex()
@@ -277,8 +275,6 @@ export function getChemEqnInfo(eqn) {
             errorMsg: err.message
         }
     }
-    console.log(reactants)
-    console.log(products)
     return {
         success: true,
         reactants: reactants,
