@@ -4,6 +4,7 @@ import { Box } from "@mui/material"
 import CategoryButton from "./CategoryButton"
 import CategoryDescription from "./CategoryDescription"
 import { tools } from "../../../data"
+import CategoryTools from "./CategoryTools"
 
 export default function CategoryPageLayout({category}) {
     const categoriesButtonObject = generateCategoryButtonObjectList(category)
@@ -28,7 +29,11 @@ export default function CategoryPageLayout({category}) {
         })
     }
 
-    const categoryButtonsComponent = categoryButtons.map( categoryButton => <CategoryButton key={categoryButton.id.displayName} category={categoryButton.id} selected={categoryButton.selected} handleClick={handleClick}/>)
+    const categoryButtonsComponent = categoryButtons.map( categoryButton => <CategoryButton 
+                                                                            key={categoryButton.id.displayName}
+                                                                            category={categoryButton.id}
+                                                                            selected={categoryButton.selected}
+                                                                            handleClick={handleClick}/>)
     return (
         <Box>
             <Box 
@@ -37,6 +42,7 @@ export default function CategoryPageLayout({category}) {
                 {categoryButtonsComponent}
             </Box>
             {selectedCategory && <CategoryDescription category={selectedCategory}/>}
+            {selectedCategory && <CategoryTools category={selectedCategory}/>}
         </Box>
     )
 }
