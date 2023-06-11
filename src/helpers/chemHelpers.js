@@ -16,7 +16,8 @@ export function getChemEqnInfo(eqn) {
     /* Initialising variables for parsing */
     let onProductsSide = false
     let additionCompounds = []
-    let lastCompound = [], lastCoefficient = '', lastCompoundSubscript = ''
+    let lastCompound = [], lastCoefficient = '', lastCompoundSubscript = '', compoundSubscriptMode = false
+
     let lastElement = '', lastElementSubscript = ''
     let numOpenParens = 0
     let bracesMode = false
@@ -60,6 +61,7 @@ export function getChemEqnInfo(eqn) {
         resetElementVars()
     }
     function processLastCompound() {
+        if(!lastCompound.length) return
         if(lastCoefficient === '') lastCoefficient = '1' // Defaults to 1
         if(lastCompoundSubscript === '') lastCompoundSubscript = '1' // Defaults to 1
         additionCompounds.push({
@@ -70,6 +72,7 @@ export function getChemEqnInfo(eqn) {
         resetCompoundVars()
     }
     function addCompleteCompound() {
+        if(!additionCompounds.length) return
         onProductsSide ? products.push(additionCompounds) : reactants.push(additionCompounds)
         additionCompounds = []
     }
@@ -96,8 +99,33 @@ export function getChemEqnInfo(eqn) {
         console.log(compoundStorage)
         resetCompoundVars()
     }
+    function processCompoundSubcript(char) {
+        if(char >= '0' && char <= '9') {
+            if(char === '0' && lastCompoundSubscript === '') throw new Error("Subscript cannot start with 0!")
+            if(lastCompoundSubscript.length >= 2) throw new Error("Cannot support subscript of longer than 2 digits: " + lastCompoundSubscript + char)
+        } else {
+            /* Disallow empty subscripts if parentheses are used */
+            if(lastCompoundSubscript === '') throw new Error("Parentheses must be followed with a valid subscript!")
+            console.log(lastElement)
+            console.log(lastCompound)
+            /* Terminating compound wrapped in parentheses */
+            processLastElement()
+            processLastCompound()
+            /* need to concatenate with previous compound from storage if there are any */
+            compoundSubscriptMode = false
+            const lastStoredCompound = compoundStorage.pop()
+            if(lastStoredCompound) {
+                /* Restore last compound value */
+                lastCoefficient = lastStoredCompound.coefficient
+                lastCompound = lastStoredCompound.compound
+            }
+            lastCompound.push(additionCompounds)
+            additionCompounds = []
+        }
+    }
     function processChar(char) {
         if(arrowMode && !['<', '>', '-', '='].includes(char)) processArrow()
+        if(compoundSubscriptMode) processCompoundSubcript(char)
         if(char >= 'A' && char <= 'Z') {
             /* 
             Capital letter, should:
@@ -127,20 +155,23 @@ export function getChemEqnInfo(eqn) {
             - Braces mode -> Using numbers in braces like {3+} may be enabled in the future, but disallow it for now
             */
             if(bracesMode) throw new Error("Numbers in braces currently disallowed!")
-            if(lastElement === '') {
-                if(char === '0' && lastCoefficient === '') throw new Error("Coefficient must not start with 0!")
-                if(lastCoefficient.length >= 2) throw new Error("Cannot support coefficients with 3 or more digits: " + lastCoefficient + char)
-                lastCoefficient += char
-            } else {
-                if(char === '0' && lastElementSubscript === '') throw new Error("Subscript must not start with 0!")
-                if(lastElementSubscript.length >= 2) throw new Error("Cannot support subscripts with 3 or more digits: " + lastElementSubscript + char)
-                lastElementSubscript += char
+            if(compoundSubscriptMode) lastCompoundSubscript += char
+            else {
+                if(lastElement === '') {
+                    if(char === '0' && lastCoefficient === '') throw new Error("Coefficient must not start with 0!")
+                    if(lastCoefficient.length >= 2) throw new Error("Cannot support coefficients with 3 or more digits: " + lastCoefficient + char)
+                    lastCoefficient += char
+                } else {
+                    if(char === '0' && lastElementSubscript === '') throw new Error("Subscript must not start with 0!")
+                    if(lastElementSubscript.length >= 2) throw new Error("Cannot support subscripts with 3 or more digits: " + lastElementSubscript + char)
+                    lastElementSubscript += char
+                }
             }
         } else { // Account for other symbols
             switch(char) {
                 case '+':
                     if(numOpenParens) throw new Error("Must close all parentheses before '+'!")
-                    if(lastElement === '') throw new Error("Invalid usage of '+'!")
+                    if(lastElement === '' && !lastCompound.length) throw new Error("Invalid usage of '+'!")
                     /*
                     + should terminate the last element along with the last compound
                     */
@@ -150,7 +181,7 @@ export function getChemEqnInfo(eqn) {
                     break
                 case '.':
                     /* Should only be allowed if lastElement is not empty, since . must follow another compound */
-                    if(lastElement === '') throw new Error("Cannot support decimal coefficients!")
+                    if(lastElement === '' && !lastCompound.length) throw new Error("Cannot support decimal coefficients!")
                     /*
                     . should terminate the last element along with the last compound, 
                     but should not complete the compound as it should indicate more addition compounds are expected
@@ -182,7 +213,7 @@ export function getChemEqnInfo(eqn) {
                     break
                 case '(':
                     numOpenParens++
-                    if(lastElement === '') break // No compound to store before these parentheses 
+                    if(lastElement === '' && !lastCompound.length) break // No compound to store before these parentheses 
                     /*
                     Opening a bracket should 1. temporarily terminate the current compound 2. Store in somewhere accessible later 3. Reset element/compound vars for
                     the compound inside the parentheses
@@ -192,6 +223,13 @@ export function getChemEqnInfo(eqn) {
                     break
                 case ')':
                     numOpenParens--
+                    if(numOpenParens < 0) throw new Error("Too many closing parentheses!")
+                    /*
+                    Closing a bracket should enter compound subscript mode such that the following characters
+                    must strictly be non-negative integers. Once a non-integer character is detected, process the current
+                    compound
+                    */
+                    compoundSubscriptMode = true
                     break
                 case '/':
                     if(lastElement === '' && lastCoefficient !== '') throw new Error("Cannot support fractional coefficients! You can convert all coefficients to integers by multiplying every term by the lowest common denominator.")
@@ -204,9 +242,11 @@ export function getChemEqnInfo(eqn) {
         lastChar = char
     }
     function processLastChar(char) {
+        if(numOpenParens) throw new Error("Invalid equation, must close all parentheses with subscripts!")
         if(char >= '0' && char <= '9') {
-            if(lastElement === '') throw new Error("Compound cannot be just a single number: " + char) //
+            if(lastElement === '' && !lastCompound.length && !compoundSubscriptMode) throw new Error("Compound cannot be just a single number: " + char) //
             else addLastCharToLatex()
+            if(compoundSubscriptMode) processCompoundSubcript('')
         }
         if(['<', '>', '-', '='].includes(char)) {
             addLastCharToLatex()
@@ -248,3 +288,4 @@ export function getChemEqnInfo(eqn) {
 }
 
 // FOR TESTING PURPOSES: 3HCl + 2As2O3 + 7NaNO3 + 4H2O -> 2NO + 2H3AsO4 + 9NaCl
+// (((NH3)2N)4.KOH)8
