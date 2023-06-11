@@ -10,20 +10,8 @@ import { useEffect } from 'react'
 export default function ChemEquationBalancer() {
     const [expr, setExpr] = useState('')
     const chemObj = useRef(null)
-    const delay = useRef(1000)
     useEffect(() => {
-        function typeset() {
-            if(window?.MathJax !== undefined){
-                window.MathJax.typeset()
-            }
-        }
-        if(delay.current > 0) {
-            setTimeout(() => typeset, delay.current)
-            delay.current = 0
-        } else {
-            typeset()
-        }
-    // eslint-disable-next-line
+        if(expr !== '') window.MathJax.typeset()
     }, [expr])
     const EquationDisplay = () => {
         if(chemObj.current?.success) {
