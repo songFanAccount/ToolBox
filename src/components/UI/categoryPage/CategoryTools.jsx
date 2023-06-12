@@ -1,4 +1,5 @@
 import React from "react"
+import { Box } from "@mui/material"
 
 import CategoryToolCard from "./CategoryToolCard"
 
@@ -7,6 +8,14 @@ export default function CategoryTools({category}) {
     return (
         <div>
             {toolsList}
+            {toolsList.length === 0 && <Box
+                                            display="flex"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            minHeight="50vh"
+                                        >
+                                            There is no tool for this category yet!
+                                        </Box>}
         </div>
     )
 }
