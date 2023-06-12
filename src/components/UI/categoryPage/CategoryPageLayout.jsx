@@ -46,6 +46,14 @@ export default function CategoryPageLayout({category}) {
             </Box>
             {selectedCategory && <CategoryDescription category={selectedCategory}/>}
             {selectedCategory && <CategoryTools category={selectedCategory}/>}
+            {!selectedCategory && <Box
+                                    display="flex"
+                                    justifyContent="center"
+                                    alignItems="center"
+                                    minHeight="75vh"
+                                  >
+                                    Select category to check out tools!
+                                  </Box>}
         </Box>
     )
 }
