@@ -1,5 +1,5 @@
 import React from "react"
-import { Card, CardContent, Typography, CardActions, Button, Grid } from "@mui/material"
+import { Card, CardContent, Typography, CardActions, Button } from "@mui/material"
 
 export default function CategoryToolCard({catWithTool}) {
     return (

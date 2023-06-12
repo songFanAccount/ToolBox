@@ -6,11 +6,13 @@ export default function CategoryButton({category, selected, handleClick}) {
     return (
         <Button
             variant={selected ? "contained" : "outlined"}
-            sx={{
-                margin: "5px"
-            }}
-            onClick={() => handleClick(category)}
             color={selected ? "success" : "primary"}
+            onClick={() => handleClick(category)}
+            sx={{
+                margin: "5px",
+                minWidth: "fit-content",
+                whiteSpace: "nowrap"
+            }}
         >
             {category.displayName}
         </Button>
