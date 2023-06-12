@@ -304,7 +304,7 @@ export function getChemEqnInfo(eqn) {
 
 // FOR TESTING PURPOSES: 3HCl + 2As2O3 + 7NaNO3 + 4H2O -> 2NO + 2H3AsO4 + 9NaCl
 // (((NH3)2N)4.KOH)8 CANT PROCESS ADDITION COMPOUNDS
-// (((NH3)2N)4KOH)8 -> 2(2(3NH3)4(MgSO4)2)5
+// (((NH3)2N)4KOH)8 + 3(((NH3)2N)4KOH)8 -> 2(2(3NH3)4(MgSO4)2)5
 
 export function modifyEqnInfo(eqnInfo, noCoefficients=false) {
     if(!eqnInfo?.success) throw new Error("getLatexFromEqnInfo: Need valid eqnInfo!")
@@ -324,6 +324,25 @@ export function modifyEqnInfo(eqnInfo, noCoefficients=false) {
         getRidOfCoefficients(reactants)
         getRidOfCoefficients(products)
         /* Now modify latex to get rid of coefficients */
+        function removeLatexCoefficients(latex) {
+            let compounds = latex.split(' + ')
+            compounds.forEach((value, index) => {
+                let newStartIndex = 0
+                while(value[newStartIndex] >= '0' && value[newStartIndex] <= '9') {
+                    newStartIndex++
+                }
+                compounds[index] = value.substring(newStartIndex)
+            })
+            return compounds.join(' + ')
+        }
+        if(arrow !== '') { // There are reactants AND products
+            let [reactantsLatex, productsLatex] = eqnInfo.latex.split(arrow)
+            reactantsLatex = removeLatexCoefficients(reactantsLatex)
+            productsLatex = removeLatexCoefficients(productsLatex)
+            latex = reactantsLatex + arrow + productsLatex
+        } else { // Has to be reactants only
+            latex = removeLatexCoefficients(latex)
+        }
     }
     return {
         success: success,
