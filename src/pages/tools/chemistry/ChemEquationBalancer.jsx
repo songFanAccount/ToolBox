@@ -3,19 +3,24 @@ import { CEPTextField } from '../../../components/GeneralComponents'
 import { PageParagraph, SectionBox } from '../../../components/UI/DefaultLayout'
 import { Box, Stack, Typography } from '@mui/material'
 import { useRef } from 'react'
-import { getChemEqnInfo } from '../../../helpers/chemHelpers'
+import { getChemEqnInfo, modifyEqnInfo } from '../../../helpers/chemHelpers'
 import { DisplayError } from '../../../components/Compsci/DataStructures'
 import { useEffect } from 'react'
 
 export default function ChemEquationBalancer() {
     const [expr, setExpr] = useState('')
+    const [exprNoSpace, setExprNoSpace] = useState('')
     const chemObj = useRef(null)
     useEffect(() => {
         if(expr !== '') window.MathJax.typeset()
     }, [expr])
-    const EquationDisplay = () => {
+    const EquationDisplay = ({withoutCoefficients=false}) => {
         if(chemObj.current?.success) {
-            return <Typography sx={{overflowX: 'scroll', height: 40}}>{`$\\ce{${chemObj.current.latex}}$`}</Typography>
+            let latex = chemObj.current.latex
+            if(withoutCoefficients) {
+                latex = modifyEqnInfo(chemObj.current, true)
+            }
+            return <Typography sx={{overflowX: 'auto', height: 40}}>{`$\\ce{${latex}}$`}</Typography>
         } else {
             const errorMsg = chemObj.current ? chemObj.current.errorMsg : "Empty input!"
             return <DisplayError errorMsg={errorMsg}/>
@@ -23,9 +28,14 @@ export default function ChemEquationBalancer() {
     }
     function handleChange(value) {
         setExpr(value)
-        chemObj.current = getChemEqnInfo(value)
+        const valueNoSpace = value.replaceAll(' ', '')
+        if(valueNoSpace !== exprNoSpace) {
+            setExprNoSpace(valueNoSpace)
+            chemObj.current = getChemEqnInfo(valueNoSpace)
+            console.log(chemObj.current)
+        }
     }
-    function DisplayElementCount({elementCount}) {
+    function ElementCount({elementCount}) {
         return (
             <Stack
                 direction="column"
@@ -36,18 +46,25 @@ export default function ChemEquationBalancer() {
             </Stack>
         )
     }
+    function DisplayElementCounts({name, children}) {
+        return (
+            <Box>
+                <PageParagraph text={name}/>
+                <Stack
+                    direction="row"
+                    columnGap={3}
+                >
+                    {children}
+                </Stack>
+            </Box>
+        )
+    }
     function Reactants() {
         if(chemObj.current?.success) {
             return (
-                <Box>
-                    <PageParagraph text="Reactants:"/>
-                    <Stack
-                        direction="row"
-                        columnGap={3}
-                    >
-                        {chemObj.current.reactants.map((reactant) => <DisplayElementCount elementCount={reactant.elementCount}/>)}
-                    </Stack>
-                </Box>
+                <DisplayElementCounts name="Reactants:">
+                    {chemObj.current.reactants.map((reactant) => <ElementCount elementCount={reactant.elementCount}/>)}
+                </DisplayElementCounts>
             )
         } else {
             return (
@@ -58,15 +75,9 @@ export default function ChemEquationBalancer() {
     function Products() {
         if(chemObj.current?.success) {
             return (
-                <Box>
-                    <PageParagraph text="Products:"/>
-                    <Stack
-                        direction="row"
-                        columnGap={3}
-                    >
-                        {chemObj.current.products.map((product) => <DisplayElementCount elementCount={product.elementCount}/>)}
-                    </Stack>
-                </Box>
+                <DisplayElementCounts name="Products:">
+                    {chemObj.current.products.map((product) => <ElementCount elementCount={product.elementCount}/>)}
+                </DisplayElementCounts>
             )
         } else {
             return (
@@ -85,6 +96,7 @@ export default function ChemEquationBalancer() {
                 <PageParagraph text="Enter an expression to begin:"/>
                 <CEPTextField onChange={handleChange} expr={expr}/>
                 <EquationDisplay/>
+                <EquationDisplay nocoefficients/>
                 <Stack 
                     direction="row"
                     columnGap={3}

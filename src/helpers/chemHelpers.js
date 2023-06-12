@@ -293,16 +293,22 @@ export function getChemEqnInfo(eqn) {
             errorMsg: err.message
         }
     }
-    console.log(reactants)
-    console.log(products)
     return {
         success: true,
         reactants: reactants,
         products: products,
-        latex: latex
+        latex: latex,
+        arrow: arrow
     }
 }
 
 // FOR TESTING PURPOSES: 3HCl + 2As2O3 + 7NaNO3 + 4H2O -> 2NO + 2H3AsO4 + 9NaCl
 // (((NH3)2N)4.KOH)8 CANT PROCESS ADDITION COMPOUNDS
-// (((NH3)2N)4KOH)8 +2(2(3NH3)4(MgSO4)2)5
+// (((NH3)2N)4KOH)8 -> 2(2(3NH3)4(MgSO4)2)5
+
+export function modifyEqnInfo(eqnInfo, nocoefficients=false) {
+    if(!eqnInfo?.success) throw new Error("getLatexFromEqnInfo: Need valid eqnInfo!")
+    const { reactants, products, arrow } = eqnInfo
+    console.log(reactants, products, arrow)
+    return eqnInfo
+}
