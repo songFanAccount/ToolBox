@@ -13,6 +13,7 @@ export function getChemEqnInfo(eqn) {
     let reactants = []
     let products = []
     let latex = ''
+    let elementCount = {}
     /* Initialising variables for parsing */
     let onProductsSide = false
     let additionCompounds = []
@@ -43,19 +44,19 @@ export function getChemEqnInfo(eqn) {
         const matchingElement = periodicTable[lastElement]
         if(!matchingElement) throw new Error("Invalid element: " + lastElement)
         /*
-        Coefficient is guaranteed to take positive numerical values in 3 possible forms:
-        1. Integer
-        2. Decimal: Only supporting .5
-        3. Fractional: Only supporting positive int / positive int
+        Coefficient is guaranteed to be positive integer
 
         Subscript is guaranteed to be a positive integer
         */
         if(lastElementSubscript === '') lastElementSubscript = '1' // Defaults to 1
+        const newSubscript = parseInt(lastElementSubscript)
         lastCompound.push({
             ...matchingElement,
             symbol: lastElement,
-            subscript: parseInt(lastElementSubscript)
+            subscript: newSubscript
         })
+        /* Update element count */
+        elementCount.hasOwnProperty(lastElement) ? elementCount[lastElement] += newSubscript : elementCount[lastElement] = newSubscript
         /* Reset all pushed values for new elements */
         resetElementVars()
     }
@@ -63,17 +64,29 @@ export function getChemEqnInfo(eqn) {
         if(!lastCompound.length) return
         if(lastCoefficient === '') lastCoefficient = '1' // Defaults to 1
         if(lastCompoundSubscript === '') lastCompoundSubscript = '1' // Defaults to 1
+        const newCoefficient = parseInt(lastCoefficient)
+        const newSubscript = parseInt(lastCompoundSubscript)
         additionCompounds.push({
             compound: lastCompound,
-            coefficient: parseInt(lastCoefficient),
-            subscript: parseInt(lastCompoundSubscript)
+            coefficient: newCoefficient,
+            subscript: newSubscript
+        })
+        /* Update element count */
+        const multiplier = newCoefficient * newSubscript
+        Object.keys(elementCount).forEach((key) => {
+            elementCount[key] *= multiplier
         })
         resetCompoundVars()
     }
     function addCompleteCompound() {
         if(!additionCompounds.length) return
-        onProductsSide ? products.push(additionCompounds[0]) : reactants.push(additionCompounds[0]) // Buggy with addition compounds and IDK WHY????
+        const newCompoundInfo = {
+            compound: additionCompounds[0],
+            elementCount: elementCount
+        }
+        onProductsSide ? products.push(newCompoundInfo) : reactants.push(newCompoundInfo) // Buggy with addition compounds and IDK WHY????
         additionCompounds = []
+        elementCount = {}
     }
     function addLastCharToLatex() {
         switch (lastChar) {
@@ -93,8 +106,10 @@ export function getChemEqnInfo(eqn) {
         if(lastCompoundSubscript !== '') throw new Error("ALERT DEVS: storeLastCompound")
         compoundStorage.push({
             coefficient: lastCoefficient,
-            compound: lastCompound
+            compound: lastCompound,
+            elementCount: elementCount
         })
+        elementCount = {}
         resetCompoundVars()
     }
     function processCompoundSubcript(char) {
@@ -112,6 +127,9 @@ export function getChemEqnInfo(eqn) {
                 /* Restore last compound value */
                 lastCoefficient = lastStoredCompound.coefficient
                 lastCompound = lastStoredCompound.compound
+                Object.entries(lastStoredCompound.elementCount).forEach((value) => {
+                    elementCount.hasOwnProperty(value[0]) ? elementCount[value[0]] += value[1] : elementCount[value[0]] = value[1]
+                })
             }
             lastCompound.push(additionCompounds)
             additionCompounds = []
@@ -275,6 +293,8 @@ export function getChemEqnInfo(eqn) {
             errorMsg: err.message
         }
     }
+    console.log(reactants)
+    console.log(products)
     return {
         success: true,
         reactants: reactants,
@@ -284,5 +304,5 @@ export function getChemEqnInfo(eqn) {
 }
 
 // FOR TESTING PURPOSES: 3HCl + 2As2O3 + 7NaNO3 + 4H2O -> 2NO + 2H3AsO4 + 9NaCl
-// (((NH3)2N)4.KOH)8
-// (((NH3)2N)4KOH)8 +2(2(3NH3)4(MgSO4)2)5 +(((((K)3 )2)3)4)7
+// (((NH3)2N)4.KOH)8 CANT PROCESS ADDITION COMPOUNDS
+// (((NH3)2N)4KOH)8 +2(2(3NH3)4(MgSO4)2)5
