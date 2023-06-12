@@ -39,7 +39,7 @@ export default function CategoryPageLayout({category}) {
             <Box 
                 sx={{
                     display: "flex",
-                    overflowX: "scroll"
+                    overflowX: "auto"
                 }}
             >
                 {categoryButtonsComponent}
