@@ -14,11 +14,13 @@ export default function ChemEquationBalancer() {
     useEffect(() => {
         if(expr !== '') window.MathJax.typeset()
     }, [expr])
-    const EquationDisplay = ({withoutCoefficients=false}) => {
+    const EquationDisplay = ({noCoefficients=false}) => {
         if(chemObj.current?.success) {
             let latex = chemObj.current.latex
-            if(withoutCoefficients) {
-                latex = modifyEqnInfo(chemObj.current, true)
+            if(noCoefficients) {
+                const noCoeffEqn = modifyEqnInfo(chemObj.current, true)
+                latex = noCoeffEqn.latex
+                console.log(noCoeffEqn)
             }
             return <Typography sx={{overflowX: 'auto', height: 40}}>{`$\\ce{${latex}}$`}</Typography>
         } else {
@@ -32,7 +34,6 @@ export default function ChemEquationBalancer() {
         if(valueNoSpace !== exprNoSpace) {
             setExprNoSpace(valueNoSpace)
             chemObj.current = getChemEqnInfo(valueNoSpace)
-            console.log(chemObj.current)
         }
     }
     function ElementCount({elementCount}) {
@@ -96,7 +97,7 @@ export default function ChemEquationBalancer() {
                 <PageParagraph text="Enter an expression to begin:"/>
                 <CEPTextField onChange={handleChange} expr={expr}/>
                 <EquationDisplay/>
-                <EquationDisplay nocoefficients/>
+                <EquationDisplay noCoefficients/>
                 <Stack 
                     direction="row"
                     columnGap={3}

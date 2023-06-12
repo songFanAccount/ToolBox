@@ -306,9 +306,30 @@ export function getChemEqnInfo(eqn) {
 // (((NH3)2N)4.KOH)8 CANT PROCESS ADDITION COMPOUNDS
 // (((NH3)2N)4KOH)8 -> 2(2(3NH3)4(MgSO4)2)5
 
-export function modifyEqnInfo(eqnInfo, nocoefficients=false) {
+export function modifyEqnInfo(eqnInfo, noCoefficients=false) {
     if(!eqnInfo?.success) throw new Error("getLatexFromEqnInfo: Need valid eqnInfo!")
-    const { reactants, products, arrow } = eqnInfo
-    console.log(reactants, products, arrow)
-    return eqnInfo
+    let { success, reactants, products, arrow, latex } = JSON.parse(JSON.stringify(eqnInfo))
+    if(noCoefficients) {
+        function getRidOfCoefficients(array) {
+            array.forEach((value, index) => {
+                const coefficient = value.compound.coefficient
+                if(coefficient !== 1) {
+                    Object.keys(array[index].elementCount).forEach((key) => {
+                        array[index].elementCount[key] /= coefficient
+                    })
+                    value.compound.coefficient = 1
+                }
+            })
+        }
+        getRidOfCoefficients(reactants)
+        getRidOfCoefficients(products)
+        /* Now modify latex to get rid of coefficients */
+    }
+    return {
+        success: success,
+        reactants: reactants,
+        products: products,
+        arrow: arrow,
+        latex: latex
+    }
 }
