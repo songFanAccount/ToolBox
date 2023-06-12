@@ -17,13 +17,10 @@ export default function ChemEquationBalancer() {
         if(expr !== '') window.MathJax.typeset()
     }, [expr])
     const EquationDisplay = ({obj}) => {
-        console.log(obj)
         if(obj?.success) {
-            console.log("first")
             let latex = obj.latex
             return <Typography sx={{overflowX: 'auto', height: 40}}>{`$\\ce{${latex}}$`}</Typography>
         } else {
-            console.log("second")
             const errorMsg = obj ? obj.errorMsg : "Empty input!"
             return <DisplayError errorMsg={errorMsg}/>
         }
