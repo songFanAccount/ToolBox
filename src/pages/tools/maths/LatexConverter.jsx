@@ -1,8 +1,9 @@
 import { Box, Typography } from '@mui/material';
 import React from 'react';
 import { MEPTextField } from '../../../components/Maths/GeneralComponents';
-import { exprToLatex } from '../../../components/Maths/LatexDisplay';
+import { processExpr } from '../../../components/Maths/LatexDisplay';
 import { CopyableParagraph, ExternalLink, PageParagraph, PageTextList, SectionBox, ToolLink } from '../../../components/UI/DefaultLayout';
+import { DisplayError } from '../../../components/Compsci/DataStructures';
 
 /*
 Page Content:
@@ -50,21 +51,20 @@ function LatexConverter() {
             return latexObj.current?.errorMsg
         }
     }
-    function handleChange(event) {
-        let input = event.target.value
-        setExpr(input)
-        latexObj.current = exprToLatex(input)
+    function handleChange(value) {
+        setExpr(value)
+        latexObj.current = processExpr(value, false, true)
     }
     return (
         <Box>
             <SectionBox noBorder={true}>
                 <PageParagraph text="LaTeX converter takes in mathematical expressions and outputs the equivalent expression in LaTeX syntax."/>
                 <PageParagraph text="Enter an expression:"/>
-                <MEPTextField handleChange={handleChange} expr={expr}/>
+                <MEPTextField onChange={handleChange} expr={expr}/>
             </SectionBox>
             <SectionBox title="Results">
                 <CopyableParagraph preText="The converted LaTeX expression: " copyableText={getTex()} copyable={validTex()}/>
-                {(latexObj.current && !latexObj.current?.success) && <PageParagraph bold={true} text={getErrorMsg()}/>}
+                {(latexObj.current && !latexObj.current?.success) && <DisplayError errorMsg={getErrorMsg()}/>}
                 <PageParagraph text="LaTeX preview:"/>
                 {latexObj.current?.success &&
                     <Typography sx={{fontSize: 20}}>

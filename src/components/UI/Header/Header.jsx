@@ -18,7 +18,6 @@ function Header(props) {
     }
     let titleStyle = {
         color: '#fdfffc',
-        pt: 2,
         px: 2,
         fontFamily: 'Braah One',
         fontSize: 40,
