@@ -270,7 +270,11 @@ export function TBTextButton({text, onClick, color='inherit', alignSelf="auto"})
 export function TBAlert({title, contents, status}) {
     const [open, setOpen] = useState(false)
     return (
-        <Alert severity={status}>
+        <Alert severity={status}
+            sx={{
+                width: 'fit-content'
+            }}
+        >
             <Stack
                 direction="column"
                 alignItems="flex-start"
