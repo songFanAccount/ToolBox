@@ -341,6 +341,7 @@ const toolnameToPath = {
     'collab': '/collab',
     'latex converter': '/tools/maths/latex-converter',
     'maths expression parser': '/tools/compsci/parsing/maths-expression-parser',
+    'chemistry equation balancer': '/tools/chemistry/chem-equation-balancer',
     'stationary points': '/'
 }
 export function ToolLink({name, linkText, fs=14, color='#011627'}) {
