@@ -7,7 +7,8 @@ export default function CategoryDescription({category}) {
         <Card 
             variant="outlined"
             sx = {{
-                mx: 0.5
+                mx: 0.5,
+                px: 0.5
             }}
         >
             <h3>{category.displayName}</h3>
