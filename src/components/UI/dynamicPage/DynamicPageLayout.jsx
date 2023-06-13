@@ -3,7 +3,7 @@ import { Box } from "@mui/material"
 import { useLocation } from "react-router-dom"
 import ToolPageLayout from "../toolPage/ToolPageLayout"
 import CategoryPageLayout from "../categoryPage/CategoryPageLayout";
-import { tools } from "../../../data"
+import { tools } from "../../../Data/data"
 
 export default function DynamicPageLayout() {
     let isCategory = true
