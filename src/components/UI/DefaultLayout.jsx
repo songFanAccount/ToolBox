@@ -313,7 +313,8 @@ const toolnameToPath = {
     'contact': '/contact',
     'collab': '/collab',
     'latex converter': '/tools/maths/latex-converter',
-    'maths expression parser': '/tools/compsci/parsing/maths-expression-parser'
+    'maths expression parser': '/tools/compsci/parsing/maths-expression-parser',
+    'stationary points': '/'
 }
 export function ToolLink({name, linkText}) {
     const toolPath = toolnameToPath[name]
