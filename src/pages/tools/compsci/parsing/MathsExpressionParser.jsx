@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material";
 import { CollapseSectionBox, ExternalLink, PageParagraph, PageTextList, SectionBox, ToolLink } from "../../../../components/UI/DefaultLayout";
 import { processExpr } from '../../../../components/Maths/LatexDisplay';
 import { BinaryTree, DisplayError, ElementArray } from '../../../../components/Compsci/DataStructures';
-import { MEPTextField } from '../../../../components/Maths/GeneralComponents';
+import { MEPTextField } from '../../../../components/GeneralComponents';
 
 export default function MathsExpressionParser() {
     const [expr, setExpr] = React.useState('')

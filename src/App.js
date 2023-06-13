@@ -17,6 +17,8 @@ import Parsing from './pages/tools/compsci/parsing/Parsing';
 import MathsExpressionParser from './pages/tools/compsci/parsing/MathsExpressionParser';
 import InfoPageLayout from './components/UI/infoPage/InfoPageLayout';
 import Collaborate from './pages/Collaborate';
+import ChemEquationBalancer from './pages/tools/chemistry/ChemEquationBalancer';
+import Chemistry from './pages/tools/chemistry/Chemistry';
 function App() {
 	return (
     	<BrowserRouter>
@@ -39,6 +41,10 @@ function App() {
 								<Route index element={<Differentiation/>}/>
 								<Route path="stationary-points" element={<StationaryPoints/>}/>
 							</Route>
+						</Route>
+						<Route path="chemistry">
+							<Route index element={<Chemistry/>}/>
+							<Route path="chem-equation-balancer" element={<ChemEquationBalancer/>}/>
 						</Route>
 						<Route path="compsci">
 							<Route index element={<Compsci/>}/>

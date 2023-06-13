@@ -15,7 +15,7 @@ export default function Collaborate() {
                         text={
                             `Does it have to be academic? Does it have to be professional? The answer to both of these questions is no. In fact, the tool doesn't even have
                             to be useful! The purpose of ToolBox is to create a shared collection of tools across all sorts of topics and categories. The nature of the tools
-                            may vary greatly, some aim to share knowledge of how to solve a type of problem, some aim to provide convenience in otherwise very tedious tasks,
+                            may vary greatly. Some aim to share knowledge of how to solve a type of problem, some aim to provide convenience in otherwise very tedious tasks,
                             and some may even be just for creating fun activities. You should check out our `
                         }
                     />
@@ -26,7 +26,7 @@ export default function Collaborate() {
                     <PageParagraph text="In short," bold/>
                     <PageParagraph 
                         text={
-                            ` any idea can become a tool, as long as it is appropriate and we believe it would be interesting and/or helpful for the community.`
+                            ` any idea can become a tool, as long as it is appropriate and we believe that it would be interesting and/or helpful for the community.`
                         }
                     />
                 </Box>
@@ -40,7 +40,7 @@ export default function Collaborate() {
                 />
             </SectionBox>
             <SectionBox title="Who can collaborate?" usePageTitle>
-                <PageParagraph text="Anyone! We do not discriminate anyone, as long as you respect us, we will respect you too."/>
+                <PageParagraph text="Anyone! We do not discriminate against anyone, as long as you respect us, we will respect you too."/>
                 <PageParagraph 
                     text={
                         `However, in most cases you will need to demonstrate that you really do know your stuff. This may vary depending on the nature of the tool, but it is
@@ -96,7 +96,7 @@ export default function Collaborate() {
                 <PageParagraph text={
                     `We are aware that nowadays there are already lots of online tools for lots of different problems. That doesn't mean we can't make a new one!
                     While it is not our intention to compete with them, if there is room for improvement (clearer working out, visualisation of solutions, 
-                    advice and tips etc...), we will consider making our own variation of the tool.`
+                    advice and tips etc), we will consider making our own variation of the tool.`
                 }/>
                 <PageSectionTitle title="Step 1: Sending us your proposal..."/>
                 <Box>
@@ -113,8 +113,8 @@ export default function Collaborate() {
                         Maths -> Integration -> Estimation techniques.`,
                         'Is this a serious or casual idea?',
                         'What inspired you to want to make this?',
-                        `A not too long but sufficient description of how you envision the tool to work.`,
-                        `Are there anything about the topic that you wouldn't be 100% sure about? Don't worry, we don't expect you to know everything!`,
+                        `A concise but sufficient description of how you envision the tool to work.`,
+                        `Is there anything about the topic that you wouldn't be 100% sure about? Don't worry, we don't expect you to know everything!`,
                         `Will you be able to stay responsive throughout the collaboration? Depending on the tool, we may need to occasionally discuss
                         implementation details with you.`
                     ]}
@@ -130,7 +130,7 @@ export default function Collaborate() {
                 </Box>
                 <PageTextList 
                     listName={
-                        `The main parts of this call is...`
+                        `The main parts of this call are...`
                     }
                     list={[
                         "For you to demonstrate that you really know the ins and outs of your chosen topic, and if not, how can we compensate for what you don't know?",

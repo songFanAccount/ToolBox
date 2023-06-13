@@ -9,7 +9,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import CloseIcon from '@mui/icons-material/Close';
 import CallMadeIcon from '@mui/icons-material/CallMade';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
-import { tools } from '../../data';
+import { tools } from '../../Data/data';
 
 function SideNavBar(props) {
 	const inHeader = props.inHeader // Used to determine how the sideNavBar toggle is rendered based on viewport width (passed from DefaultLayout)

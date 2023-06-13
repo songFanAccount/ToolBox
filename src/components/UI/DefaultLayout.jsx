@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, IconButton, Link, List, ListItemText, Collapse, Typography, useMediaQuery, Button } from '@mui/material';
+import { Box, IconButton, Link, List, ListItemText, Collapse, Typography, useMediaQuery, Button, Stack, Alert, AlertTitle } from '@mui/material';
 import { Outlet, Link as RouterLink } from 'react-router-dom';
 import { ToastContainer, Slide } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
@@ -64,7 +64,7 @@ function DefaultLayout() {
 
 export default DefaultLayout
 
-function Contents({noBorder, children, mb=3}) {
+function Contents({noBorder, children, mb=3, rowGap=2}) {
     return(
         <Box
             sx={{
@@ -76,7 +76,7 @@ function Contents({noBorder, children, mb=3}) {
                 borderColor: '#AEAEAE',
                 display: 'flex',
                 flexDirection: 'column',
-                rowGap: 2,
+                rowGap: rowGap,
                 width: 'fit-content',
                 maxWidth: 1
             }}
@@ -86,11 +86,11 @@ function Contents({noBorder, children, mb=3}) {
     )
 }
 
-export function SectionBox({title, noBorder, children, usePageTitle, mb}) {
+export function SectionBox({title, noBorder, children, usePageTitle, mb=3, rowGap=2}) {
     return (
         <Box>
             {title && usePageTitle ? <PageTitle title={title}/> : <PageSectionTitle title={title}/>}
-            <Contents noBorder={noBorder} children={children} mb={mb}/>
+            <Contents noBorder={noBorder} children={children} mb={mb} rowGap={rowGap}/>
         </Box>
     )
 }
@@ -242,9 +242,20 @@ export function PageEndSpace() {
         />
     )
 }
+
+export function TBAlert({title, contents, status}) {
+    return (
+        <Alert severity={status}>
+            <AlertTitle>
+                {title}
+            </AlertTitle>
+            {contents}
+        </Alert>
+    )
+}
 export function CopyButton({copyableText}) {
     return (
-        <IconButton sx={{ml: .5}} onClick={() => navigator.clipboard.writeText(copyableText)}>
+        <IconButton sx={{ml: .5, pb:3}} onClick={() => navigator.clipboard.writeText(copyableText)}>
             <ContentCopyIcon
                 sx={{fontSize: 20, color: 'black'}}
             />
@@ -253,18 +264,34 @@ export function CopyButton({copyableText}) {
 }
 export function CopyableParagraph({preText, copyableText, copyable}) {
     return (
-        <Box
-            sx={{display: 'flex', alignItems: 'center'}}
+        <Stack
+            direction='column'
+            rowGap={2}
         >
             <Typography
-                sx={{fontFamily: 'Verdana',}}
+                sx={{fontFamily: 'Verdana', overflowX: 'auto'}}
             >
-                {preText + copyableText}
+                {preText}
             </Typography>
-            {copyable && 
-                <CopyButton copyableText={copyableText}/>
-            }
-        </Box>
+            <Box
+                sx={{display: 'flex', alignItems: 'center', flexWrap: 'wrap',}}
+            >
+                <Typography
+                    sx={{fontFamily: 'Verdana', overflowX: 'auto', pb:2}}
+                >
+                    {copyableText}
+                </Typography>
+                {copyable && 
+                    <CopyButton copyableText={copyableText}/>
+                }
+            </Box>
+        </Stack>
+    )
+}
+
+export function LatexBox({latex, fs=20, pb=2}) {
+    return (
+        <Typography sx={{fontSize: fs, overflowX: 'auto', pb:pb}}>{latex}</Typography>
     )
 }
 
@@ -316,7 +343,7 @@ const toolnameToPath = {
     'maths expression parser': '/tools/compsci/parsing/maths-expression-parser',
     'stationary points': '/'
 }
-export function ToolLink({name, linkText}) {
+export function ToolLink({name, linkText, fs=14, color='#011627'}) {
     const toolPath = toolnameToPath[name]
     if(!toolPath) {throw new Error("No matching tool path for given name!")}
     return (
@@ -326,8 +353,9 @@ export function ToolLink({name, linkText}) {
             onClick={() => window.scrollTo(0, 0)}
             sx={{
                 fontFamily: 'Verdana',
-                color:'#011627',
-                textDecorationColor: '#011627'
+                color:color,
+                textDecorationColor: color,
+                fontSize: fs
             }}
         >
             {linkText}
