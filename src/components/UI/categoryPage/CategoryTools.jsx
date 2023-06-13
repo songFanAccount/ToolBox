@@ -4,7 +4,7 @@ import { Box } from "@mui/material"
 import CategoryToolCard from "./CategoryToolCard"
 
 export default function CategoryTools({category}) {
-    const toolsList = getTools(category).map(tool => <CategoryToolCard catWithTool={tool} />)
+    const toolsList = getTools(category).map(element => <CategoryToolCard key={element.tool.displayName} catWithTool={element} />)
     return (
         <div>
             {toolsList}
