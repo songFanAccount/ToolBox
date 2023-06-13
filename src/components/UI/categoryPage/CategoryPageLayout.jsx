@@ -35,7 +35,11 @@ export default function CategoryPageLayout({category}) {
                                                                             selected={categoryButton.selected}
                                                                             handleClick={handleClick}/>)
     return (
-        <Box>
+        <Box
+            sx={{
+                px: 1
+            }}
+        >
             <Box 
                 sx={{
                     display: "flex",
