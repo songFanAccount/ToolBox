@@ -19,6 +19,7 @@ import InfoPageLayout from './components/UI/infoPage/InfoPageLayout';
 import Collaborate from './pages/Collaborate';
 import ChemEquationBalancer from './pages/tools/chemistry/ChemEquationBalancer';
 import Chemistry from './pages/tools/chemistry/Chemistry';
+import SeriesAndSequences from './pages/tools/maths/seriesandseq/SeriesAndSeq';
 function App() {
 	return (
     	<BrowserRouter>
@@ -40,6 +41,9 @@ function App() {
 							<Route path="differentiation">
 								<Route index element={<Differentiation/>}/>
 								<Route path="stationary-points" element={<StationaryPoints/>}/>
+							</Route>
+							<Route path="series-seq">
+								<Route path="ari-geo-series" element={<SeriesAndSequences/>}/>
 							</Route>
 						</Route>
 						<Route path="chemistry">

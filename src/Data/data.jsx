@@ -7,6 +7,16 @@ const mathsTools = {
         }
     },
     subCategories: {
+        'series-seq': {
+            displayName: 'Series and Sequences',
+            tools: {
+                'ari-geo-series': {
+                    displayName: 'Arithmetic and geometric series',
+                    sectionTitles: ['The Tool', 'How to use']
+                }
+            },
+            subCategories: null
+        },
         differentiation: {
             displayName: 'Differentiation',
             tools: {
