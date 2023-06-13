@@ -3,7 +3,7 @@ import { Box } from "@mui/material"
 
 import CategoryButton from "./CategoryButton"
 import CategoryDescription from "./CategoryDescription"
-import { tools } from "../../../data"
+import { tools } from "../../../Data/data"
 import CategoryTools from "./CategoryTools"
 
 export default function CategoryPageLayout({category}) {
