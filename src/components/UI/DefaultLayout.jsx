@@ -64,7 +64,7 @@ function DefaultLayout() {
 
 export default DefaultLayout
 
-function Contents({noBorder, children, mb=3}) {
+function Contents({noBorder, children, mb=3, rowGap=2}) {
     return(
         <Box
             sx={{
@@ -76,7 +76,7 @@ function Contents({noBorder, children, mb=3}) {
                 borderColor: '#AEAEAE',
                 display: 'flex',
                 flexDirection: 'column',
-                rowGap: 2,
+                rowGap: rowGap,
                 width: 'fit-content',
                 maxWidth: 1
             }}
@@ -86,11 +86,11 @@ function Contents({noBorder, children, mb=3}) {
     )
 }
 
-export function SectionBox({title, noBorder, children, usePageTitle, mb}) {
+export function SectionBox({title, noBorder, children, usePageTitle, mb=3, rowGap=2}) {
     return (
         <Box>
             {title && usePageTitle ? <PageTitle title={title}/> : <PageSectionTitle title={title}/>}
-            <Contents noBorder={noBorder} children={children} mb={mb}/>
+            <Contents noBorder={noBorder} children={children} mb={mb} rowGap={rowGap}/>
         </Box>
     )
 }
@@ -242,6 +242,7 @@ export function PageEndSpace() {
         />
     )
 }
+
 export function CopyButton({copyableText}) {
     return (
         <IconButton sx={{ml: .5, pb:3}} onClick={() => navigator.clipboard.writeText(copyableText)}>
@@ -331,7 +332,7 @@ const toolnameToPath = {
     'latex converter': '/tools/maths/latex-converter',
     'maths expression parser': '/tools/compsci/parsing/maths-expression-parser'
 }
-export function ToolLink({name, linkText}) {
+export function ToolLink({name, linkText, fs=14, color='#011627'}) {
     const toolPath = toolnameToPath[name]
     if(!toolPath) {throw new Error("No matching tool path for given name!")}
     return (
@@ -341,8 +342,9 @@ export function ToolLink({name, linkText}) {
             onClick={() => window.scrollTo(0, 0)}
             sx={{
                 fontFamily: 'Verdana',
-                color:'#011627',
-                textDecorationColor: '#011627'
+                color:color,
+                textDecorationColor: color,
+                fontSize: fs
             }}
         >
             {linkText}
