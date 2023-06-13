@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Grid } from "@mui/material"
+import { Grid } from "@mui/material"
 
 import CategoryToolCard from "./CategoryToolCard"
 
@@ -11,19 +11,16 @@ export default function CategoryTools({category}) {
                                                             catWithTool={element} />
                                                     </Grid>)
     return (
-        <Grid 
-            container spacing={0.1}
-            justifyContent="space-between"
-        >
+        <Grid container spacing={0.1}>
             {toolsList}
-            {toolsList.length === 0 && <Box
+            {toolsList.length === 0 && <Grid item xs={12}
                                             display="flex"
                                             justifyContent="center"
                                             alignItems="center"
                                             minHeight="50vh"
                                         >
                                             There is no tool for this category yet!
-                                        </Box>}
+                                        </Grid>}
         </Grid>
     )
 }
