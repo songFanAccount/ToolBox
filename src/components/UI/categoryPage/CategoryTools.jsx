@@ -1,12 +1,20 @@
 import React from "react"
-import { Box } from "@mui/material"
+import { Box, Grid } from "@mui/material"
 
 import CategoryToolCard from "./CategoryToolCard"
 
 export default function CategoryTools({category}) {
-    const toolsList = getTools(category).map(element => <CategoryToolCard key={element.tool.displayName} catWithTool={element} />)
+    const toolsList = getTools(category).map(element => 
+                                                    <Grid item xs={12} sm={6} md={4} lg={3}>
+                                                        <CategoryToolCard
+                                                            key={element.tool.displayName}
+                                                            catWithTool={element} />
+                                                    </Grid>)
     return (
-        <div>
+        <Grid 
+            container spacing={0.1}
+            justifyContent="space-between"
+        >
             {toolsList}
             {toolsList.length === 0 && <Box
                                             display="flex"
@@ -16,7 +24,7 @@ export default function CategoryTools({category}) {
                                         >
                                             There is no tool for this category yet!
                                         </Box>}
-        </div>
+        </Grid>
     )
 }
 

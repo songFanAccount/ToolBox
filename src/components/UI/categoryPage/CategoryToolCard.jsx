@@ -11,7 +11,6 @@ export default function CategoryToolCard({catWithTool}) {
     return (
         <Card 
             sx={{
-                  width: 275,
                   m: 0.5
                 }} 
             variant="outlined"
