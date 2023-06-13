@@ -18,6 +18,7 @@ function ToolPagePath({urls, displayNames}) {
                             textDecoration: 'underline',
                             fontFamily: 'Verdana',
                             fontSize: 14,
+                            whiteSpace: 'nowrap'
                         }}
                     >
                         {displayNames[i]}
@@ -33,6 +34,8 @@ function ToolPagePath({urls, displayNames}) {
             sx={{
                 display: 'flex',
                 alignItems: 'center',
+                flexWrap: 'wrap',
+                rowGap: 2,
                 mb: 3
             }}
         >

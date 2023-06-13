@@ -1,31 +1,21 @@
-import { Box, Typography } from '@mui/material';
-import React from 'react';
-import { MEPTextField } from '../../../components/Maths/GeneralComponents';
+import { Box } from '@mui/material';
+import { MEPTextField } from '../../../components/GeneralComponents';
 import { processExpr } from '../../../components/Maths/LatexDisplay';
-import { CopyableParagraph, ExternalLink, PageParagraph, PageTextList, SectionBox, ToolLink } from '../../../components/UI/DefaultLayout';
+import { CopyableParagraph, ExternalLink, LatexBox, PageParagraph, PageTextList, SectionBox, ToolLink } from '../../../components/UI/DefaultLayout';
 import { DisplayError } from '../../../components/Compsci/DataStructures';
+import { useState } from 'react';
+import { useRef } from 'react';
+import { useEffect } from 'react';
 
 /*
 Page Content:
 User input for math equation
 */
 function LatexConverter() {
-    const [expr, setExpr] = React.useState('')
-    const latexObj = React.useRef(null)
-    const delay = React.useRef(1000)
-    React.useEffect(() => {
-        function typeset() {
-            if(window?.MathJax !== undefined){
-                window.MathJax.typeset()
-            }
-        }
-        if(delay.current > 0) {
-            setTimeout(() => typeset, delay.current)
-            delay.current = 0
-        } else {
-            typeset()
-        }
-    // eslint-disable-next-line
+    const [expr, setExpr] = useState('')
+    const latexObj = useRef(null)
+    useEffect(() => {
+        if(expr !== '') window.MathJax.typeset()
     }, [expr])
     function validTex() {
         return latexObj.current?.latex !== '-'
@@ -67,9 +57,7 @@ function LatexConverter() {
                 {(latexObj.current && !latexObj.current?.success) && <DisplayError errorMsg={getErrorMsg()}/>}
                 <PageParagraph text="LaTeX preview:"/>
                 {latexObj.current?.success &&
-                    <Typography sx={{fontSize: 20}}>
-                        {getTexRendered()}
-                    </Typography>
+                    <LatexBox latex={getTexRendered()}/>
                 }
             </SectionBox>
             <SectionBox title="How to use" id="How to use">

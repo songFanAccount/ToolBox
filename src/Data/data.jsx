@@ -31,20 +31,13 @@ const mathsTools = {
 
 const chemistryTools = {
     displayName: 'Chemistry',
-    tools: null,
-    subCategories: {
-        integration: {
-            displayName: 'Chem Category 1',
-            tools: null,
-            subCategories:  {
-                TEMPORARY: {
-                    displayName: 'Chem Category 11',
-                    tools: null,
-                    subCategories: null
-                }
-            }
+    tools: {
+        'chem-equation-balancer': {
+            displayName: 'Chemistry Equation Balancer',
+            sectionTitles: ['The Tool']
         }
-    }
+    },
+    subCategories: null
 }
 const physicsTools = {
     displayName: 'Physics',
