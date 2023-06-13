@@ -28,8 +28,7 @@ const mathsTools = {
                 }
             }
         }
-    },
-    description : <p>This is <strong>Maths</strong> Category</p>
+    }
 }
 
 const chemistryTools = {
@@ -47,8 +46,7 @@ const chemistryTools = {
                 }
             }
         }
-    },
-    description : <p>This is <strong>Chemistry</strong> Category</p>
+    }
 }
 const physicsTools = {
     displayName: 'Physics',
@@ -65,8 +63,7 @@ const physicsTools = {
                 }
             }
         }
-    },
-    description : <p>This is <strong>Physics</strong> Category</p>
+    }
 }
 
 const engineeringTools = {
@@ -84,8 +81,7 @@ const engineeringTools = {
                 }
             }
         }
-    },
-    description : <p>This is <strong>Engineering</strong> Category</p>
+    }
 }
 
 const irlGamesTools = {
@@ -103,8 +99,7 @@ const irlGamesTools = {
                 }
             }
         }
-    },
-    description : <p>This is <strong>IRL Games</strong> Category</p>
+    }
 }
 
 const videoGamesTools = {
@@ -122,8 +117,7 @@ const videoGamesTools = {
                 }
             }
         }
-    },
-    description : <p>This is <strong>Video Games</strong> Category</p>
+    }
 }
 
 const compsciTools = {
@@ -140,8 +134,7 @@ const compsciTools = {
             },
             subCategories: null
         }
-    },
-    description : <p>This is <strong>Computer Science</strong> Category</p>
+    }
 }
 
 export const tools = {
@@ -154,6 +147,5 @@ export const tools = {
         engineering: engineeringTools,
         irlGames: irlGamesTools,
         videoGames: videoGamesTools
-    },
-    description : <p>This is <strong>All Category</strong></p>
+    }
 }
