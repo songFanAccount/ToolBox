@@ -1,7 +1,7 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { MEPTextField } from '../../../components/GeneralComponents';
 import { processExpr } from '../../../components/Maths/LatexDisplay';
-import { CopyableParagraph, ExternalLink, PageParagraph, PageTextList, SectionBox, ToolLink } from '../../../components/UI/DefaultLayout';
+import { CopyableParagraph, ExternalLink, LatexBox, PageParagraph, PageTextList, SectionBox, ToolLink } from '../../../components/UI/DefaultLayout';
 import { DisplayError } from '../../../components/Compsci/DataStructures';
 import { useState } from 'react';
 import { useRef } from 'react';
@@ -57,9 +57,7 @@ function LatexConverter() {
                 {(latexObj.current && !latexObj.current?.success) && <DisplayError errorMsg={getErrorMsg()}/>}
                 <PageParagraph text="LaTeX preview:"/>
                 {latexObj.current?.success &&
-                    <Typography sx={{fontSize: 20}}>
-                        {getTexRendered()}
-                    </Typography>
+                    <LatexBox latex={getTexRendered()}/>
                 }
             </SectionBox>
             <SectionBox title="How to use" id="How to use">

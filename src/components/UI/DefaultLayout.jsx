@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, IconButton, Link, List, ListItemText, Collapse, Typography, useMediaQuery, Button } from '@mui/material';
+import { Box, IconButton, Link, List, ListItemText, Collapse, Typography, useMediaQuery, Button, Stack } from '@mui/material';
 import { Outlet, Link as RouterLink } from 'react-router-dom';
 import { ToastContainer, Slide } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
@@ -244,7 +244,7 @@ export function PageEndSpace() {
 }
 export function CopyButton({copyableText}) {
     return (
-        <IconButton sx={{ml: .5}} onClick={() => navigator.clipboard.writeText(copyableText)}>
+        <IconButton sx={{ml: .5, pb:3}} onClick={() => navigator.clipboard.writeText(copyableText)}>
             <ContentCopyIcon
                 sx={{fontSize: 20, color: 'black'}}
             />
@@ -253,18 +253,34 @@ export function CopyButton({copyableText}) {
 }
 export function CopyableParagraph({preText, copyableText, copyable}) {
     return (
-        <Box
-            sx={{display: 'flex', alignItems: 'center'}}
+        <Stack
+            direction='column'
+            rowGap={2}
         >
             <Typography
-                sx={{fontFamily: 'Verdana',}}
+                sx={{fontFamily: 'Verdana', overflowX: 'auto'}}
             >
-                {preText + copyableText}
+                {preText}
             </Typography>
-            {copyable && 
-                <CopyButton copyableText={copyableText}/>
-            }
-        </Box>
+            <Box
+                sx={{display: 'flex', alignItems: 'center', flexWrap: 'wrap',}}
+            >
+                <Typography
+                    sx={{fontFamily: 'Verdana', overflowX: 'auto', pb:2}}
+                >
+                    {copyableText}
+                </Typography>
+                {copyable && 
+                    <CopyButton copyableText={copyableText}/>
+                }
+            </Box>
+        </Stack>
+    )
+}
+
+export function LatexBox({latex, fs=20, pb=2}) {
+    return (
+        <Typography sx={{fontSize: fs, overflowX: 'auto', pb:pb}}>{latex}</Typography>
     )
 }
 
