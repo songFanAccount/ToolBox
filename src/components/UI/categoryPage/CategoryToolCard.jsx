@@ -1,7 +1,13 @@
 import React from "react"
 import { Card, CardContent, Typography, CardActions, Button } from "@mui/material"
 
+import { ToolLink } from "../DefaultLayout"
+
 export default function CategoryToolCard({catWithTool}) {
+    const link = <ToolLink 
+                    name={catWithTool.tool.displayName.toLowerCase()}
+                    linkText={<Button size="small">Learn More</Button>} 
+                />
     return (
         <Card 
             sx={{
@@ -24,11 +30,11 @@ export default function CategoryToolCard({catWithTool}) {
                     {catWithTool.tool.displayName}
                 </Typography>
                 <Typography variant="body2">
-                    breif <strong>explanation</strong> goes here
+                    brief <strong>explanation</strong> goes here
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button size="small">Learn More</Button>
+                {link}
             </CardActions>
         </Card>
     )
