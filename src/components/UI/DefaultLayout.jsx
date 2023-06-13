@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, IconButton, Link, List, ListItemText, Collapse, Typography, useMediaQuery, Button, Stack } from '@mui/material';
+import { Box, IconButton, Link, List, ListItemText, Collapse, Typography, useMediaQuery, Button, Stack, Alert, AlertTitle } from '@mui/material';
 import { Outlet, Link as RouterLink } from 'react-router-dom';
 import { ToastContainer, Slide } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
@@ -243,6 +243,16 @@ export function PageEndSpace() {
     )
 }
 
+export function TBAlert({title, contents, status}) {
+    return (
+        <Alert severity={status}>
+            <AlertTitle>
+                {title}
+            </AlertTitle>
+            {contents}
+        </Alert>
+    )
+}
 export function CopyButton({copyableText}) {
     return (
         <IconButton sx={{ml: .5, pb:3}} onClick={() => navigator.clipboard.writeText(copyableText)}>

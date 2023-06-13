@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { CEPTextField } from '../../../components/GeneralComponents'
-import { LatexBox, PageParagraph, SectionBox, ToolLink } from '../../../components/UI/DefaultLayout'
-import { Alert, AlertTitle, Box, Stack } from '@mui/material'
+import { LatexBox, PageParagraph, SectionBox, TBAlert, ToolLink } from '../../../components/UI/DefaultLayout'
+import { Box, Stack } from '@mui/material'
 import { useRef } from 'react'
 import { getChemEqnInfo, modifyEqnInfo } from '../../../helpers/chemHelpers'
 import { DisplayError } from '../../../components/Compsci/DataStructures'
@@ -152,33 +152,36 @@ export default function ChemEquationBalancer() {
                     `The Chemistry Equation Balancer takes in a chemical equation and equips all reactants and products with coefficients that are optimised to give
                     a balanced equation with the smallest possible combination of integer coefficients.`
                 }/>
-                <Alert severity='error'>
-                    <AlertTitle>
+                <TBAlert
+                    status="error"
+                    title={
                         <Box sx={{mb: 1.5}}>
                             <PageParagraph text="DEVELOPERS' NOTE: " bold/>
-                            <PageParagraph text="Collaborator(s) needed!"/>
+                            <PageParagraph text="Incomplete implementation. Collaborator(s) needed!"/>
                         </Box>
-                    </AlertTitle>
-                    <SectionBox noBorder={true} rowGap={1} mb={0}>
-                        <PageParagraph fs={12} text={
-                            `In the development of this tool, we realised that the most efficient method of balancing chemical equations boils down to solving
-                            linear equations. Implementing this tool with such technique would be possible, but is incompatible with what we're trying to achieve, which 
-                            is to help high school chemistry students understand and visualise the best trial-and-error approach.`
-                        }/>
-                        <PageParagraph fs={12} text={
-                            `Although we have done our share of chemical equation balancing, we are unsure of whether our technique is optimal and/or capable of
-                            tackling more complex equations. We also did not find any promising solutions online. As a result, we decided to pause its development.`
-                        }/>
-                        <Box>
+                    }
+                    contents={
+                        <SectionBox noBorder={true} rowGap={1} mb={0}>
                             <PageParagraph fs={12} text={
-                                `If you believe you have a method suitable for what we're trying to achieve, we would love to hear it! You can learn more about
-                                collaborating with us `
+                                `In the development of this tool, we realised that the most efficient method of balancing chemical equations boils down to solving
+                                linear equations. Implementing this tool with such technique would be possible, but is incompatible with what we're trying to achieve, which 
+                                is to help high school chemistry students understand and visualise the best trial-and-error approach.`
                             }/>
-                            <ToolLink fs={12} name="collab" linkText="here" color="inherit"/>
-                            <PageParagraph fs={12} text="."/>
-                        </Box>
-                    </SectionBox>
-                </Alert>
+                            <PageParagraph fs={12} text={
+                                `Although we have done our share of chemical equation balancing, we are unsure of whether our technique is optimal and/or capable of
+                                tackling more complex equations. We also did not find any promising solutions online. As a result, we decided to pause its development.`
+                            }/>
+                            <Box>
+                                <PageParagraph fs={12} text={
+                                    `If you believe you have a method suitable for what we're trying to achieve, we would love to hear it! You can learn more about
+                                    collaborating with us `
+                                }/>
+                                <ToolLink fs={12} name="collab" linkText="here" color="inherit"/>
+                                <PageParagraph fs={12} text="."/>
+                            </Box>
+                        </SectionBox>
+                    }
+                />
             </SectionBox>
             <SectionBox title="How it works">
                 <PageParagraph text="Enter an expression to begin:"/>
