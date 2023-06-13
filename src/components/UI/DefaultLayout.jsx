@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, IconButton, Link, List, ListItemText, Collapse, Typography, useMediaQuery, Button, Stack, Alert, AlertTitle } from '@mui/material';
 import { Outlet, Link as RouterLink } from 'react-router-dom';
 import { ToastContainer, Slide } from 'react-toastify'
@@ -243,13 +243,45 @@ export function PageEndSpace() {
     )
 }
 
+export function TBTextButton({text, onClick, color='inherit', alignSelf="auto"}) {
+    return (
+        <Button
+            onClick={onClick}
+            sx={{
+                padding: 0,
+                minHeight: 0,
+                minWidth: 0,
+                textTransform: 'none',
+                textDecoration: 'underline',
+                textDecorationColor: color,
+                color: color,
+                alignSelf: alignSelf,
+                '&:hover': {
+                    backgroundColor: 'transparent',
+                    textDecoration: 'underline',
+                    textDecorationColor: color,
+                }
+            }}
+        >
+            {text}
+        </Button>
+    )
+}
 export function TBAlert({title, contents, status}) {
+    const [open, setOpen] = useState(false)
     return (
         <Alert severity={status}>
-            <AlertTitle>
-                {title}
-            </AlertTitle>
-            {contents}
+            <Stack
+                direction="column"
+                alignItems="flex-start"
+            >
+                <AlertTitle>
+                    {title}
+                </AlertTitle>
+                {!open && <TBTextButton text="Read more" onClick={() => setOpen(true)}/>}
+                {open && contents}
+                {open && <TBTextButton text="Close" alignSelf="flex-end" onClick={() => setOpen(false)}/>}
+            </Stack>
         </Alert>
     )
 }
