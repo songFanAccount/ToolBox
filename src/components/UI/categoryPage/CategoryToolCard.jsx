@@ -11,7 +11,9 @@ export default function CategoryToolCard({catWithTool}) {
     return (
         <Card 
             sx={{
-                  m: 0.5
+                  m: 0.5,
+                  height: "200px",
+                  position: "relative"
                 }} 
             variant="outlined"
         >
@@ -32,7 +34,7 @@ export default function CategoryToolCard({catWithTool}) {
                     brief <strong>explanation</strong> goes here
                 </Typography>
             </CardContent>
-            <CardActions>
+            <CardActions sx={{position: 'absolute', bottom: 0}}>
                 {link}
             </CardActions>
         </Card>
