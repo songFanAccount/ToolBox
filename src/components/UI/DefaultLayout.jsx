@@ -291,7 +291,7 @@ export function TBAlert({title, contents, status}) {
 }
 export function CopyButton({copyableText}) {
     return (
-        <IconButton sx={{ml: .5, pb:3}} onClick={() => navigator.clipboard.writeText(copyableText)}>
+        <IconButton sx={{ml: .5, mb:2}} onClick={() => navigator.clipboard.writeText(copyableText)}>
             <ContentCopyIcon
                 sx={{fontSize: 20, color: 'black'}}
             />
