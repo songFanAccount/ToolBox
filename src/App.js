@@ -19,12 +19,14 @@ import InfoPageLayout from './components/UI/infoPage/InfoPageLayout';
 import Collaborate from './pages/Collaborate';
 import ChemEquationBalancer from './pages/tools/chemistry/ChemEquationBalancer';
 import Chemistry from './pages/tools/chemistry/Chemistry';
+import Compiler from './pages/Compiler';
 function App() {
 	return (
     	<BrowserRouter>
 			<Routes>
 				<Route path="/" element={<DefaultLayout />} >
 					<Route index element={<Home />} />
+					<Route path="compiler" element={<Compiler/>}/>
 					<Route element={<InfoPageLayout/>}>
 						<Route path="collab" element={<Collaborate />} />
 						<Route path="about" element={<AboutUs />} />
