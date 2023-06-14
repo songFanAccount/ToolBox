@@ -124,6 +124,15 @@ const compsciTools = {
                 }
             },
             subCategories: null
+        },
+        array: {
+            displayName: 'Arrays',
+            tools: {
+                'array-basics': {
+                    displayName: 'Array basics',
+                    sectionTitles: ['The Tool']
+                }
+            }
         }
     }
 }
