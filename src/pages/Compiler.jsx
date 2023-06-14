@@ -5,8 +5,8 @@ import { TBButton } from '../components/UI/DefaultLayout'
 
 export default function Compiler() {
     const [code, setCode] = useState('')
-    function compile() {
-        console.log('compile')
+    function execute() {
+        console.log('executing code...')
     }
     return (
         <Box>
@@ -19,8 +19,8 @@ export default function Compiler() {
                 width={600}
             />
             <TBButton 
-                buttonText="Compile"
-                onClick={compile}
+                buttonText="Execute"
+                onClick={execute}
             />
         </Box>
     )
