@@ -1,5 +1,6 @@
 import React from "react"
-import { Card } from "@mui/material"
+import { Card, Typography } from "@mui/material"
+import { PageParagraph } from "../DefaultLayout"
 
 export default function CategoryDescription({category}) {
     const categoryDesc = getDescription(category.displayName)
@@ -11,7 +12,7 @@ export default function CategoryDescription({category}) {
                 px: 0.5
             }}
         >
-            <h3>{category.displayName}</h3>
+            <Typography sx={{fontFamily: 'Montserrat', fontSize: 20, fontWeight: "Bold"}}>{category.displayName}</Typography>
             {categoryDesc}
         </Card>
     )
@@ -20,20 +21,20 @@ export default function CategoryDescription({category}) {
 function getDescription(categoryName) {
     switch (categoryName) {
         case "Maths":
-            return <p>This is <strong>Maths</strong> Category</p>
+            return <PageParagraph text={"Mathematics is an area of knowledge that includes the topics of numbers, formulas and related structures, shapes and the spaces in which they are contained, and quantities and their changes."} fs={13}/>
         case "Chemistry":
-            return <p>This is <strong>Chemistry</strong> Category</p>
+            return <PageParagraph text={"Chemistry is the scientific study of the properties and behavior of matter."} fs={13}/>
         case "Physics":
-            return <p>This is <strong>Physics</strong> Category</p>
+            return <PageParagraph text={"Physics is the natural science of matter, involving the study of matter, its fundamental constituents, its motion and behavior through space and time, and the related entities of energy and force."} fs={13}/>
         case "Engineering":
-            return <p>This is <strong>Engineering</strong> Category</p>
+            return <PageParagraph text={"Engineering is the use of scientific principles to design and build machines, structures, and other items, including bridges, tunnels, roads, vehicles, and buildings."} fs={13}/>
         case "IRL Games":
-            return <p>This is <strong>IRL Games</strong> Category</p>
+            return <PageParagraph text={"Enjoy games in real life!"} fs={13}/>
         case "Video Games":
-            return <p>This is <strong>Video Games</strong> Category</p>
+            return <PageParagraph text={"Enjoy video games :)"} fs={13}/>
         case "Computer Science":
-            return <p>This is <strong>Computer Science</strong> Category</p>
+            return <PageParagraph text={"Computer science is the study of computation, information, and automation."} fs={13}/>
         default: // All categories
-            return <p>This is <strong>All Category</strong></p>
+            return <PageParagraph text={"This page contains every tools avaiable with us!"} fs={13}/>
     }
 }

@@ -6,7 +6,7 @@ import { ToolLink } from "../DefaultLayout"
 export default function CategoryToolCard({catWithTool}) {
     const link = <ToolLink 
                     name={catWithTool.tool.displayName.toLowerCase()}
-                    linkText={<Button size="small">Learn More</Button>} 
+                    linkText={<Button size="small" sx={{fontFamily: 'Verdana', color: "#218f1f"}}>Learn More</Button>} 
                 />
     return (
         <Card 
@@ -20,17 +20,18 @@ export default function CategoryToolCard({catWithTool}) {
             <CardContent>
                 <Typography 
                     sx={{
-                        fontSize: 14
+                        fontSize: 14,
+                        fontFamily: 'Montserrat'
                         }} 
                     color="text.secondary"
                     gutterBottom
                 >
                     {catWithTool.cat}
                 </Typography>
-                <Typography variant="h5" component="div">
+                <Typography variant="h5" component="div" sx={{fontFamily: 'Verdana',}}>
                     {catWithTool.tool.displayName}
                 </Typography>
-                <Typography variant="body2">
+                <Typography variant="body2" sx={{fontFamily: 'Verdana',}}>
                     brief <strong>explanation</strong> goes here
                 </Typography>
             </CardContent>

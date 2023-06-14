@@ -1,5 +1,5 @@
 import React from "react"
-import { Button } from "@mui/material"
+import { Button, Typography } from "@mui/material"
 
 export default function CategoryButton({category, selected, handleClick}) {
 
@@ -14,7 +14,14 @@ export default function CategoryButton({category, selected, handleClick}) {
                 whiteSpace: "nowrap"
             }}
         >
-            {category.displayName}
+            <Typography
+                sx={{
+                    fontFamily: 'Montserrat',
+                    fontSize: 13
+                }}
+            >
+                {category.displayName}
+            </Typography>
         </Button>
     )
 }
