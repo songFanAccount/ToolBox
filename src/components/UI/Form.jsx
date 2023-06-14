@@ -25,7 +25,7 @@ By default, text fields cannot start as an error, even if their default value is
 Visually, we don't want the form to look red/invalid at first glance. So, error detection takes place only after the field has been
 modified
 */
-export function TBTextField({value, label, placeholder, width=200, variant='standard', onChange, required, rows, minRows, maxRows, maxLength=50, error, errorMsg, stickToTop}) {
+export function TBTextField({value, label, placeholder, width=200, variant='standard', onChange, required, rows, minRows, maxRows, maxLength=50, error, errorMsg, stickToTop, allowTab}) {
     if(rows && (minRows || maxRows)) throw new Error("TBTextField: Rows is defined -> Don't input min/max rows!") // May need to change this restraint
     if(error !== undefined && errorMsg === undefined) throw new Error("TBTextField: If errors can occur, supply an error message!")
     const [modified, setModified] = useState(false)
@@ -44,6 +44,28 @@ export function TBTextField({value, label, placeholder, width=200, variant='stan
             maxRows={maxRows}
             error={modified && error}
             helperText={modified && error && errorMsg}
+            onKeyDown={(e) => {
+                if(!allowTab) return
+                const { value } = e.target;
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                
+                    const cursorPosition = e.target.selectionStart;
+                    const cursorEndPosition = e.target.selectionEnd;
+                    const tab = '\t';
+                    
+                    e.target.value =
+                        value.substring(0, cursorPosition) +
+                        tab +
+                        value.substring(cursorEndPosition);
+                    onChange(e.target.value)
+                    // if you modify the value programmatically, the cursor is moved
+                    // to the end of the value, we need to reset it to the correct
+                    // position again
+                    e.target.selectionStart = cursorPosition + 1;
+                    e.target.selectionEnd = cursorPosition + 1;
+                }
+            }}
             InputLabelProps={{
                 shrink: true,
                 sx: {
