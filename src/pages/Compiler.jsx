@@ -7,6 +7,11 @@ export default function Compiler() {
     const [code, setCode] = useState('')
     function execute() {
         console.log('executing code...')
+        console.log('Input code =')
+        console.log(code)
+        /*
+        1. Split input by line breaks so we can process line by line
+        */
     }
     return (
         <Box>
