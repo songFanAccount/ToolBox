@@ -8,6 +8,7 @@ export default function CategoryButton({category, selected, handleClick}) {
             variant={selected ? "contained" : "outlined"}
             color={selected ? "success" : "primary"}
             onClick={() => handleClick(category)}
+            disableRipple
             sx={{
                 margin: "5px",
                 minWidth: "fit-content",
