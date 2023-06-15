@@ -37,13 +37,14 @@ export default function CategoryPageLayout({category}) {
     return (
         <Box
             sx={{
-                px: 1
+                p: 1.5
             }}
         >
             <Box 
                 sx={{
                     display: "flex",
-                    overflowX: "auto"
+                    overflowX: "auto",
+                    mb: 1
                 }}
             >
                 {categoryButtonsComponent}
