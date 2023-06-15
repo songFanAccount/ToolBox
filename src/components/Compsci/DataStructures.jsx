@@ -87,50 +87,45 @@ export function getArrayDOM(array, name) {
     }
     return DOMarray
 }
-export function AnimatedArray({name}) {
-    const [array, setArray] = useState([])
-    const [DOMArray, setDOMArray] = useState([])
-    const [scope, animate] = useAnimate()
-    function endIndex(array) {
-        return array.length - 1
-    }
-    function push(value) {
-        if(value.trimStart() === '') return
-        setArray([...array, value])
-        const className = `${name}-${DOMArray.length}`
-        const newElement = <ArrayElement value={value} className={className} index={DOMArray.length}/>
-        setDOMArray([...DOMArray, newElement])
-        console.log(DOMArray)
-    }
-    async function pop() {
-        if(DOMArray.length === 0) return
-        const lastIndex = endIndex(array)
-        setArray(array.slice(0, lastIndex))
-        await animate(`.${name}-${lastIndex}`, getAnim('delete'), {duration: 0.5})
-        setDOMArray(DOMArray.slice(0, lastIndex))
-    }
-    return (
-        <Stack
-            direction="column"
-        >
-            <Stack
-                className={name}
-                direction="row"
-                ref={scope}
-                flexWrap='wrap'
-                rowGap={1.5}
-                sx={{
-                    overflowX: 'auto',
-                    pb: 2
-                }}
-            >
-                {DOMArray.map((element) => element)}
-            </Stack>
-            <TextFieldWithButton buttonText="Push" onClick={push}/>
-            <TBButton buttonText="Pop" onClick={pop} m={0}/>
-        </Stack>
-    )
+function arrayRemoveIth(array, i) {
+    return array.slice(0, i).concat(array.slice(i+1))
 }
+// export function AnimatedArray({name}) {
+//     const [array, setArray] = useState([])
+//     const [DOMArray, setDOMArray] = useState([])
+//     const [scope, animate] = useAnimate()
+//     const popCount = useRef(0)
+//     function endIndex(array) {
+//         return array.length - 1
+//     }
+//     function push(value) {
+//     }
+//     async function pop() {
+//     }
+//     function deleteIndex(i) {
+//     }
+//     return (
+//         <Stack
+//             direction="column"
+//         >
+//             <Stack
+//                 className={name}
+//                 direction="row"
+//                 ref={scope}
+//                 rowGap={1.5}
+//                 sx={{
+//                     overflowX: 'auto',
+//                     pb: 2
+//                 }}
+//             >
+//                 {DOMArray.map((element) => element)}
+//             </Stack>
+//             <TextFieldWithButton buttonText="Push" onClick={push}/>
+//             <TBButton buttonText="Pop" onClick={pop} m={0}/>
+//             <TextFieldWithButton buttonText="Delete" onClick={deleteIndex} m={0}/>
+//         </Stack>
+//     )
+// }
 /*
 Use this for an input array of already created DOMs
 */
