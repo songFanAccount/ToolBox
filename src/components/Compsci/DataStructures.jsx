@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import { Box, Stack, Typography } from "@mui/material"
 import Xarrow, { Xwrapper } from 'react-xarrows';
 import { CopyButton, PageParagraph, TBButton } from '../UI/DefaultLayout';
@@ -37,7 +37,12 @@ function getAnim(status) {
             throw new Error("ArrayElement: Unknown status = " + status)
     }
 }
-function ArrayElement({value, className, index, status='create'}) {
+const ArrayElement = forwardRef(({value, className, index, status='create'}, ref) => {
+    useImperativeHandle(ref, () => ({
+        hello() {
+            alert("You clicked the button!");
+        }
+    }));
     const boxSx = {
         height: 25,
         minWidth: 25,
@@ -45,6 +50,7 @@ function ArrayElement({value, className, index, status='create'}) {
     }
     return (
         <Stack
+            ref={ref}
             direction='column'
             alignItems='center'
             key={className}
@@ -76,7 +82,7 @@ function ArrayElement({value, className, index, status='create'}) {
             }
         </Stack>
     )
-}
+})
 export function getArrayDOM(array, name) {
     if(!array || !Array.isArray(array)) throw new Error("getArrayDOM: Need array!")
     const l = array.length
@@ -89,6 +95,49 @@ export function getArrayDOM(array, name) {
 }
 function arrayRemoveIth(array, i) {
     return array.slice(0, i).concat(array.slice(i+1))
+}
+export function AnimatedArray2({arrayName}) {
+    const [scope, animate] = useAnimate()
+    const [array, setArray] = useState([])
+    const refArray = useRef([])
+    function push(value) {
+        const newIndex = refArray.current.length
+        const className = `${arrayName}-${newIndex}`
+        const newElement = <ArrayElement ref={(el) => refArray.current.push(el)} value={value} className={className} index={newIndex}/>
+        console.log(refArray.current)
+        setArray([...array, newElement])
+    }
+    function pop() {
+    }
+    function deleteIndex(i) {
+        const index = parseInt(i)
+        if(!index && index !== 0) return
+        if(refArray.current.length === 0) return
+        if(refArray.current.length <= index) return
+        console.log(refArray.current[i])
+        refArray.current[i].hello()
+    }
+    return (
+        <Stack
+            direction="column"
+        >
+            <Stack
+                className={arrayName}
+                direction="row"
+                ref={scope}
+                rowGap={1.5}
+                sx={{
+                    overflowX: 'auto',
+                    pb: 2
+                }}
+            >
+                {array.map((element) => element)}
+            </Stack>
+            <TextFieldWithButton buttonText="Push" onClick={push}/>
+            <TBButton buttonText="Pop" onClick={pop} m={0}/>
+            <TextFieldWithButton buttonText="Delete" onClick={deleteIndex} m={0}/>
+        </Stack>
+    )
 }
 export function AnimatedArray({name}) {
     const [array, setArray] = useState([])
