@@ -90,42 +90,42 @@ export function getArrayDOM(array, name) {
 function arrayRemoveIth(array, i) {
     return array.slice(0, i).concat(array.slice(i+1))
 }
-// export function AnimatedArray({name}) {
-//     const [array, setArray] = useState([])
-//     const [DOMArray, setDOMArray] = useState([])
-//     const [scope, animate] = useAnimate()
-//     const popCount = useRef(0)
-//     function endIndex(array) {
-//         return array.length - 1
-//     }
-//     function push(value) {
-//     }
-//     async function pop() {
-//     }
-//     function deleteIndex(i) {
-//     }
-//     return (
-//         <Stack
-//             direction="column"
-//         >
-//             <Stack
-//                 className={name}
-//                 direction="row"
-//                 ref={scope}
-//                 rowGap={1.5}
-//                 sx={{
-//                     overflowX: 'auto',
-//                     pb: 2
-//                 }}
-//             >
-//                 {DOMArray.map((element) => element)}
-//             </Stack>
-//             <TextFieldWithButton buttonText="Push" onClick={push}/>
-//             <TBButton buttonText="Pop" onClick={pop} m={0}/>
-//             <TextFieldWithButton buttonText="Delete" onClick={deleteIndex} m={0}/>
-//         </Stack>
-//     )
-// }
+export function AnimatedArray({name}) {
+    const [array, setArray] = useState([])
+    const [DOMArray, setDOMArray] = useState([])
+    const [scope, animate] = useAnimate()
+    const popCount = useRef(0)
+    function endIndex(array) {
+        return array.length - 1
+    }
+    function push(value) {
+    }
+    async function pop() {
+    }
+    function deleteIndex(i) {
+    }
+    return (
+        <Stack
+            direction="column"
+        >
+            <Stack
+                className={name}
+                direction="row"
+                ref={scope}
+                rowGap={1.5}
+                sx={{
+                    overflowX: 'auto',
+                    pb: 2
+                }}
+            >
+                {DOMArray.map((element) => element)}
+            </Stack>
+            <TextFieldWithButton buttonText="Push" onClick={push}/>
+            <TBButton buttonText="Pop" onClick={pop} m={0}/>
+            <TextFieldWithButton buttonText="Delete" onClick={deleteIndex} m={0}/>
+        </Stack>
+    )
+}
 /*
 Use this for an input array of already created DOMs
 */
