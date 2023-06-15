@@ -1,8 +1,11 @@
 import React from 'react'
-import Array from '../../../../components/Compsci/Array'
+import { AnimatedArray } from '../../../../components/Compsci/DataStructures'
+import { Box } from '@mui/material'
 
 export default function ArrayBasics() {
     return (
-        <Array/>
+        <Box>
+            <AnimatedArray/>
+        </Box>
     )
 }

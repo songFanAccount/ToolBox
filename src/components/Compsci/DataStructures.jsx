@@ -1,30 +1,92 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Stack, Typography } from "@mui/material"
 import Xarrow, { Xwrapper } from 'react-xarrows';
-import { CopyButton, PageParagraph } from '../UI/DefaultLayout';
+import { CopyButton, PageParagraph, TBButton } from '../UI/DefaultLayout';
 import { useAnimate, motion } from "framer-motion"
 import { useRef } from 'react';
 import { ControlBoard, commonAnims } from '../UI/Animation';
+import { TBTextField } from '../UI/Form';
 export function DisplayError({errorMsg}) {
     return <PageParagraph text={`>> ${errorMsg}`} bold/>
+}
+function TextFieldWithButton({buttonText, onClick}) {
+    const [value, setValue] = useState('')
+    return (
+        <Stack
+            direction='row'
+            alignItems='center'
+        >
+            <TBTextField size="small" width={100} variant="outlined" value={value} onChange={setValue}/>
+            <TBButton buttonText={buttonText} onClick={() => onClick(value)}/>
+        </Stack>
+    )
+}
+function ArrayElement({value, className}) {
+    return (
+        <Box
+            key={className}
+            className={className}
+            sx={{
+                border: 1,
+                height: 25,
+                minWidth: 25,
+                textAlign: 'center'
+            }}
+        >
+            <Typography>
+                {value}
+            </Typography>
+        </Box>
+    )
+}
+export function getArrayDOM(array, name) {
+    if(!array || !Array.isArray(array)) throw new Error("getArrayDOM: Need array!")
+    const l = array.length
+    let DOMarray = []
+    for(let i = 0; i < l; i++) {
+        const newElement = <ArrayElement value={array[i]} className={`${name}-${i}`}/>
+        DOMarray.push(newElement)
+    }
+    return DOMarray
+}
+export function AnimatedArray() {
+    const [array, setArray] = useState([1,2])
+    function append(value) {
+        setArray([...array, value])
+    }
+    return (
+        <Stack
+            direction="column"
+        >
+            <Stack
+                direction="row"
+            >
+                {getArrayDOM(array).map((element) => element)}
+            </Stack>
+            <TextFieldWithButton buttonText="Append" onClick={append}/>
+        </Stack>
+    )
 }
 /*
 Use this for an input array of already created DOMs
 */
-export function ElementArray({array, maxLength, copyText}) {
+export function ElementArray({array, maxLength, copyText, name}) {
     if(maxLength < 0) {throw new Error("ElementArray: Negative maxLength not allowed!")}
     const Elements = () => {
         let generatedArray = []
         const l = maxLength ? Math.min(array.length, maxLength) : array.length
+        const elementSx = {
+            border: 1,
+            minHeight: 25,
+            minWidth: 25,
+            textAlign: 'center'
+        }
         for(let i = 0; i < l; i++) {
             generatedArray.push(
                 <Box
-                    sx={{
-                        border: 1,
-                        minHeight: 25,
-                        minWidth: 25,
-                        textAlign: 'center'
-                    }}
+                    key={`${name}-${i}`}
+                    className={`${name}-${i}`}
+                    sx={elementSx}
                 >
                     {array[i]}
                 </Box>
@@ -33,12 +95,9 @@ export function ElementArray({array, maxLength, copyText}) {
         if(maxLength < array.length) {
             generatedArray.push(
             <Box
-                sx={{
-                    border: 1,
-                    minHeight: 25,
-                    minWidth: 25,
-                    textAlign: 'center'
-                }}
+                key={`${name}-forceend`}
+                className={`${name}-forceend`}
+                sx={elementSx}
             >
                 ...
             </Box>)
@@ -69,10 +128,10 @@ export function ElementArray({array, maxLength, copyText}) {
         </Stack>
     )
 }
-export function TextArray({array, copyable}) {
+export function TextArray({array, name, copyable}) {
     if(!array || array.length === 0) return <DisplayError errorMsg="Empty or undefined array!"/>
     return (
-        <ElementArray copyText={copyable ? array.join(copyable) : null} array={array.map((e) => <Typography>{e}</Typography>)}/>
+        <ElementArray name={name} copyText={copyable ? array.join(copyable) : null} array={array.map((e) => <Typography>{e}</Typography>)}/>
     )
 }
 
