@@ -3,16 +3,20 @@ import { Card, Typography } from "@mui/material"
 import { PageParagraph } from "../DefaultLayout"
 
 export default function CategoryDescription({category}) {
-    const categoryDesc = getDescription(category.displayName)
+    const desc = getDescription(category.displayName)
+    const categoryDesc = <PageParagraph text={desc} fs={13}/>
     return (
         <Card 
             variant="outlined"
             sx = {{
                 mx: 0.5,
-                px: 0.5
+                mb: 1,
+                px: 1.5,
+                py: 0.5,
+                minHeight: 100
             }}
         >
-            <Typography sx={{fontFamily: 'Montserrat', fontSize: 20, fontWeight: "Bold"}}>{category.displayName}</Typography>
+            <Typography sx={{fontFamily: 'Montserrat', fontSize: 20, fontWeight: "Bold", mb: 0.5}}>{category.displayName}</Typography>
             {categoryDesc}
         </Card>
     )
@@ -21,20 +25,20 @@ export default function CategoryDescription({category}) {
 function getDescription(categoryName) {
     switch (categoryName) {
         case "Maths":
-            return <PageParagraph text={"Mathematics is an area of knowledge that includes the topics of numbers, formulas and related structures, shapes and the spaces in which they are contained, and quantities and their changes."} fs={13}/>
+            return "Mathematics is an area of knowledge that includes the topics of numbers, formulas and related structures, shapes and the spaces in which they are contained, and quantities and their changes."
         case "Chemistry":
-            return <PageParagraph text={"Chemistry is the scientific study of the properties and behavior of matter."} fs={13}/>
+            return "Chemistry is the scientific study of the properties and behavior of matter."
         case "Physics":
-            return <PageParagraph text={"Physics is the natural science of matter, involving the study of matter, its fundamental constituents, its motion and behavior through space and time, and the related entities of energy and force."} fs={13}/>
+            return "Physics is the natural science of matter, involving the study of matter, its fundamental constituents, its motion and behavior through space and time, and the related entities of energy and force."
         case "Engineering":
-            return <PageParagraph text={"Engineering is the use of scientific principles to design and build machines, structures, and other items, including bridges, tunnels, roads, vehicles, and buildings."} fs={13}/>
+            return "Engineering is the use of scientific principles to design and build machines, structures, and other items, including bridges, tunnels, roads, vehicles, and buildings."
         case "IRL Games":
-            return <PageParagraph text={"Enjoy games in real life!"} fs={13}/>
+            return "Enjoy games in real life!"
         case "Video Games":
-            return <PageParagraph text={"Enjoy video games :)"} fs={13}/>
+            return "Enjoy video games :)"
         case "Computer Science":
-            return <PageParagraph text={"Computer science is the study of computation, information, and automation."} fs={13}/>
+            return "Computer science is the study of computation, information, and automation."
         default: // All categories
-            return <PageParagraph text={"This page contains every tools avaiable with us!"} fs={13}/>
+            return "This page contains every tools avaiable with us!"
     }
 }
