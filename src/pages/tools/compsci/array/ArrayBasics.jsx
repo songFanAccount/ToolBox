@@ -5,7 +5,7 @@ import { Box } from '@mui/material'
 export default function ArrayBasics() {
     return (
         <Box>
-            <AnimatedArray/>
+            <AnimatedArray name='basicArray'/>
         </Box>
     )
 }

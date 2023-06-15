@@ -21,22 +21,60 @@ function TextFieldWithButton({buttonText, onClick}) {
         </Stack>
     )
 }
-function ArrayElement({value, className}) {
+function getAnim(status) {
+    switch(status) {
+        case 'create':
+            return {
+                backgroundColor: ['#00D100', '#FFFFFF']
+            }
+        case 'delete': {
+            return {
+                ...commonAnims.conceal,
+                backgroundColor: '#ff3333'
+            }
+        }
+        default:
+            throw new Error("ArrayElement: Unknown status = " + status)
+    }
+}
+function ArrayElement({value, className, index, status='create'}) {
+    const boxSx = {
+        height: 25,
+        minWidth: 25,
+        textAlign: 'center'
+    }
     return (
-        <Box
+        <Stack
+            direction='column'
+            alignItems='center'
             key={className}
-            className={className}
-            sx={{
-                border: 1,
-                height: 25,
-                minWidth: 25,
-                textAlign: 'center'
-            }}
+            sx={{width: 'fit-content'}}
         >
-            <Typography>
-                {value}
-            </Typography>
-        </Box>
+            <Box
+                className={className}
+                component={motion.div}
+                animate={getAnim(status)}
+                transition={{
+                    duration: 0.5
+                }}
+                sx={{
+                    ...boxSx,
+                    border: 1,
+                    width: 0.95
+                }}
+            >
+                <Typography sx={{px: 1}}>
+                    {value}
+                </Typography>
+            </Box>
+            {index !== undefined && 
+                <Box sx={boxSx}>
+                    <Typography sx={{px: 1}}>
+                        {index}
+                    </Typography>
+                </Box>
+            }
+        </Stack>
     )
 }
 export function getArrayDOM(array, name) {
@@ -49,21 +87,47 @@ export function getArrayDOM(array, name) {
     }
     return DOMarray
 }
-export function AnimatedArray() {
-    const [array, setArray] = useState([1,2])
-    function append(value) {
+export function AnimatedArray({name}) {
+    const [array, setArray] = useState([])
+    const [DOMArray, setDOMArray] = useState([])
+    const [scope, animate] = useAnimate()
+    function endIndex(array) {
+        return array.length - 1
+    }
+    function push(value) {
+        if(value.trimStart() === '') return
         setArray([...array, value])
+        const className = `${name}-${DOMArray.length}`
+        const newElement = <ArrayElement value={value} className={className} index={DOMArray.length}/>
+        setDOMArray([...DOMArray, newElement])
+        console.log(DOMArray)
+    }
+    async function pop() {
+        if(DOMArray.length === 0) return
+        const lastIndex = endIndex(array)
+        setArray(array.slice(0, lastIndex))
+        await animate(`.${name}-${lastIndex}`, getAnim('delete'), {duration: 0.5})
+        setDOMArray(DOMArray.slice(0, lastIndex))
     }
     return (
         <Stack
             direction="column"
         >
             <Stack
+                className={name}
                 direction="row"
+                ref={scope}
+                flexWrap='wrap'
+                rowGap={1.5}
+                sx={{
+                    overflowX: 'auto',
+                    pb: 2
+                }}
             >
-                {getArrayDOM(array).map((element) => element)}
+                {DOMArray.map((element) => element)}
             </Stack>
-            <TextFieldWithButton buttonText="Append" onClick={append}/>
+            <TextFieldWithButton buttonText="Push" onClick={push}/>
+            <TBButton buttonText="Pop" onClick={pop} m={0}/>
         </Stack>
     )
 }

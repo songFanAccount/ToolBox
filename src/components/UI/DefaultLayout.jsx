@@ -331,7 +331,7 @@ export function LatexBox({latex, fs=20, pb=2}) {
     )
 }
 
-export function TBButton({buttonText, onClick}) {
+export function TBButton({buttonText, onClick, m=2}) {
     return (
         <Button 
             variant="outlined"
@@ -340,7 +340,7 @@ export function TBButton({buttonText, onClick}) {
             sx={{
                 width: 'fit-content',
                 p:1,
-                m:2,
+                m:m,
                 backgroundColor: '#011627',
                 borderColor: '#011627',
                 '&:hover': {
