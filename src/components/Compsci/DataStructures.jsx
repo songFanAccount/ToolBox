@@ -99,10 +99,29 @@ export function AnimatedArray({name}) {
         return array.length - 1
     }
     function push(value) {
+        if(popCount.current > 0 || value.trimStart() === '') return
+        setArray([...array, value])
+        const className = `${name}-${DOMArray.length}`
+        const newElement = <ArrayElement value={value} className={className} index={DOMArray.length}/>
+        setDOMArray([...DOMArray, newElement])
+        console.log(DOMArray)
     }
     async function pop() {
+        if(DOMArray.length === 0) return
+        popCount.current++
+        const lastIndex = endIndex(array)
+        setArray(array.slice(0, lastIndex))
+        await animate(`.${name}-${lastIndex}`, getAnim('delete'), {duration: 0.5})
+        setDOMArray(DOMArray.slice(0, lastIndex))
+        popCount.current--
     }
     function deleteIndex(i) {
+        const index = parseInt(i)
+        if(!index && index !== 0) return
+        if(DOMArray.length === 0) return
+        if(DOMArray.length <= index) return
+        setArray(arrayRemoveIth(array, index))
+        setDOMArray(arrayRemoveIth(DOMArray, index))
     }
     return (
         <Stack
