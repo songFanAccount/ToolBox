@@ -45,12 +45,7 @@ export default function CategoryToolCard({catWithTool}) {
 function getDescription(toolDisplayName) {
     switch(toolDisplayName) {
         case "LaTeX Converter":
-            return "This is description for LaTeX Converter \
-                    This is description for LaTeX Converter \
-                    This is description for LaTeX Converter \
-                    This is description for LaTeX Converter \
-                    This is description for LaTeX Converter \
-                    This is description for LaTeX Converter"
+            return "This is description for LaTeX Converter."
         case "Stationary points":
             return "This is description for stationary points"
         case "Chemistry Equation Balancer":
