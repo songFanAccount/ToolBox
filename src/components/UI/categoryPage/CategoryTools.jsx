@@ -5,11 +5,11 @@ import CategoryToolCard from "./CategoryToolCard"
 
 export default function CategoryTools({category}) {
     const toolsList = getTools(category).map(element => 
-                                                    <Grid item xs={12} sm={6} md={4} lg={3}>
+                                                    <Grid item xs={12} sm={6} md={4} lg={3} key={element.tool.displayName}>
                                                         <CategoryToolCard
-                                                            key={element.tool.displayName}
                                                             catWithTool={element} />
                                                     </Grid>)
+    console.log(toolsList)
     return (
         <Grid container spacing={0.1}>
             {toolsList}
