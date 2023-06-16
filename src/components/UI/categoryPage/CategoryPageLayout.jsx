@@ -1,15 +1,20 @@
 import React, { useState } from "react"
 import { Box } from "@mui/material"
+import { useLocation } from "react-router-dom"
 
 import CategoryButton from "./CategoryButton"
 import CategoryDescription from "./CategoryDescription"
 import { tools } from "../../../Data/data"
 import CategoryTools from "./CategoryTools"
 
-export default function CategoryPageLayout({category}) {
-    const categoriesButtonObject = generateCategoryButtonObjectList(category)
+export default function CategoryPageLayout({categoryObject}) {
+    const param = useQuery()
+    if (param) {
+        categoryObject = disPlayName2Object(param.get("category"))
+    }
+    const categoriesButtonObject = generateCategoryButtonObjectList(categoryObject)
     const [categoryButtons, setCategoryButtons] = useState(categoriesButtonObject)
-    const [selectedCategory, setSelectedCategory] = useState(category)
+    const [selectedCategory, setSelectedCategory] = useState(categoryObject)
 
     function handleClick(category) {
         // it possibly changes one or two button/buttons and leave others as it is.
@@ -72,4 +77,29 @@ function generateCategoryButtonObjectList(categoryName) {
         categoriesObjectList.push({id: categories[i], selected: categoryName === categories[i] ? true : false})
     }
     return categoriesObjectList
+}
+
+function disPlayName2Object(name) {
+    switch(name) {
+        case "Maths":
+            return tools.subCategories["maths"]
+        case "Chemistry":
+            return tools.subCategories["chemistry"]
+        case "Physics":
+            return tools.subCategories["physics"]
+        case "Computer Science":
+            return tools.subCategories["compsci"]
+        case "Engineering":
+            return tools.subCategories["engineering"]
+        case "IRL Games":
+            return tools.subCategories["irlGames"]
+        case "Video Games":
+            return tools.subCategories["videoGames"]
+        default:
+            return tools
+    }
+}
+
+function useQuery() {
+    return new URLSearchParams(useLocation().search)
 }
