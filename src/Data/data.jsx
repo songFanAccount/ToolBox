@@ -10,7 +10,9 @@ const mathsTools = {
         differentiation: {
             displayName: 'Differentiation',
             tools: {
-                'stationary-points': 'Stationary points'
+                'stationary-points': {
+                    displayName: 'Stationary points'
+                }
             },
             subCategories:  {
                 estimation: {
@@ -127,7 +129,9 @@ const compsciTools = {
         }
     }
 }
+
 export const tools = {
+    displayName: "All categories",
     subCategories: {
         maths: mathsTools,
         chemistry: chemistryTools,

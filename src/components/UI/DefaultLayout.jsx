@@ -340,9 +340,11 @@ const toolnameToPath = {
     'contact': '/contact',
     'collab': '/collab',
     'latex converter': '/tools/maths/latex-converter',
-    'maths expression parser': '/tools/compsci/parsing/maths-expression-parser'
+    'maths expression parser': '/tools/compsci/parsing/maths-expression-parser',
+    'chemistry equation balancer': '/tools/chemistry/chem-equation-balancer',
+    'stationary points': '/'
 }
-export function ToolLink({name, linkText, fs=14, color='#011627'}) {
+export function ToolLink({name, linkText, textDecoration='none', fs=14, color='#011627'}) {
     const toolPath = toolnameToPath[name]
     if(!toolPath) {throw new Error("No matching tool path for given name!")}
     return (
@@ -354,7 +356,8 @@ export function ToolLink({name, linkText, fs=14, color='#011627'}) {
                 fontFamily: 'Verdana',
                 color:color,
                 textDecorationColor: color,
-                fontSize: fs
+                fontSize: fs,
+                textDecoration: textDecoration
             }}
         >
             {linkText}
