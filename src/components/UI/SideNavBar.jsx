@@ -370,7 +370,7 @@ function SideNavBar(props) {
 		return (
 			<Button
 				component={Link}
-				to={newPath}
+				to="/tools"
 				onClick={toggleOff}
 				sx={{
 					mt: 'auto',
@@ -395,7 +395,7 @@ function SideNavBar(props) {
 							color: '#fdfffc'
 						}}
 					>
-						Explore {categories.length === 0 ? 'all categories' : 'current category'}
+						Explore all categories
 					</Typography>
 					<Icon
 						sx={{

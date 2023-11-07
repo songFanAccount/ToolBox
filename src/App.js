@@ -4,13 +4,13 @@ import AboutUs from './pages/AboutUs';
 import Contact from './pages/Contact';
 import NotFound from './pages/NotFound';
 import DefaultLayout from './components/UI/DefaultLayout';
-import Tools from './pages/tools/Tools';
 import Maths from './pages/tools/maths/Maths';
 import Differentiation from './pages/tools/maths/differentiation/Differentiation';
 import StationaryPoints from './pages/tools/maths/differentiation/StationaryPoints';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LatexConverter from './pages/tools/maths/LatexConverter';
+import CategoryPageLayout from './components/UI/categoryPage/CategoryPageLayout';
 import DynamicPageLayout from './components/UI/dynamicPage/DynamicPageLayout';
 import Compsci from './pages/tools/compsci/Compsci';
 import Parsing from './pages/tools/compsci/parsing/Parsing';
@@ -19,6 +19,8 @@ import InfoPageLayout from './components/UI/infoPage/InfoPageLayout';
 import Collaborate from './pages/Collaborate';
 import ChemEquationBalancer from './pages/tools/chemistry/ChemEquationBalancer';
 import Chemistry from './pages/tools/chemistry/Chemistry';
+import ResourceAllocation from './pages/tools/compsci/AI/resourceAlloc/ResourceAllocation';
+import AI from './pages/tools/compsci/AI/AI';
 function App() {
 	return (
     	<BrowserRouter>
@@ -32,8 +34,8 @@ function App() {
 					</Route>
 						
 					<Route path="*" element={<NotFound />} />
+					<Route path="tools" element={<CategoryPageLayout/>}/>
 					<Route path="tools" element={<DynamicPageLayout/>}>
-						<Route index element={<Tools/>}/>
 						<Route path="maths">
 							<Route index element={<Maths/>}/>
 							<Route path="latex-converter" element={<LatexConverter/>}/>
@@ -51,6 +53,12 @@ function App() {
 							<Route path="parsing">
 								<Route index element={<Parsing/>}/>
 								<Route path="maths-expression-parser" element={<MathsExpressionParser/>}/>
+							</Route>
+							<Route path="AI">
+								<Route index element={<AI/>}/>
+								<Route path="resourceAlloc">
+									<Route index element={<ResourceAllocation/>}/>
+								</Route>
 							</Route>
 						</Route>
 					</Route>
