@@ -336,6 +336,10 @@ const categoryNameToPath = {
 export function hasCategoryInfo(cat) {
     return categoryNameToPath.hasOwnProperty(cat)
 }
+export function getCategoryInfoPath(cat) {
+    // Assumes has ^^^
+    return categoryNameToPath[cat]
+}
 export function CategoryLink({name, linkText, textDecoration='none', fs=14, color='#011627', onClick = () => window.scrollTo(0,0)}) {
     const categoryPath = categoryNameToPath[name]
     if(!categoryPath) {throw new Error("No matching category for given name!")}
