@@ -330,7 +330,32 @@ export function ExternalLink({href, target, children}) {
         </Link>
     )
 }
-
+const categoryNameToPath = {
+    'Resource Allocation': '/tools/compsci/AI/resourceAlloc',
+}
+export function hasCategoryInfo(cat) {
+    return categoryNameToPath.hasOwnProperty(cat)
+}
+export function CategoryLink({name, linkText, textDecoration='none', fs=14, color='#011627', onClick = () => window.scrollTo(0,0)}) {
+    const categoryPath = categoryNameToPath[name]
+    if(!categoryPath) {throw new Error("No matching category for given name!")}
+    return (
+        <Link
+            component={RouterLink}
+            to={categoryPath}
+            onClick={onClick}
+            sx={{
+                fontFamily: 'Verdana',
+                color:color,
+                textDecorationColor: color,
+                fontSize: fs,
+                textDecoration: textDecoration
+            }}
+        >
+            {linkText}
+        </Link>
+    )
+}
 /*
 Remember to update this every time a new tool is done.
 */

@@ -10,6 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import CallMadeIcon from '@mui/icons-material/CallMade';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import { tools } from '../../Data/data';
+import { CategoryLink, hasCategoryInfo } from './DefaultLayout';
 
 function SideNavBar(props) {
 	const inHeader = props.inHeader // Used to determine how the sideNavBar toggle is rendered based on viewport width (passed from DefaultLayout)
@@ -432,7 +433,8 @@ function SideNavBar(props) {
 				<Box sx={{minHeight: 100}}>
 					<PrevPath/>
 					<Heading/>
-				</Box>	
+				</Box>
+				{hasCategoryInfo(curCategory.displayName) && <CategoryLink name={curCategory.displayName} linkText={"Learn more about " + curCategory.displayName} onClick={clickTool}/>}
 				{curCategory.tools && <Tools/>}
 				{curCategory.subCategories && <SubCategories/>}
 				

@@ -29,7 +29,7 @@ export default function DynamicPageLayout() {
                 break
             }
         }
-        page = isCategory ? <TopicPageLayout topic={lastCat}/> : <ToolPageLayout/>
+        page = isCategory ? <TopicPageLayout topic={lastCat.displayName}/> : <ToolPageLayout/>
     }
 
     return (
