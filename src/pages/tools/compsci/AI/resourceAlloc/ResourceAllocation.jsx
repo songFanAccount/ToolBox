@@ -1,79 +1,83 @@
 import React from 'react';
 import { Box } from "@mui/material";
-import { PageParagraph, PageTextList, SectionBox } from "../../../../../components/UI/DefaultLayout";
+import { CollapseSectionBox, PageParagraph, PageTextList, SectionBox } from "../../../../../components/UI/DefaultLayout";
 import Latex from 'react-latex-next';
 
 export default function ResourceAllocation() {
     return (
         <Box>
-            <SectionBox>
-                <PageParagraph 
-                    text="Resource allocation is the concept of assigning item(s) to agents according to
-                        their preferences, and, depending on the goal of this allocation, what strategy
-                        will be adopted to produce an utility output that is optimal for the goal. Unless 
-                        specified otherwise, our tools for resource allocation will be based on the following 
-                        allocation setting."
-                />
-                <Box>
+            <SectionBox title="Resource Allocation" usePageTitle>
+                <SectionBox noBorder={true}>
+                    <PageParagraph 
+                        text="Resource allocation is the concept of assigning item(s) to agents according to
+                            their preferences, and, depending on the goal of this allocation, what strategy
+                            will be adopted to produce an utility output that is optimal for the goal. Unless 
+                            specified otherwise, our tools for resource allocation will be based on the following 
+                            allocation setting."
+                    />
+                    <Box>
+                        <PageTextList
+                            mt={1}
+                            py={0.5}
+                            listName="Allocation setting:"
+                            list={[
+                                <Box>
+                                    <PageParagraph text="Set of agents "/>
+                                    <Latex>$N = \lbrace 1, ..., n \rbrace$</Latex>
+                                </Box>,
+                                <Box>
+                                    <PageParagraph text="Set of items "/>
+                                    <Latex>$O = \lbrace o_1, ..., o_m \rbrace$</Latex>
+                                </Box>,
+                                <Box>
+                                    <PageParagraph text="Preferences of agents "/>
+                                    <Latex>$\succeq = \lbrace \succeq_1, ..., \succeq_n \rbrace$</Latex>
+                                    <PageParagraph text="; preferences can be encoded by utility function "/>
+                                    <Latex>$u = (u_1, ..., u_n)$</Latex>
+                                    <PageParagraph text=" over bundles of items."/>
+                                </Box>
+                            ]}
+                        />
+                    </Box>
+                    <Box>
+                        <PageParagraph text="An allocation under this setting can be described by "/>
+                        <Latex>$X = (X_1, ..., X_n)$</Latex>
+                        <PageParagraph text=" where "/>
+                        <Latex>$X_i$</Latex>
+                        <PageParagraph text=" is the subset of items from "/>
+                        <Latex>$O$</Latex>
+                        <PageParagraph text=" that is allocated to agent "/>
+                        <Latex>$i.$</Latex>
+                    </Box>
                     <PageTextList
                         mt={1}
-                        listName="Allocation setting:"
+                        py={0.5}
+                        listName="Furthermore, unless specified otherwise, we will operate under the following constraints:"
                         list={[
                             <Box>
-                                <PageParagraph text="Set of agents "/>
-                                <Latex>$N = \lbrace 1, ..., n \rbrace$</Latex>
+                                <PageParagraph text="No items are to be shared between multiple agents. That is, for any two agents "/>
+                                <Latex>$i$</Latex>
+                                <PageParagraph text=" and "/>
+                                <Latex>$j$,</Latex>
+                                <PageParagraph text=" their allocated set of item(s) are disjoint, "/>
+                                <Latex>$X_i \cap X_j = \varnothing.$</Latex>
                             </Box>,
                             <Box>
-                                <PageParagraph text="Set of items "/>
-                                <Latex>$O = \lbrace o_1, ..., o_m \rbrace$</Latex>
+                                <PageParagraph text="All items are allocated to some agent, that is, "/>
+                                <Latex>{`$\\bigcup\\limits_{i=1}^n X_i = O.$`}</Latex>
                             </Box>,
                             <Box>
-                                <PageParagraph text="Preferences of agents "/>
-                                <Latex>$\succeq = \lbrace \succeq_1, ..., \succeq_n \rbrace$</Latex>
-                                <PageParagraph text="; preferences can be encoded by utility function "/>
-                                <Latex>$u = (u_1, ..., u_n)$</Latex>
-                                <PageParagraph text=" over bundles of items."/>
+                                <PageParagraph text="We will assume simple additive properties for utilities, that is, for any agent, "/>
+                                <Latex>$i$</Latex>
+                                <PageParagraph text=" and any two distinct and disjoint bundles of items "/>
+                                <Latex>$A, B \subseteq O$</Latex>
+                                <PageParagraph text=", we have that "/>
+                                <Latex>$u_i(A) + u_i(B) = u_i(A\cup B).$</Latex>
                             </Box>
                         ]}
                     />
-                </Box>
-                <Box>
-                    <PageParagraph text="An allocation under this setting can be described by "/>
-                    <Latex>$X = (X_1, ..., X_n)$</Latex>
-                    <PageParagraph text=" where "/>
-                    <Latex>$X_i$</Latex>
-                    <PageParagraph text=" is the subset of items from "/>
-                    <Latex>$O$</Latex>
-                    <PageParagraph text=" that is allocated to agent "/>
-                    <Latex>$i.$</Latex>
-                </Box>
-                <PageTextList
-                    mt={1}
-                    listName="Furthermore, unless specified otherwise, we will operate under the following constraints:"
-                    list={[
-                        <Box>
-                            <PageParagraph text="No items are to be shared between multiple agents. That is, for any two agents "/>
-                            <Latex>$i$</Latex>
-                            <PageParagraph text=" and "/>
-                            <Latex>$j$,</Latex>
-                            <PageParagraph text=" their allocated set of item(s) are disjoint, "/>
-                            <Latex>$X_i \cap X_j = \varnothing.$</Latex>
-                        </Box>,
-                        <Box>
-                            <PageParagraph text="All items are allocated to some agent, that is, "/>
-                            <Latex>{`$\\bigcup\\limits_{i=1}^n X_i = O.$`}</Latex>
-                        </Box>,
-                        <Box>
-                            <PageParagraph text="We will assume simple additive properties for utilities, that is, for any agent, "/>
-                            <Latex>$i$</Latex>
-                            <PageParagraph text=" and any two distinct bundles of items "/>
-                            <Latex>$A, B \subseteq O$</Latex>
-                            <PageParagraph text=", we have that "/>
-                            <Latex>$u_i(A) + u_i(B) = u_i(A\cup B)$</Latex>
-                        </Box>
-                    ]}
-                />
-                <SectionBox title="Preferences and utility functions">
+                </SectionBox>
+                <SectionBox mb={1} title="Preferences and utility functions">
                     <Box>
                         <PageParagraph text="The agents' preferences "/>
                         <Latex>$\succeq = \lbrace \succeq_1, ..., \succeq_n \rbrace$</Latex>
@@ -92,6 +96,16 @@ export default function ResourceAllocation() {
                         <PageParagraph text=" would denote a strict preference of "/>
                         <Latex>$A$</Latex>
                         <PageParagraph text=" over "/>
+                        <Latex>$B,$</Latex>
+                        <PageParagraph text=" and the operator "/>
+                        <Latex>$\sim_i$</Latex>
+                        <PageParagraph text=" in "/>
+                        <Latex>$A \sim_i B$</Latex>
+                        <PageParagraph text=" would indicate that agent "/>
+                        <Latex>$i$</Latex>
+                        <PageParagraph text=" is indifferent between "/>
+                        <Latex>$A$</Latex>
+                        <PageParagraph text=" and "/>
                         <Latex>$B.$</Latex>
                     </Box>
                     <Box>
@@ -108,6 +122,18 @@ export default function ResourceAllocation() {
                         <PageParagraph text=" than it will gain by obtaining bundle "/>
                         <Latex>$B.$</Latex>
                     </Box>
+                </SectionBox>
+                <SectionBox title="Allocation properties">
+                    <PageParagraph 
+                        text="In the process of discovering and developing allocation algorithms, there are certain desirable properties we want to consider.
+                              Certain algorithm may wish to satisfy certain properties and may not satisfy some others, this ultimately depends
+                              on the goals and priorities of the algorithm."
+                    />
+                    <CollapseSectionBox
+                        title="Pareto-optimality"
+                        titleFs={16}
+                    >
+                    </CollapseSectionBox>
                 </SectionBox>
             </SectionBox>
         </Box>

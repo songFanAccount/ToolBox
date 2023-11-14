@@ -86,16 +86,16 @@ function Contents({noBorder, children, mb=3, rowGap=2}) {
     )
 }
 
-export function SectionBox({title, noBorder, children, usePageTitle, mb=3, rowGap=2}) {
+export function SectionBox({title, noBorder, children, usePageTitle, mb=2, rowGap=2}) {
     return (
         <Box>
-            {title && usePageTitle ? <PageTitle title={title}/> : <PageSectionTitle title={title}/>}
+            {title && usePageTitle ? <PageTitle title={title} mb={1}/> : <PageSectionTitle title={title}/>}
             <Contents noBorder={noBorder} children={children} mb={mb} rowGap={rowGap}/>
         </Box>
     )
 }
 
-export function CollapseSectionBox({title, children, startClosed, usePageTitle}) {
+export function CollapseSectionBox({title, titleFs, children, startClosed, usePageTitle}) {
     if(!title) {throw new Error("CollapseSectionBox: Cannot be collapsible without title!")}
     const [open, setOpen] = React.useState(startClosed ? false : true)
     function handleClick() {
@@ -127,7 +127,7 @@ export function CollapseSectionBox({title, children, startClosed, usePageTitle})
                     }
                 }}
             >
-                {usePageTitle ? <PageTitle title={title}/> : <PageSectionTitle title={title}/>}
+                {usePageTitle ? <PageTitle title={title} mb={1}/> : <PageSectionTitle title={title} fs={titleFs}/>}
                 {open ? <KeyboardArrowUpIcon sx={iconSx}/> : <KeyboardArrowDownIcon sx={iconSx}/>}
             </Button>
         )
@@ -178,12 +178,12 @@ export function PageTitle({title, color, fs=30, underline='inherit', align, mb, 
     )
 }
 
-export function PageSectionTitle({title}) {
+export function PageSectionTitle({title, fs=24}) {
     return (
         <Typography
             id={title}
             sx={{
-                fontSize: 24,
+                fontSize: fs,
                 fontFamily: 'Montserrat',
             }}
         >
@@ -211,13 +211,13 @@ export function PageParagraph({text, bold, block, color='inherit', fs='medium'})
     )
 }
 
-export function PageTextList({list, listName, noPaddingsY, mt=0}) {
+export function PageTextList({list, listName, noPaddingsY, py='inherit', mt=0}) {
     if(!list) {throw new Error("Need input list in PageTextList!")}
     const ListElement = ({element}) => {
         if(typeof element === 'string') {
-            return <ListItemText primaryTypographyProps={{fontFamily: 'Verdana'}} sx={{display: 'list-item'}}>{element}</ListItemText>
+            return <ListItemText primaryTypographyProps={{fontFamily: 'Verdana'}} sx={{display: 'list-item', py: py}}>{element}</ListItemText>
         } else {
-            return <Box sx={{display: 'list-item'}}>{element}</Box>
+            return <Box sx={{display: 'list-item', py: py}}>{element}</Box>
         }
     }
     return (
@@ -373,7 +373,7 @@ const toolnameToPath = {
     'chemistry equation balancer': '/tools/chemistry/chem-equation-balancer',
     'stationary points': '/'
 }
-export function ToolLink({name, linkText, textDecoration='none', fs=14, color='#011627'}) {
+export function ToolLink({name, linkText, textDecoration='underline', fs='inherit', color='#011627'}) {
     const toolPath = toolnameToPath[name]
     if(!toolPath) {throw new Error("No matching tool path for given name!")}
     return (

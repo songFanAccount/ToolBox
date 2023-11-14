@@ -1,5 +1,4 @@
 import React from 'react';
-import { PageTitle } from "../DefaultLayout";
 import { Helmet } from "react-helmet";
 import SideNavBar from "../SideNavBar";
 import { Box } from "@mui/material";
@@ -51,7 +50,6 @@ export default function TopicPageLayout({topic}) {
                         mt: 3,
                     }}
                 >
-                    <PageTitle title={pageTitle} fs={32}/>
                     <Outlet/>
                 </Box>
                 
