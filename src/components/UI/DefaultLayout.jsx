@@ -211,7 +211,7 @@ export function PageParagraph({text, bold, block, color='inherit', fs='medium'})
     )
 }
 
-export function PageTextList({list, listName, noPaddingsY}) {
+export function PageTextList({list, listName, noPaddingsY, mt=0}) {
     if(!list) {throw new Error("Need input list in PageTextList!")}
     const ListElement = ({element}) => {
         if(typeof element === 'string') {
@@ -223,7 +223,7 @@ export function PageTextList({list, listName, noPaddingsY}) {
     return (
         <Box>
             <PageParagraph text={listName}/>
-            <List sx={{pl: 4, listStyleType: 'square', py: noPaddingsY ? 0 : 'inherit',}}>
+            <List sx={{mt: mt, pl: 4, listStyleType: 'square', py: noPaddingsY ? 0 : 'inherit',}}>
                 {list.map((e) => (
                     <ListElement element={e}/>
                 ))}
