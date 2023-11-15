@@ -8,7 +8,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import FastForwardIcon from '@mui/icons-material/FastForward';
 import { PageParagraph } from './DefaultLayout';
 
-export function ControlBoard({label, play, back, next, skipToEnd, tooltips}) {
+export function ControlBoardBox({label, children}) {
     return (
         <Stack
             direction="column"
@@ -31,16 +31,23 @@ export function ControlBoard({label, play, back, next, skipToEnd, tooltips}) {
                 rowGap={3}
                 columnGap={3}
             >
-                {play && <CBIconButton tooltip={tooltips?.play ? tooltips.play : "Play animation"} onClick={play} icon={<PlayArrowIcon />}/>}
-                {back && <CBIconButton tooltip={tooltips?.back ? tooltips.back : "Decrement animation"} onClick={back} icon={<ArrowBackIcon />}/>}
-                {next && <CBIconButton tooltip={tooltips?.next ? tooltips.next : "Increment animation"} onClick={next} icon={<ArrowForwardIcon />}/>}
-                {skipToEnd && <CBIconButton tooltip={tooltips?.skipToEnd ? tooltips.skipToEnd : "Skip to end state"} onClick={skipToEnd} icon={<FastForwardIcon />}/>}
+                {children}
             </Stack>
         </Stack>
     )
 }
+export function AnimControlBoard({label, play, back, next, skipToEnd, tooltips}) {
+    return (
+        <ControlBoardBox label={label}>
+            {play && <CBIconButton tooltip={tooltips?.play ? tooltips.play : "Play animation"} onClick={play} icon={<PlayArrowIcon />}/>}
+            {back && <CBIconButton tooltip={tooltips?.back ? tooltips.back : "Decrement animation"} onClick={back} icon={<ArrowBackIcon />}/>}
+            {next && <CBIconButton tooltip={tooltips?.next ? tooltips.next : "Increment animation"} onClick={next} icon={<ArrowForwardIcon />}/>}
+            {skipToEnd && <CBIconButton tooltip={tooltips?.skipToEnd ? tooltips.skipToEnd : "Skip to end state"} onClick={skipToEnd} icon={<FastForwardIcon />}/>}
+        </ControlBoardBox>
+    )
+}
 
-function CBIconButton({icon, label, onClick, tooltip}) {
+export function CBIconButton({icon, label, onClick, tooltip}) {
     return (
         <Tooltip title={tooltip}>
             <IconButton aria-label={label} disableRipple
