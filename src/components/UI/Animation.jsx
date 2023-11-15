@@ -1,4 +1,4 @@
-import { IconButton, Stack, Tooltip } from '@mui/material'
+import { Button, IconButton, Stack, Tooltip } from '@mui/material'
 import React from 'react'
 import { motion } from 'framer-motion';
 
@@ -47,6 +47,38 @@ export function AnimControlBoard({label, play, back, next, skipToEnd, tooltips})
     )
 }
 
+export function CBTextIconButton({text, endIcon, onClick, tooltip}) {
+    return (
+        <Tooltip title={tooltip}>
+            <Button disableRipple
+                onClick={onClick}
+                endIcon={endIcon}
+                variant="outlined"
+                component={motion.button}
+                whileTap={{
+                    scale: 0.9
+                }}
+                sx={{
+                    color: 'black',
+                    borderColor: 'black',
+                    borderRadius: 10,
+                    border: 2,
+                    fontFamily: 'Verdana',
+                    textTransform: 'none',
+                    boxSizing: 'content-box',
+                    '&:hover': {
+                        backgroundColor: 'black',
+                        color: 'white',
+                        borderColor: 'black',
+                        border: 2
+                    }
+                }}
+            >
+                {text}
+            </Button>
+        </Tooltip>
+    )
+}
 export function CBIconButton({icon, label, onClick, tooltip}) {
     return (
         <Tooltip title={tooltip}>

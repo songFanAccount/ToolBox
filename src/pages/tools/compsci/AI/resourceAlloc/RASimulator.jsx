@@ -1,6 +1,6 @@
 import { Box, Stack } from '@mui/material'
 import React from 'react'
-import { CBIconButton, ControlBoardBox } from '../../../../../components/UI/Animation'
+import { CBIconButton, CBTextIconButton, ControlBoardBox } from '../../../../../components/UI/Animation'
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import PersonRemoveAlt1Icon from '@mui/icons-material/PersonRemoveAlt1';
 import AddIcon from '@mui/icons-material/Add';
@@ -148,8 +148,8 @@ export default function RASimulator() {
             <ControlBoardBox label="Control board">
                 <CBIconButton tooltip="Add agent (up to 10)" onClick={addAgent} icon={<PersonAddAlt1Icon/>}/>
                 <CBIconButton tooltip="Remove agent (bottom row)" onClick={removeAgent} icon={<PersonRemoveAlt1Icon/>}/>
-                <CBIconButton tooltip="Add item (up to 10)" onClick={addItem} icon={<AddIcon/>}/>
-                <CBIconButton tooltip="Remove item (right-most column)" onClick={removeItem} icon={<RemoveIcon/>}/>
+                <CBTextIconButton text="Add item" onClick={addItem} endIcon={<AddIcon/>} tooltip="Add item (up to 10)"/>
+                <CBTextIconButton text="Del item" onClick={removeItem} endIcon={<RemoveIcon/>} tooltip="Delete item (right-most column)"/>
             </ControlBoardBox>
         )
     }
