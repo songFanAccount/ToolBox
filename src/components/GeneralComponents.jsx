@@ -1,3 +1,4 @@
+import { InputBase } from "@mui/material";
 import { TBTextField } from "./UI/Form";
 
 function ParserTextField({onChange, expr, placeholder}) {
@@ -32,6 +33,27 @@ export function CEPTextField({onChange, expr}) {
     )
 }
 
+export function TBText({expr, onChange, width=40, height=40, placeholder='', maxLength='', center}) {
+    return (
+        <InputBase
+            type="text"
+            value={expr}
+            onChange={onChange}
+            placeholder={placeholder}
+            fullWidth
+            inputProps={{
+                maxLength: maxLength,
+                sx: {
+                    textAlign: center ? 'center' : ''
+                }
+            }}
+            sx={{
+                width: width,
+                height: height,
+            }}
+        />
+    )
+}
 // PARSER PAGE CONTENT TEMPLATE
 // export default function ChemExpressionParser() {
 //     const [expr, setExpr] = useState('')
