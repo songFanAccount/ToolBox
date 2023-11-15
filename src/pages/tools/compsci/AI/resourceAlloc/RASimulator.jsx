@@ -12,7 +12,7 @@ export default function RASimulator() {
     const sqrWidth = 40
     const [numAgents, setNumAgents] = React.useState(0)
     const [numItems, setNumItems] = React.useState(0)
-    const [preferences, setPreferences] = React.useState([])
+    const newInputs = React.useRef([])
     const TableBox = ({contents}) => (
         <Box
             sx={{
@@ -69,19 +69,19 @@ export default function RASimulator() {
         }
         return agents
     }
-    function changePreference(agent, item, value) {
-        const isnum = /^\d+$/.test(value);
-        if (!isnum) return
-
+    function changePreference(agent, item, newValue) {
+        newInputs.current[agent][item] = newValue
     }
     const Preferences = () => {
         const PreferenceRow = ({row}) => {
             const Preference = ({agent, item}) => (
                 <TableBox 
                     contents={
-                        <TBText expr={preferences[agent][item] === -1 ? '' : preferences[agent][item]} onChange={(value) => changePreference(agent, item, value)} 
-                                width={sqrWidth} height={sqrWidth} placeholder='-' maxLength={2} center/>
-                    }/>
+                        <TBText key={`sim(${agent},${item})`} defaultValue={newInputs.current[agent][item] === -1 ? '' : newInputs.current[agent][item]} 
+                                onChange={(value) => changePreference(agent, item, value)} width={sqrWidth} height={sqrWidth} placeholder='-' maxLength={2} center
+                        />
+                    }
+                />
             )
             const rowGrids = []
             for (let j = 0; j < numItems; j++) {
@@ -126,19 +126,22 @@ export default function RASimulator() {
         for (let i = 0; i < numItems; i++) {
             newPreference.push(-1)
         }
-        setPreferences([...preferences, newPreference])
+        newInputs.current.push([...newPreference])
     }
     function removeAgent() {
         if (numAgents === 0) return
         setNumAgents(numAgents - 1)
+        newInputs.current = newInputs.current.slice(0, numAgents - 1)
     }
     function addItem() {
         if (numItems === 10) return
         setNumItems(numItems + 1)
+        newInputs.current.forEach((value) => value.push(-1))
     }
     function removeItem() {
         if (numItems === 0) return
         setNumItems(numItems - 1)
+        newInputs.current = newInputs.current.map((value) => value.slice(0, numItems - 1))
     }
     const ControlBoard = () => {
         return (

@@ -33,12 +33,15 @@ export function CEPTextField({onChange, expr}) {
     )
 }
 
-export function TBText({expr, onChange, width=40, height=40, placeholder='', maxLength='', center}) {
+export function TBText({key, expr, defaultValue, onChange, width=40, height=40, placeholder='', maxLength='', center}) {
     return (
         <InputBase
             type="text"
+            id={key}
+            key={key}
+            defaultValue={defaultValue}
             value={expr}
-            onChange={onChange}
+            onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
             fullWidth
             inputProps={{
