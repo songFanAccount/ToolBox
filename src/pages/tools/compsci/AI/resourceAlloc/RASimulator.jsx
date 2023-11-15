@@ -5,11 +5,33 @@ import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import PersonRemoveAlt1Icon from '@mui/icons-material/PersonRemoveAlt1';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import Latex from 'react-latex-next';
 
 export default function RASimulator() {
     const sqrWidth = 40
     const [numAgents, setNumAgents] = React.useState(0)
     const [numItems, setNumItems] = React.useState(0)
+    const [preferences, setPreferences] = React.useState([])
+    const Items = () => {
+        const Item = ({subscript}) => (
+            <Box
+                sx={{
+                    width: sqrWidth,
+                    height: sqrWidth,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+            >
+                <Latex>{`$o_{${subscript}}$`}</Latex>
+            </Box>
+        )
+        const items = []
+        for (let i = 1; i <= numItems; i++) {
+            items.push(<Item subscript={i}/>)
+        }
+        return items
+    }
     const TopRow = () => (
         <Stack
             direction="row"
@@ -25,10 +47,11 @@ export default function RASimulator() {
             <Stack
                 direction="row"
                 sx={{
+                    ml: 0.5,
                     minWidth: 4*sqrWidth
                 }}
             >
-                
+                <Items/>
             </Stack>
         </Stack>
     )
@@ -58,6 +81,11 @@ export default function RASimulator() {
     function addAgent() {
         if (numAgents === 10) return
         setNumAgents(numAgents + 1)
+        const newPreference = []
+        for (let i = 0; i < numItems; i++) {
+            newPreference.push(-1)
+        }
+        setPreferences([...preferences, newPreference])
     }
     function removeAgent() {
         if (numAgents === 0) return
