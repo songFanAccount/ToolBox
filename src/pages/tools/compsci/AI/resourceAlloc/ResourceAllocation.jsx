@@ -2,6 +2,7 @@ import React from 'react';
 import { Box } from "@mui/material";
 import { CollapseSectionBox, PageParagraph, PageTextList, SectionBox } from "../../../../../components/UI/DefaultLayout";
 import Latex from 'react-latex-next';
+import RASimulator from './RASimulator';
 
 export default function ResourceAllocation() {
     return (
@@ -121,18 +122,30 @@ export default function ResourceAllocation() {
                         <Latex>$A$</Latex>
                         <PageParagraph text=" than it will gain by obtaining bundle "/>
                         <Latex>$B.$</Latex>
+                        <PageParagraph text=" Similarly, "/>
+                        <Latex>$A \succ_i B$</Latex>
+                        <PageParagraph text=" is equivalent to "/>
+                        <Latex>$u_i(A) \gt u_i(B),$</Latex>
+                        <PageParagraph text=" and "/>
+                        <Latex>$A \sim_i B$</Latex>
+                        <PageParagraph text=" is equivalent to "/>
+                        <Latex>$u_i(A) = u_i(B).$</Latex>
                     </Box>
+                </SectionBox>
+                <SectionBox title="Simulator">
+                    <RASimulator/>
                 </SectionBox>
                 <SectionBox title="Allocation properties">
                     <PageParagraph 
                         text="In the process of discovering and developing allocation algorithms, there are certain desirable properties we want to consider.
-                              Certain algorithm may wish to satisfy certain properties and may not satisfy some others, this ultimately depends
+                              Certain algorithms may wish to satisfy certain properties and may not satisfy some others, this ultimately depends
                               on the goals and priorities of the algorithm."
                     />
                     <CollapseSectionBox
                         title="Pareto-optimality"
                         titleFs={16}
                     >
+
                     </CollapseSectionBox>
                 </SectionBox>
             </SectionBox>
