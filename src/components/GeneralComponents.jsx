@@ -1,6 +1,7 @@
 import { InputBase, Stack, Switch } from "@mui/material";
 import { TBTextField } from "./UI/Form";
 import { PageParagraph } from "./UI/DefaultLayout";
+import React from "react";
 
 function ParserTextField({onChange, expr, placeholder}) {
     return (
@@ -34,22 +35,25 @@ export function CEPTextField({onChange, expr}) {
     )
 }
 
-export function TBText({key, expr, defaultValue, onChange, width=40, height=40, placeholder='', maxLength='', center, disabled, zIndex, border=0}) {
+export function TBText({key, expr, defaultValue, onChange, errorFunc, width=40, height=40, placeholder='', maxLength='', center, disabled, zIndex, border=0}) {
+    const [isError, setIsError] = React.useState(errorFunc(defaultValue))
     return (
         <InputBase
             id={key}
             key={key}
             defaultValue={defaultValue}
             value={expr}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={(e) => {onChange(e.target.value); setIsError(errorFunc(e.target.value))}}
             placeholder={placeholder}
             fullWidth
             disabled={disabled}
+            error={isError}
             inputProps={{
                 maxLength: maxLength,
                 sx: {
                     textAlign: center ? 'center' : '',
-                    fontFamily: 'Verdana'
+                    fontFamily: 'Verdana',
+                    color: isError ? 'red' : 'black' 
                 }
             }}
             sx={{
@@ -60,7 +64,7 @@ export function TBText({key, expr, defaultValue, onChange, width=40, height=40, 
                 borderRadius: '50%',
                 borderColor: 'black',
                 '& .MuiInputBase-input.Mui-disabled': {
-                    WebkitTextFillColor: "#000000",
+                    WebkitTextFillColor: isError ? 'red' : "#000000",
                 }
             }}
         />
@@ -84,7 +88,7 @@ export function TBDoubleSizedSwitch({leftText, rightText, checked, onChange}) {
                         color: 'black', 
                         backgroundColor: 'black',
                     },
-                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-thumb': {
+                    '& .MuiSwitch-thumb': {
                         color: 'black', 
                         backgroundColor: 'black',
                     }

@@ -7,6 +7,7 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Latex from 'react-latex-next';
 import { TBDoubleSizedSwitch, TBText } from '../../../../../components/GeneralComponents';
+import { PageParagraph, TBButton } from '../../../../../components/UI/DefaultLayout';
 
 export default function RASimulator() {
     const sqrWidth = 40
@@ -14,12 +15,14 @@ export default function RASimulator() {
     const [numItems, setNumItems] = React.useState(0)
     const [mode, setMode] = React.useState(false) // false for edit mode, true for allocate mode
     const inputs = React.useRef([])
+    const [updateNeeded, setUpdateNeeded] = React.useState(false)
     const [allocation, setAllocation] = React.useState([])
-    const TableBox = ({contents}) => (
+    const TableBox = ({contents, width, borderBottom}) => (
         <Box
             sx={{
-                width: sqrWidth,
+                width: width ? width : sqrWidth,
                 height: sqrWidth,
+                borderBottom: borderBottom,
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -52,6 +55,7 @@ export default function RASimulator() {
                             <TBText key={`sim(${agent},${item})`} defaultValue={inputs.current[agent][item] === -1 ? '' : inputs.current[agent][item]} 
                                     onChange={(value) => changePreference(agent, item, value)} width={sqrWidth - 10} height={sqrWidth - 10} placeholder='-' 
                                     maxLength={2} center disabled={mode} border={allocation[agent].has(item) ? 1 : 0}
+                                    errorInit={true} errorFunc={(str) => !(/^[1-9]\d*$/.test(str))}
                             />
                         </Box>
                         <Button
@@ -119,6 +123,7 @@ export default function RASimulator() {
     }
     function changePreference(agent, item, newValue) {
         inputs.current[agent][item] = newValue
+        setUpdateNeeded(true)
     }
     const Preferences = () => {
         const PreferenceRow = ({row}) => {
@@ -190,6 +195,80 @@ export default function RASimulator() {
             return value
         }))
     }
+    const AllocationDetails = () => {
+        return (
+            <Stack direction="column">
+                <TableBox
+                    width="fit-content"
+                    borderBottom={1}
+                    contents={
+                        <Box>
+                            <PageParagraph text="Let "/>
+                            <Latex>$X$</Latex>
+                            <PageParagraph text=" be your highlighted allocation:"/>
+                        </Box>
+                    }
+                />
+                <Stack direction="row" columnGap={3}>
+                    <Stack direction="column">
+                        {
+                            allocation.map((value, index) => {
+                                let setStr = ''
+                                const a = Array.from(value)
+                                a.sort()
+                                for (let i = 0; i < value.size; i++) {
+                                    setStr += `o_{${a[i] + 1}}`
+                                    if (i !== value.size - 1) setStr += ', '
+                                }
+                                return (
+                                    <TableBox
+                                        width="fit-content"
+                                        contents={
+                                            <Box>
+                                                <Latex>{`$X_${index + 1} = \\{${setStr}\\}$`}</Latex>
+                                            </Box>
+                                        }
+                                    />
+                                )
+                            })
+                        }
+                    </Stack>
+                    <Stack direction="column">
+                        {
+                            allocation.map((value, index) => {
+                                let sum = 0
+                                let sumStr = ''
+                                const a = Array.from(value)
+                                a.sort()
+                                for (let i = 0; i < a.length; i++) {
+                                    const itemIndex = a[i]
+                                    const curPrefValue = inputs.current[index][itemIndex]
+                                    if (/^[1-9]\d*$/.test(curPrefValue)) { sum += parseInt(curPrefValue); sumStr += curPrefValue }
+                                    else { sumStr = null; break }
+                                    if (i !== a.length - 1) sumStr += ' + '
+                                    else {
+                                        if (i !== 0) sumStr += ` = ${sum}`
+                                    }
+                                }
+                                if (a.length === 0) sumStr = '0'
+                                return (
+                                    <TableBox
+                                        width='fit-content'
+                                        contents={
+                                            <Box>
+                                                <Latex>{`$u_{${index + 1}}(X_{${index + 1}}) = ${sumStr ? sumStr : ''}$`}</Latex>
+                                                { sumStr === null && <PageParagraph color="red" text=" ?"/>}
+                                            </Box>
+                                        }
+                                    />
+                                )
+                            })
+                        }
+                    </Stack>
+                </Stack>
+            </Stack>
+        )
+    }
     const ControlBoard = () => {
         return (
             <ControlBoardBox label="Control board" maxWidth={400}>
@@ -203,11 +282,17 @@ export default function RASimulator() {
     }
     return (
         <Stack direction="column" rowGap={3}>
-            <Stack
-                direction="column"
-            >
-                <TopRow/>
-                <Preferences/>
+            <Stack direction="row" columnGap={5}>
+                <Stack
+                    direction="column"
+                >
+                    <TopRow/>
+                    <Preferences/>
+                    {
+                        updateNeeded && <TBButton buttonText="Apply changes" onClick={() => {setUpdateNeeded(false);}}/>
+                    }
+                </Stack>
+                <AllocationDetails/>
             </Stack>
             <ControlBoard/>
         </Stack>
