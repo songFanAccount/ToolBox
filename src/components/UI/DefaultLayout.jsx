@@ -296,7 +296,7 @@ export function LatexBox({latex, fs=20, pb=2}) {
     )
 }
 
-export function TBButton({buttonText, onClick}) {
+export function TBButton({buttonText, onClick, p=1, mt=2, ml=2, mr=2, mb=2}) {
     return (
         <Button 
             variant="outlined"
@@ -304,8 +304,11 @@ export function TBButton({buttonText, onClick}) {
             disableRipple
             sx={{
                 width: 'fit-content',
-                p:1,
-                m:2,
+                p:p,
+                mt:mt,
+                ml:ml,
+                mr:mr,
+                mb:mb,
                 backgroundColor: '#011627',
                 borderColor: '#011627',
                 '&:hover': {

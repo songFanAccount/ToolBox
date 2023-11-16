@@ -15,8 +15,8 @@ export default function RASimulator() {
     const [numItems, setNumItems] = React.useState(0)
     const [mode, setMode] = React.useState(false) // false for edit mode, true for allocate mode
     const inputs = React.useRef([])
-    const [updateNeeded, setUpdateNeeded] = React.useState(false)
     const [allocation, setAllocation] = React.useState([])
+    const [sumStrs, setSumStrs] = React.useState([])
     const TableBox = ({contents, width, borderBottom}) => (
         <Box
             sx={{
@@ -32,15 +32,28 @@ export default function RASimulator() {
         </Box>
     )
     function allocate(agent, item) {
-        setAllocation(allocation.map((value, index) => {
+        let agentLostIndex = -1
+        const newAllocation = allocation.map((value, index) => {
             if (agent === index) {
                 if (value.has(item)) value.delete(item)
                 else value.add(item)
             } else {
-                if (value.has(item)) value.delete(item)
+                if (value.has(item)) { 
+                    value.delete(item)
+                    agentLostIndex = index
+                }
             }
             return value
-        }))
+        })
+        setAllocation(newAllocation)
+        setSumStrs(
+            sumStrs.map((sumStr, index) => {
+                if (index === agent || index === agentLostIndex) {
+                    return allocationToSumstr(newAllocation[index], index)
+                }
+                return sumStr
+            })
+        )
     }
     const SelectTableBox = ({agent, item}) => {
         return (
@@ -123,7 +136,6 @@ export default function RASimulator() {
     }
     function changePreference(agent, item, newValue) {
         inputs.current[agent][item] = newValue
-        setUpdateNeeded(true)
     }
     const Preferences = () => {
         const PreferenceRow = ({row}) => {
@@ -163,6 +175,16 @@ export default function RASimulator() {
             </Stack>
         )
     }
+    function applyChanges() {
+        setSumStrs(
+            allocation.map((allocSet, index) => (
+                allocationToSumstr(allocSet, index)
+            ))
+        )
+    }
+    const ApplyChangesButton = () => (
+        <TBButton buttonText="Apply changes" onClick={applyChanges} ml={0} mb={0}/>
+    )
     function addAgent() {
         if (numAgents === 10) return
         setNumAgents(numAgents + 1)
@@ -172,12 +194,14 @@ export default function RASimulator() {
         }
         inputs.current.push([...newPreference])
         setAllocation([...allocation, new Set()])
+        setSumStrs([...sumStrs, '0'])
     }
     function removeAgent() {
         if (numAgents === 0) return
         setNumAgents(numAgents - 1)
         inputs.current = inputs.current.slice(0, numAgents - 1)
         setAllocation(allocation.slice(0, numAgents - 1))
+        setSumStrs(sumStrs.slice(0, numAgents - 1))
     }
     function addItem() {
         if (numItems === 10) return
@@ -188,12 +212,41 @@ export default function RASimulator() {
         if (numItems === 0) return
         setNumItems(numItems - 1)
         inputs.current = inputs.current.map((value) => value.slice(0, numItems - 1))
-        setAllocation(allocation.map((value) => {
+        let ownerIndex = -1
+        let newSumStr
+        setAllocation(allocation.map((value, i) => {
             if (value.has(numItems - 1)) {
                 value.delete(numItems - 1)
+                newSumStr = allocationToSumstr(value, i)
+                ownerIndex = i
             }
             return value
         }))
+        if (ownerIndex !== -1) {
+            setSumStrs(
+                sumStrs.map((str, i) => {
+                    return i === ownerIndex ? newSumStr : str
+                })
+            )
+        }
+    }
+    function allocationToSumstr(allocSet, agentIndex) {
+        const itemIndices = Array.from(allocSet)
+        const numAlloced = itemIndices.length
+        if (numAlloced === 0) return '0'
+        itemIndices.sort()
+        const utilValues = itemIndices.map((itemIndex) => inputs.current[agentIndex][itemIndex])
+        let sumStr = ''
+        let sum = 0
+        for (let i = 0; i < numAlloced; i++) {
+            const value = utilValues[i]
+            if (!/^[1-9]\d*$/.test(value)) return null
+            sumStr += value
+            sum += parseInt(value)
+            if (i !== numAlloced - 1) sumStr += ' + '
+            else if (numAlloced !== 1) sumStr += ` = ${sum}`
+        }
+        return sumStr
     }
     const AllocationDetails = () => {
         return (
@@ -235,22 +288,7 @@ export default function RASimulator() {
                     </Stack>
                     <Stack direction="column">
                         {
-                            allocation.map((value, index) => {
-                                let sum = 0
-                                let sumStr = ''
-                                const a = Array.from(value)
-                                a.sort()
-                                for (let i = 0; i < a.length; i++) {
-                                    const itemIndex = a[i]
-                                    const curPrefValue = inputs.current[index][itemIndex]
-                                    if (/^[1-9]\d*$/.test(curPrefValue)) { sum += parseInt(curPrefValue); sumStr += curPrefValue }
-                                    else { sumStr = null; break }
-                                    if (i !== a.length - 1) sumStr += ' + '
-                                    else {
-                                        if (i !== 0) sumStr += ` = ${sum}`
-                                    }
-                                }
-                                if (a.length === 0) sumStr = '0'
+                            sumStrs.map((sumStr, index) => {
                                 return (
                                     <TableBox
                                         width='fit-content'
@@ -288,9 +326,7 @@ export default function RASimulator() {
                 >
                     <TopRow/>
                     <Preferences/>
-                    {
-                        updateNeeded && <TBButton buttonText="Apply changes" onClick={() => {setUpdateNeeded(false);}}/>
-                    }
+                    { !mode && <ApplyChangesButton/> }
                 </Stack>
                 <AllocationDetails/>
             </Stack>
