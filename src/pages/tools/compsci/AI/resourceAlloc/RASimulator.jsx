@@ -6,12 +6,13 @@ import PersonRemoveAlt1Icon from '@mui/icons-material/PersonRemoveAlt1';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Latex from 'react-latex-next';
-import { TBText } from '../../../../../components/GeneralComponents';
+import { TBDoubleSizedSwitch, TBText } from '../../../../../components/GeneralComponents';
 
 export default function RASimulator() {
     const sqrWidth = 40
     const [numAgents, setNumAgents] = React.useState(0)
     const [numItems, setNumItems] = React.useState(0)
+    const [mode, setMode] = React.useState(false) // false for edit mode, true for allocate mode
     const newInputs = React.useRef([])
     const TableBox = ({contents}) => (
         <Box
@@ -145,11 +146,12 @@ export default function RASimulator() {
     }
     const ControlBoard = () => {
         return (
-            <ControlBoardBox label="Control board">
+            <ControlBoardBox label="Control board" maxWidth={400}>
                 <CBIconButton tooltip="Add agent (up to 10)" onClick={addAgent} icon={<PersonAddAlt1Icon/>}/>
                 <CBIconButton tooltip="Remove agent (bottom row)" onClick={removeAgent} icon={<PersonRemoveAlt1Icon/>}/>
                 <CBTextIconButton text="Add item" onClick={addItem} endIcon={<AddIcon/>} tooltip="Add item (up to 10)"/>
                 <CBTextIconButton text="Del item" onClick={removeItem} endIcon={<RemoveIcon/>} tooltip="Delete item (right-most column)"/>
+                <TBDoubleSizedSwitch leftText="Edit mode" rightText="Allocate mode" checked={mode} onChange={(value) => setMode(value)}/>
             </ControlBoardBox>
         )
     }

@@ -1,5 +1,6 @@
-import { InputBase } from "@mui/material";
+import { InputBase, Stack, Switch } from "@mui/material";
 import { TBTextField } from "./UI/Form";
+import { PageParagraph } from "./UI/DefaultLayout";
 
 function ParserTextField({onChange, expr, placeholder}) {
     return (
@@ -47,7 +48,8 @@ export function TBText({key, expr, defaultValue, onChange, width=40, height=40, 
             inputProps={{
                 maxLength: maxLength,
                 sx: {
-                    textAlign: center ? 'center' : ''
+                    textAlign: center ? 'center' : '',
+                    fontFamily: 'Verdana'
                 }
             }}
             sx={{
@@ -55,6 +57,25 @@ export function TBText({key, expr, defaultValue, onChange, width=40, height=40, 
                 height: height,
             }}
         />
+    )
+}
+
+export function TBDoubleSizedSwitch({leftText, rightText, checked, onChange}) {
+    return (
+        <Stack direction="row" alignItems="center">
+            <PageParagraph text={leftText} color={checked ? 'grey' : 'black'}/>
+            <Switch color="primary"  checked={checked} onChange={(event) => onChange(event.target.checked)} disableRipple
+                sx={{
+                    '.MuiSwitch-colorPrimary': {
+                        color: 'black'
+                    },
+                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                        backgroundColor: 'black',
+                    },
+                }}
+            />
+            <PageParagraph text={rightText} color={checked ? 'black' : 'grey'}/>
+        </Stack>
     )
 }
 // PARSER PAGE CONTENT TEMPLATE
