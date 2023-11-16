@@ -34,10 +34,9 @@ export function CEPTextField({onChange, expr}) {
     )
 }
 
-export function TBText({key, expr, defaultValue, onChange, width=40, height=40, placeholder='', maxLength='', center}) {
+export function TBText({key, expr, defaultValue, onChange, width=40, height=40, placeholder='', maxLength='', center, disabled, zIndex, border=0}) {
     return (
         <InputBase
-            type="text"
             id={key}
             key={key}
             defaultValue={defaultValue}
@@ -45,6 +44,7 @@ export function TBText({key, expr, defaultValue, onChange, width=40, height=40, 
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
             fullWidth
+            disabled={disabled}
             inputProps={{
                 maxLength: maxLength,
                 sx: {
@@ -55,6 +55,13 @@ export function TBText({key, expr, defaultValue, onChange, width=40, height=40, 
             sx={{
                 width: width,
                 height: height,
+                zIndex: zIndex,
+                border: border,
+                borderRadius: '50%',
+                borderColor: 'black',
+                '& .MuiInputBase-input.Mui-disabled': {
+                    WebkitTextFillColor: "#000000",
+                }
             }}
         />
     )
@@ -67,11 +74,20 @@ export function TBDoubleSizedSwitch({leftText, rightText, checked, onChange}) {
             <Switch color="primary"  checked={checked} onChange={(event) => onChange(event.target.checked)} disableRipple
                 sx={{
                     '.MuiSwitch-colorPrimary': {
-                        color: 'black'
+                        color: 'black',
+                        backgroundColor: 'transparent',
+                        '&:hover': {
+                            backgroundColor: 'transparent'
+                        }
                     },
                     '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                        color: 'black', 
                         backgroundColor: 'black',
                     },
+                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-thumb': {
+                        color: 'black', 
+                        backgroundColor: 'black',
+                    }
                 }}
             />
             <PageParagraph text={rightText} color={checked ? 'black' : 'grey'}/>

@@ -1,4 +1,4 @@
-import { Box, Stack } from '@mui/material'
+import { Box, Button, Stack } from '@mui/material'
 import React from 'react'
 import { CBIconButton, CBTextIconButton, ControlBoardBox } from '../../../../../components/UI/Animation'
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
@@ -13,7 +13,8 @@ export default function RASimulator() {
     const [numAgents, setNumAgents] = React.useState(0)
     const [numItems, setNumItems] = React.useState(0)
     const [mode, setMode] = React.useState(false) // false for edit mode, true for allocate mode
-    const newInputs = React.useRef([])
+    const inputs = React.useRef([])
+    const [allocation, setAllocation] = React.useState([])
     const TableBox = ({contents}) => (
         <Box
             sx={{
@@ -27,6 +28,50 @@ export default function RASimulator() {
             {contents}
         </Box>
     )
+    function allocate(agent, item) {
+        setAllocation(allocation.map((value, index) => {
+            if (agent === index) {
+                if (value.has(item)) value.delete(item)
+                else value.add(item)
+            }
+            return value
+        }))
+    }
+    const SelectTableBox = ({agent, item}) => {
+        return (
+            <TableBox 
+                contents={
+                    <Box width={sqrWidth} height={sqrWidth}
+                        sx={{
+                            position: 'relative'
+                        }}
+                    >
+                        <Box width={1} height={1} display="flex" justifyContent="center" alignItems="center">
+                            <TBText key={`sim(${agent},${item})`} defaultValue={inputs.current[agent][item] === -1 ? '' : inputs.current[agent][item]} 
+                                    onChange={(value) => changePreference(agent, item, value)} width={sqrWidth - 10} height={sqrWidth - 10} placeholder='-' 
+                                    maxLength={2} center disabled={mode} border={allocation[agent].has(item) ? 1 : 0}
+                            />
+                        </Box>
+                        <Button
+                            disableRipple
+                            disabled={!mode}
+                            onClick={() => allocate(agent, item)}
+                            sx={{
+                                height: 1,
+                                width: 1,
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                '&:hover': {
+                                    backgroundColor: 'transparent'
+                                }
+                            }}
+                        />
+                    </Box>
+                }
+            />
+        )
+    }
     const Items = () => {
         const Item = ({subscript}) => (
             <TableBox contents={<Latex>{`$o_{${subscript}}$`}</Latex>}/>
@@ -71,22 +116,13 @@ export default function RASimulator() {
         return agents
     }
     function changePreference(agent, item, newValue) {
-        newInputs.current[agent][item] = newValue
+        inputs.current[agent][item] = newValue
     }
     const Preferences = () => {
         const PreferenceRow = ({row}) => {
-            const Preference = ({agent, item}) => (
-                <TableBox 
-                    contents={
-                        <TBText key={`sim(${agent},${item})`} defaultValue={newInputs.current[agent][item] === -1 ? '' : newInputs.current[agent][item]} 
-                                onChange={(value) => changePreference(agent, item, value)} width={sqrWidth} height={sqrWidth} placeholder='-' maxLength={2} center
-                        />
-                    }
-                />
-            )
             const rowGrids = []
             for (let j = 0; j < numItems; j++) {
-                rowGrids.push(<Preference agent={row} item={j}/>)
+                rowGrids.push(<SelectTableBox agent={row} item={j}/>)
             }
             return (
                 <Stack direction="row" sx={{ml: 0.4}}>
@@ -127,22 +163,30 @@ export default function RASimulator() {
         for (let i = 0; i < numItems; i++) {
             newPreference.push(-1)
         }
-        newInputs.current.push([...newPreference])
+        inputs.current.push([...newPreference])
+        setAllocation([...allocation, new Set()])
     }
     function removeAgent() {
         if (numAgents === 0) return
         setNumAgents(numAgents - 1)
-        newInputs.current = newInputs.current.slice(0, numAgents - 1)
+        inputs.current = inputs.current.slice(0, numAgents - 1)
+        setAllocation(allocation.slice(0, numAgents - 1))
     }
     function addItem() {
         if (numItems === 10) return
         setNumItems(numItems + 1)
-        newInputs.current.forEach((value) => value.push(-1))
+        inputs.current.forEach((value) => value.push(-1))
     }
     function removeItem() {
         if (numItems === 0) return
         setNumItems(numItems - 1)
-        newInputs.current = newInputs.current.map((value) => value.slice(0, numItems - 1))
+        inputs.current = inputs.current.map((value) => value.slice(0, numItems - 1))
+        setAllocation(allocation.map((value) => {
+            if (value.has(numItems - 1)) {
+                value.delete(numItems - 1)
+            }
+            return value
+        }))
     }
     const ControlBoard = () => {
         return (
