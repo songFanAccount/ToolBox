@@ -33,6 +33,8 @@ export default function RASimulator() {
             if (agent === index) {
                 if (value.has(item)) value.delete(item)
                 else value.add(item)
+            } else {
+                if (value.has(item)) value.delete(item)
             }
             return value
         }))
