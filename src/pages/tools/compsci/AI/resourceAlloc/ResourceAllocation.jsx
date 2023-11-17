@@ -161,16 +161,13 @@ export default function ResourceAllocation() {
                     />
                     <RASimulator/>
                 </SectionBox>
-                <SectionBox title="Allocation properties">
+                <SectionBox title="Efficiency concepts">
                     <PageParagraph 
-                        text="In the process of discovering and developing allocation algorithms, there are certain desirable properties we want to consider.
+                        text="In the process of discovering and developing allocation algorithms, there are certain desirable properties we want to consider in terms of efficiency .
                               Certain algorithms may wish to satisfy certain properties and may not satisfy some others, this ultimately depends
                               on the goals and priorities of the algorithm."
                     />
-                    <CollapseSectionBox
-                        title="Pareto-optimality"
-                        titleFs={18}
-                    >
+                    <CollapseSectionBox title="Pareto-optimality" titleFs={18}>
                         <Box>
                             <PageParagraph text="An allocation "/>
                             <Latex>$X$</Latex>
@@ -267,6 +264,35 @@ export default function ResourceAllocation() {
                             <Latex>$Y$</Latex>
                             <PageParagraph text=" is Pareto optimal because all other allocations do not Pareto dominate it (since it is a small sample space, you can manually compare all other allocations). "/>
                         </Box>
+                    </CollapseSectionBox>
+                    <CollapseSectionBox title="Utilitarian social welfare" titleFs={18}>
+                        <Box>
+                            <PageParagraph text="An allocation "/>
+                            <Latex>$X$</Latex>
+                            <PageParagraph text="'s utilitarian social welfare is calculated by "/>
+                            <Latex>{`$\\sum\\limits_{i\\in N}u_i(X_i)$`}</Latex>.
+                        </Box>
+                        <PageParagraph 
+                            text="In Layman's terms, it is the sum of all utilities gained by the agents from their allocated bundle of item(s)."
+                        />
+                        <PageTextList 
+                            listName="Important notes:"
+                            list={[
+                                <Box>
+                                    <PageParagraph bold text="Fairness concerns: "/>
+                                    <PageParagraph 
+                                        text= 
+                                        {
+                                            `
+                                            Allocation algorithms may find it appealing to try and maximise this property as in general, we want to improve net utility gained.
+                                            However, this can encounter fairness problems due to its utilitarian nature. Since we are focused on the net utility, it may be the case 
+                                            that the maximisation of the sum relies on some agent(s) being mistreated and receiving very little in comparison.
+                                            `
+                                        }
+                                    />
+                                </Box>
+                            ]}
+                        />
                     </CollapseSectionBox>
                 </SectionBox>
             </SectionBox>
