@@ -9,13 +9,14 @@ import Latex from 'react-latex-next';
 import { TBDoubleSizedSwitch, TBText } from '../../../../../components/GeneralComponents';
 import { PageParagraph, TBButton } from '../../../../../components/UI/DefaultLayout';
 
-export default function RASimulator({allocationName='X', utilities, allocations, modifiable=true, showAllocDetails=true, showControlBoard=true}) {
+export default function RASimulator({allocationName='X', utilities, allocations, modifiable=true, showAllocDetails=true, showControlBoard=true, showPropertyValues=true}) {
     const sqrWidth = 40
     const [numAgents, setNumAgents] = React.useState(utilities ? utilities.length : 0)
     const [numItems, setNumItems] = React.useState(utilities ? utilities[0].length : 0)
     const [mode, setMode] = React.useState(false) // false for edit mode, true for allocate mode
     const inputs = React.useRef(utilities ? utilities : [])
     const [allocation, setAllocation] = React.useState(allocations ? allocations : [])
+    const netUtils = React.useRef(utilities ? Array(utilities.length).fill(0) : [])
     const [sumStrs, setSumStrs] = React.useState(
         allocations 
         ? allocations.map((allocSet, index) => allocationToSumstr(allocSet, index))
@@ -199,6 +200,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
         inputs.current.push([...newPreference])
         setAllocation([...allocation, new Set()])
         setSumStrs([...sumStrs, '0'])
+        netUtils.current.push(0)
     }
     function removeAgent() {
         if (numAgents === 0) return
@@ -206,6 +208,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
         inputs.current = inputs.current.slice(0, numAgents - 1)
         setAllocation(allocation.slice(0, numAgents - 1))
         setSumStrs(sumStrs.slice(0, numAgents - 1))
+        netUtils.current = netUtils.current.slice(0, numAgents - 1)
     }
     function addItem() {
         if (numItems === 10) return
@@ -215,7 +218,6 @@ export default function RASimulator({allocationName='X', utilities, allocations,
     function removeItem() {
         if (numItems === 0) return
         setNumItems(numItems - 1)
-        inputs.current = inputs.current.map((value) => value.slice(0, numItems - 1))
         let ownerIndex = -1
         let newSumStr
         setAllocation(allocation.map((value, i) => {
@@ -233,23 +235,25 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                 })
             )
         }
+        inputs.current = inputs.current.map((value) => value.slice(0, numItems - 1))
     }
     function allocationToSumstr(allocSet, agentIndex) {
         const itemIndices = Array.from(allocSet)
         const numAlloced = itemIndices.length
-        if (numAlloced === 0) return '0'
+        if (numAlloced === 0) { netUtils.current[agentIndex] = 0; return '0'}
         itemIndices.sort()
         const utilValues = itemIndices.map((itemIndex) => inputs.current[agentIndex][itemIndex])
         let sumStr = ''
         let sum = 0
         for (let i = 0; i < numAlloced; i++) {
             const value = utilValues[i]
-            if (!/^[1-9]\d*$/.test(value)) return null
+            if (!/^[1-9]\d*$/.test(value)) { sumStr = null; break }
             sumStr += value
             sum += parseInt(value)
             if (i !== numAlloced - 1) sumStr += ' + '
             else if (numAlloced !== 1) sumStr += ` = ${sum}`
         }
+        if (sumStr !== null) netUtils.current[agentIndex] = sum
         return sumStr
     }
     const AllocationDetails = () => {
@@ -310,6 +314,66 @@ export default function RASimulator({allocationName='X', utilities, allocations,
             </Stack>
         )
     }
+    const PropertyValues = () => {
+        let netUtilSumStr = '= ' 
+        let netUtilSum = 0 
+        if (netUtils.current.length === 0) netUtilSumStr = '= 0'
+        else {
+            netUtils.current.forEach((value, i) => {
+                netUtilSum += value
+                netUtilSumStr += value
+                if (i === netUtils.current.length - 1) {
+                    if (netUtils.current.length !== 1) {
+                        netUtilSumStr += '='
+                        netUtilSumStr += ` ${netUtilSum}`
+                    }
+                } else {
+                    netUtilSumStr += ' + '
+                }
+            })
+        }
+        return (
+            <Stack direction="column" width="fit-content">
+                <TableBox
+                    width="1"
+                    borderBottom={1}
+                    contents={
+                        <PageParagraph text="Property values:"/>
+                    }
+                />
+                <Stack direction="row" columnGap={1}>
+                    <Stack direction="column">
+                        <TableBox
+                            width='fit-content'
+                            contents={
+                                <PageParagraph text="Utilitarian social welfare"/>
+                            }
+                        />
+                        <TableBox
+                            width='fit-content'
+                            contents={
+                                <PageParagraph text="Egalitarian social welfare"/>
+                            }
+                        />
+                    </Stack>
+                    <Stack direction="column">
+                        <TableBox
+                            width='fit-content'
+                            contents={
+                                <Latex>{`$${netUtilSumStr}$`}</Latex>
+                            }
+                        />
+                        <TableBox
+                            width='fit-content'
+                            contents={
+                                <Latex>$= $</Latex>
+                            }
+                        />
+                    </Stack>
+                </Stack>
+            </Stack>
+        )
+    }
     const ControlBoard = () => {
         return (
             <ControlBoardBox label="Control board" maxWidth={400}>
@@ -332,6 +396,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                     { modifiable && !mode && <ApplyChangesButton/> }
                 </Stack>
                 { showAllocDetails && <AllocationDetails/> } 
+                { showPropertyValues && <PropertyValues/> }
             </Stack>
             { (showControlBoard || modifiable) && <ControlBoard/> }
         </Stack>

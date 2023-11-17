@@ -270,7 +270,7 @@ export default function ResourceAllocation() {
                             <PageParagraph text="An allocation "/>
                             <Latex>$X$</Latex>
                             <PageParagraph text="'s utilitarian social welfare is calculated by "/>
-                            <Latex>{`$\\sum\\limits_{i\\in N}u_i(X_i)$`}</Latex>.
+                            <Latex>{`$$\\sum\\limits_{i\\in N}u_i(X_i)$$`}</Latex>
                         </Box>
                         <PageParagraph 
                             text="In Layman's terms, it is the sum of all utilities gained by the agents from their allocated bundle of item(s)."
@@ -290,7 +290,33 @@ export default function ResourceAllocation() {
                                             `
                                         }
                                     />
-                                </Box>
+                                </Box>,
+                                <Box>
+                                    <PageParagraph bold text="Finding an allocation that maximises utilitarian social welfare: "/>
+                                    <PageParagraph 
+                                        text= 
+                                        {
+                                            `
+                                            In our allocation setting, items cannot be shared, and the utility gained per item is not affected by whether it is in a bundle with any other item.
+                                            Then, the utilitarian social welfare is equal to the sum of all utilities gained by the items. This means that this value can be maximised
+                                            by allocating each item to the agent that gains the most utility from them.
+                                            `
+                                        }
+                                    />
+                                </Box>,
+                                <Box>
+                                    <PageParagraph bold text="Not strategyproof: "/>
+                                    <PageParagraph 
+                                        text= 
+                                        {
+                                            `
+                                            An allocation that maximises utilitarian social welfare is not strategyproof since, as a consequence of the last point, 
+                                            if any agent misreports their preferences with the highest possible utility values per item, 
+                                            this allocation algorithm would allocate all the items to that agent, as that would maximise the sum of utilities gained.
+                                            `
+                                        }
+                                    />
+                                </Box>,
                             ]}
                         />
                     </CollapseSectionBox>
