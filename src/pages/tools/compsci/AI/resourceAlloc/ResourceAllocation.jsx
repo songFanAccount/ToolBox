@@ -169,9 +169,104 @@ export default function ResourceAllocation() {
                     />
                     <CollapseSectionBox
                         title="Pareto-optimality"
-                        titleFs={16}
+                        titleFs={18}
                     >
-
+                        <Box>
+                            <PageParagraph text="An allocation "/>
+                            <Latex>$X$</Latex>
+                            <PageParagraph text=" is Pareto optimal if there exists no allocation "/>
+                            <Latex>$Y$</Latex>
+                            <PageParagraph text=" such that "/>
+                            <Latex>$Y_i\succeq_i X_i$</Latex>
+                            <PageParagraph text=" for all "/>
+                            <Latex>$i\in N,$</Latex>
+                            <PageParagraph text=" and "/>
+                            <Latex>$Y_i\succ_i X_i$</Latex>
+                            <PageParagraph text=" for some "/>
+                            <Latex>$i\in N.$</Latex>
+                            <PageParagraph text=" If there does exists some such allocation "/>
+                            <Latex>$Y,$</Latex>
+                            <PageParagraph text=" then we say that "/>
+                            <Latex>$Y$</Latex>
+                            <PageParagraph text=" Pareto dominates "/>
+                            <Latex>$X.$</Latex>
+                        </Box>
+                        <Box>
+                            <PageParagraph text="In Layman's terms, an allocation is Pareto optimal if there is no way of improving the total utility of any agent(s) without strictly worsening the total utility of some other agent(s). "/>
+                        </Box>
+                        <PageTextList
+                            listName="Important notes:"
+                            list={[
+                                <Box>
+                                    <PageParagraph bold text="May be more than 1 Pareto optimal allocation: "/>
+                                    <PageParagraph 
+                                        text="In many cases, there may be multiple distinct Pareto optimal allocations. For example, suppose there is a Pareto optimal allocation where you have item "
+                                    />
+                                    <Latex>$a$</Latex>
+                                    <PageParagraph text=" and your friend has item "/>
+                                    <Latex>$b,$</Latex>
+                                    <PageParagraph text=" and both you and your friend consider these two items to be " />
+                                    <Latex>$x$</Latex>
+                                    <PageParagraph 
+                                        text=" utility points each. Then, if you swap items with your friend and thus changing the allocation, clearly, 
+                                              your individual utilities remain the same, and so this new allocation would also be Pareto optimal."/>
+                                </Box>,
+                                <Box>
+                                    <PageParagraph bold text="Proving an allocation is or isn't Pareto optimal: "/>
+                                    <PageParagraph 
+                                        text="To prove that an allocation is not Pareto optimal, you would need to find simply 1 allocation that Pareto dominates it. 
+                                              However, to prove that an allocation is Pareto optimal, you would need to show that all other allocations do not Pareto dominate it. "
+                                    />
+                                </Box>
+                            ]}
+                        />
+                        <PageParagraph text="Example:"/>
+                        <RASimulator 
+                            modifiable={false} showControlBoard={false}
+                            allocationName='X'
+                            utilities={[
+                                [6, 2, 3, 1],
+                                [4, 1, 2, 3]
+                            ]} 
+                            allocations={[
+                                new Set([0, 2, 3]),
+                                new Set([1])
+                            ]}
+                        />
+                        <Box>
+                            <PageParagraph text="The allocation "/>
+                            <Latex>$X$</Latex>
+                            <PageParagraph text=" is "/>
+                            <PageParagraph bold text="not "/>
+                            <PageParagraph text=" Pareto optimal because there exists at least one other allocation, like "/>
+                            <Latex>$Y$</Latex>
+                            <PageParagraph 
+                                text=" below, such that at least some (in this case both) agents can receive a strictly better allocation while ensuring that no other agents are strictly worse off.
+                                      We can identify that both agents are strictly better in "
+                            />
+                            <Latex>$Y,$</Latex>
+                            <PageParagraph text=" since agent 1 has a utility of "/>
+                            <Latex>$11 \gt 10,$</Latex>
+                            <PageParagraph text=" and agent 2 has a utility of "/>
+                            <Latex>$3 \gt 1.$</Latex>
+                        </Box>
+                        <RASimulator 
+                            modifiable={false} showControlBoard={false}
+                            allocationName='Y'
+                            utilities={[
+                                [6, 2, 3, 1],
+                                [4, 1, 2, 3]
+                            ]} 
+                            allocations={[
+                                new Set([0, 1, 2]),
+                                new Set([3])
+                            ]}
+                        />
+                        <Box>
+                            <PageParagraph text="On the other hand, "/>
+                            <Latex>$Y$</Latex>
+                            <PageParagraph text=" is Pareto optimal because all other allocations do not Pareto dominate it (since it is a small sample space, you can manually compare all other allocations). "/>
+                        </Box>
                     </CollapseSectionBox>
                 </SectionBox>
             </SectionBox>

@@ -9,14 +9,18 @@ import Latex from 'react-latex-next';
 import { TBDoubleSizedSwitch, TBText } from '../../../../../components/GeneralComponents';
 import { PageParagraph, TBButton } from '../../../../../components/UI/DefaultLayout';
 
-export default function RASimulator() {
+export default function RASimulator({allocationName='X', utilities, allocations, modifiable=true, showAllocDetails=true, showControlBoard=true}) {
     const sqrWidth = 40
-    const [numAgents, setNumAgents] = React.useState(0)
-    const [numItems, setNumItems] = React.useState(0)
+    const [numAgents, setNumAgents] = React.useState(utilities ? utilities.length : 0)
+    const [numItems, setNumItems] = React.useState(utilities ? utilities[0].length : 0)
     const [mode, setMode] = React.useState(false) // false for edit mode, true for allocate mode
-    const inputs = React.useRef([])
-    const [allocation, setAllocation] = React.useState([])
-    const [sumStrs, setSumStrs] = React.useState([])
+    const inputs = React.useRef(utilities ? utilities : [])
+    const [allocation, setAllocation] = React.useState(allocations ? allocations : [])
+    const [sumStrs, setSumStrs] = React.useState(
+        allocations 
+        ? allocations.map((allocSet, index) => allocationToSumstr(allocSet, index))
+        : []
+    )
     const TableBox = ({contents, width, borderBottom}) => (
         <Box
             sx={{
@@ -67,7 +71,7 @@ export default function RASimulator() {
                         <Box width={1} height={1} display="flex" justifyContent="center" alignItems="center">
                             <TBText key={`sim(${agent},${item})`} defaultValue={inputs.current[agent][item] === -1 ? '' : inputs.current[agent][item]} 
                                     onChange={(value) => changePreference(agent, item, value)} width={sqrWidth - 10} height={sqrWidth - 10} placeholder='-' 
-                                    maxLength={2} center disabled={mode} border={allocation[agent].has(item) ? 1 : 0}
+                                    maxLength={2} center disabled={mode || !modifiable} border={allocation[agent].has(item) ? 1 : 0}
                                     errorInit={true} errorFunc={(str) => !(/^[1-9]\d*$/.test(str))}
                             />
                         </Box>
@@ -250,15 +254,14 @@ export default function RASimulator() {
     }
     const AllocationDetails = () => {
         return (
-            <Stack direction="column">
+            <Stack direction="column" width="fit-content">
                 <TableBox
-                    width="fit-content"
+                    width="1"
                     borderBottom={1}
                     contents={
                         <Box>
-                            <PageParagraph text="Let "/>
-                            <Latex>$X$</Latex>
-                            <PageParagraph text=" be your highlighted allocation:"/>
+                            <Latex>{`$${allocationName} = $`}</Latex>
+                            <PageParagraph text=" highlighted allocation:"/>
                         </Box>
                     }
                 />
@@ -278,7 +281,7 @@ export default function RASimulator() {
                                         width="fit-content"
                                         contents={
                                             <Box>
-                                                <Latex>{`$X_${index + 1} = \\{${setStr}\\}$`}</Latex>
+                                                <Latex>{`$${allocationName}_${index + 1} = \\{${setStr}\\}$`}</Latex>
                                             </Box>
                                         }
                                     />
@@ -294,7 +297,7 @@ export default function RASimulator() {
                                         width='fit-content'
                                         contents={
                                             <Box>
-                                                <Latex>{`$u_{${index + 1}}(X_{${index + 1}}) = ${sumStr ? sumStr : ''}$`}</Latex>
+                                                <Latex>{`$u_{${index + 1}}(${allocationName}_{${index + 1}}) = ${sumStr ? sumStr : ''}$`}</Latex>
                                                 { sumStr === null && <PageParagraph color="red" text=" ?"/>}
                                             </Box>
                                         }
@@ -320,17 +323,17 @@ export default function RASimulator() {
     }
     return (
         <Stack direction="column" rowGap={3}>
-            <Stack direction="row" columnGap={5}>
+            <Stack direction="row" columnGap={5} rowGap={3} flexWrap="wrap">
                 <Stack
                     direction="column"
                 >
                     <TopRow/>
                     <Preferences/>
-                    { !mode && <ApplyChangesButton/> }
+                    { modifiable && !mode && <ApplyChangesButton/> }
                 </Stack>
-                <AllocationDetails/>
+                { showAllocDetails && <AllocationDetails/> } 
             </Stack>
-            <ControlBoard/>
+            { (showControlBoard || modifiable) && <ControlBoard/> }
         </Stack>
     )
 }
