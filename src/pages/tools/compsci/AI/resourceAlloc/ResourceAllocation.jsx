@@ -219,7 +219,7 @@ export default function ResourceAllocation() {
                         />
                         <PageParagraph text="Example:"/>
                         <RASimulator 
-                            modifiable={false} showControlBoard={false}
+                            modifiable={false} showControlBoard={false} showPropertyValues={false}
                             allocationName='X'
                             utilities={[
                                 [6, 2, 3, 1],
@@ -248,7 +248,7 @@ export default function ResourceAllocation() {
                             <Latex>$3 \gt 1.$</Latex>
                         </Box>
                         <RASimulator 
-                            modifiable={false} showControlBoard={false}
+                            modifiable={false} showControlBoard={false} showPropertyValues={false}
                             allocationName='Y'
                             utilities={[
                                 [6, 2, 3, 1],
@@ -273,7 +273,7 @@ export default function ResourceAllocation() {
                             <Latex>{`$$\\sum\\limits_{i\\in N}u_i(X_i)$$`}</Latex>
                         </Box>
                         <PageParagraph 
-                            text="In Layman's terms, it is the sum of all utilities gained by the agents from their allocated bundle of item(s)."
+                            text="In other words, it is the sum of all utilities gained by the agents from their allocated bundle of item(s)."
                         />
                         <PageTextList 
                             listName="Important notes:"
