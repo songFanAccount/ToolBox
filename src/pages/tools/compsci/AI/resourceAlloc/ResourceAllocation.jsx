@@ -133,6 +133,32 @@ export default function ResourceAllocation() {
                     </Box>
                 </SectionBox>
                 <SectionBox title="Simulator">
+                    <PageParagraph 
+                        text="Here is a simple Resource Allocation simulator that follows the allocation settings specified above."
+                    />
+                    <PageTextList 
+                        listName="How it works:"
+                        listStyleType='decimal'
+                        list={[
+                            <PageParagraph text="Use the control board to add and delete agents and items (both up to 10). "/>,
+                            <PageParagraph 
+                                text="Toggle 'Edit mode' on the control board and fill out the preference profile with every agent's utility value (positive 2-digit integer) for each item. 
+                                      Make sure to apply the changes once you are done editing."
+                            />,
+                            <PageParagraph 
+                                text="Toggle 'Allocate mode' on the control board and click on the preference profile to allocate items. E.g. Clicking on the square [agent1, item2] implies you
+                                      are allocating item2 to agent1. Each item can be allocated to at most 1 agent, i.e. there is at most one circle per column."
+                            />,
+                            <Box>
+                                <PageParagraph 
+                                    text="The details of your allocation will be displayed on the right of the preference profile, showing each agent's allocated set of items and their net utility gained.
+                                        If any of the utilities are left empty or invalid, their net utilities cannot be properly calculated, and will display "
+                                    />
+                                <PageParagraph text="?" color="red"/>
+                                <PageParagraph text="."/>
+                            </Box>
+                        ]}
+                    />
                     <RASimulator/>
                 </SectionBox>
                 <SectionBox title="Allocation properties">
