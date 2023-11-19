@@ -195,11 +195,12 @@ export function PageSectionTitle({title, fs=24}) {
 /*
 By default, paragraphs are inline, since it is common to insert link or want to modify part of the paragraph.
 */
-export function PageParagraph({text, bold, underline=false, block, color='inherit', fs='medium'}) {
+export function PageParagraph({text, bold, underline=false, block, color='inherit', fs='medium', mt, mb}) {
     if(!text) {return <></>}
     return (
         <Typography display={block ? 'block' : 'inline'}
             sx={{
+                mb: mb, mt: mt,
                 fontFamily: 'Verdana',
                 fontWeight: bold ? 'bold' : 'normal',
                 textDecoration: underline ? 'underline' : 'none',

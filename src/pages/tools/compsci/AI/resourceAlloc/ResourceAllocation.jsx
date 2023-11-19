@@ -391,7 +391,7 @@ export default function ResourceAllocation() {
                         </Box>
                         <RASimulator 
                             modifiable={false} showControlBoard={false} showPropertyValues={false}
-                            allocationName='X'
+                            allocationName='Y'
                             utilities={[
                                 [6, 2, 3, 1],
                                 [4, 1, 2, 3]
@@ -424,6 +424,32 @@ export default function ResourceAllocation() {
                             <Latex>$Y$</Latex>
                             <PageParagraph text=" based on this standard."/>
                         </Box>
+                        <PageTextList 
+                            listName="Important notes:"
+                            list={[
+                                <Box>
+                                    <PageParagraph bold text="Maximising lexmin welfare also maximises egalitarian welfare but not the other way around: "/>
+                                    <PageParagraph 
+                                        text="Any allocation that maximises lexmin welfare must be lexicographically greater than all other possible allocations, meaning that its lexmin welfare's
+                                              first element must be greater than or equal to all other possible lexmin welfares. Since the first element of the vector represents the lowest utility
+                                              gained of all agents, this means we have also maximised egalitarian welfare by definition. "
+                                    />
+                                    <PageParagraph block mt={2}
+                                        text="On the other hand, maximising egalitarian welfare does not necessarily maximise lexmin welfare. This is because egalitarian welfare only considers the
+                                              lowest utility gained, whereas the lexicographic nature of lexmin welfare implies that it prioritises the lowest utility but also compares 
+                                              all other utilities, as demonstrated by the use of utility vectors."
+                                    />
+                                </Box>,
+                                <Box>
+                                    <PageParagraph bold text="Not strategyproof: "/>
+                                    <PageParagraph 
+                                        text="As with egalitarian welfare allocations, an allocation algorithm that maximises lexmin welfare is also not strategyproof.
+                                              Similarly, since it still considers the lowest utility agent as its highest priority, an agent may misreport their utility values as lower
+                                              than they actually are in order to be prioritised."
+                                    />
+                                </Box>
+                            ]}
+                        />
                     </CollapseSectionBox>
                 </SectionBox>
             </SectionBox>
