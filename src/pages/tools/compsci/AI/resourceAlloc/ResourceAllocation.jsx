@@ -167,7 +167,7 @@ export default function ResourceAllocation() {
                               Certain algorithms may wish to satisfy certain properties and may not satisfy some others, this ultimately depends
                               on the goals and priorities of the algorithm."
                     />
-                    <CollapseSectionBox title="Pareto-optimality" titleFs={18}>
+                    <CollapseSectionBox title="Pareto-optimality" titleFs={18} startClosed>
                         <Box>
                             <PageParagraph text="An allocation "/>
                             <Latex>$X$</Latex>
@@ -265,7 +265,7 @@ export default function ResourceAllocation() {
                             <PageParagraph text=" is Pareto optimal because all other allocations do not Pareto dominate it (since it is a small sample space, you can manually compare all other allocations). "/>
                         </Box>
                     </CollapseSectionBox>
-                    <CollapseSectionBox title="Utilitarian social welfare" titleFs={18}>
+                    <CollapseSectionBox title="Utilitarian social welfare" titleFs={18} startClosed>
                         <Box>
                             <PageParagraph text="An allocation "/>
                             <Latex>$X$</Latex>
@@ -311,8 +311,47 @@ export default function ResourceAllocation() {
                                         {
                                             `
                                             An allocation that maximises utilitarian social welfare is not strategyproof since, as a consequence of the last point, 
-                                            if any agent misreports their preferences with the highest possible utility values per item, 
-                                            this allocation algorithm would allocate all the items to that agent, as that would maximise the sum of utilities gained.
+                                            if any agent misreports their preferences with the higher utility values per item, this allocation algorithm would be more likely 
+                                            to allocate the items to that agent, as that would maximise the sum of utilities gained.
+                                            `
+                                        }
+                                    />
+                                </Box>,
+                            ]}
+                        />
+                    </CollapseSectionBox>
+                    <CollapseSectionBox title="Egalitarian social welfare" titleFs={18} startClosed>
+                        <Box>
+                            <PageParagraph text="An allocation "/>
+                            <Latex>$X$</Latex>
+                            <PageParagraph text="'s egalitarian social welfare is "/>
+                            <Latex>{`$$\\min\\limits_{i\\in N}{u_i(X_i)}$$`}</Latex>
+                        </Box>
+                        <PageParagraph 
+                            text="In other words, it is the minimum utility gained of all the agents."
+                        />
+                        <PageTextList 
+                            listName="Important notes:"
+                            list={[
+                                <Box>
+                                    <PageParagraph bold text="Fairness appeal: "/>
+                                    <PageParagraph 
+                                        text="As the name egalitarian suggests, an allocation algorithm that aims to maximise egalitarian social welfare is one that advocates for 
+                                              the equality of all agents in question. This is because, by maximising "
+                                    />
+                                    <Latex>{`$\\min\\limits_{i\\in N}{u_i(X_i)}$`}</Latex>
+                                    <PageParagraph
+                                        text=", we are maximising the smallest amount of utility gained of all agents, in hopes for no agent feeling like they are mistreated and receiving too little."
+                                    />
+                                </Box>,
+                                <Box>
+                                    <PageParagraph bold text="Not strategy proof: "/>
+                                    <PageParagraph 
+                                        text= 
+                                        {
+                                            `
+                                            An allocation that prioritises maximising egalitarian social welfare can be understood as trying to boost the agent with the lowest utility up as
+                                            much as possible. As such, there is an exploit for agents to misreport their utility values as lower than they actually are, and result in more allocated items.
                                             `
                                         }
                                     />

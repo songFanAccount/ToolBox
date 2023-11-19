@@ -316,19 +316,25 @@ export default function RASimulator({allocationName='X', utilities, allocations,
     }
     const PropertyValues = () => {
         let netUtilSumStr = '= ' 
-        let netUtilSum = 0 
-        if (netUtils.current.length === 0) netUtilSumStr = '= 0'
+        let netUtilSum = 0
+        let egalStr = '= \\min('
+        let egalMin = 0
+        if (netUtils.current.length === 0)  { netUtilSumStr = '= undefined'; egalStr = '= undefined' }
         else {
             netUtils.current.forEach((value, i) => {
                 netUtilSum += value
                 netUtilSumStr += value
+                egalStr += value
+                if (value < egalMin || egalMin === 0) egalMin = value
                 if (i === netUtils.current.length - 1) {
                     if (netUtils.current.length !== 1) {
                         netUtilSumStr += '='
                         netUtilSumStr += ` ${netUtilSum}`
                     }
+                    egalStr += `) = ${egalMin}`
                 } else {
                     netUtilSumStr += ' + '
+                    egalStr += ', '
                 }
             })
         }
@@ -366,7 +372,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                         <TableBox
                             width='fit-content'
                             contents={
-                                <Latex>$= $</Latex>
+                                <Latex>{`$${egalStr}$`}</Latex>
                             }
                         />
                     </Stack>
