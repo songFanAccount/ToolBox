@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from "@mui/material";
-import { CollapseSectionBox, PageParagraph, PageTextList, SectionBox } from "../../../../../components/UI/DefaultLayout";
+import { CollapseSectionBox, ExternalLink, PageParagraph, PageTextList, SectionBox } from "../../../../../components/UI/DefaultLayout";
 import Latex from 'react-latex-next';
 import RASimulator from './RASimulator';
 
@@ -358,6 +358,72 @@ export default function ResourceAllocation() {
                                 </Box>,
                             ]}
                         />
+                    </CollapseSectionBox>
+                    <CollapseSectionBox title="Lexmin welfare" titleFs={18} startClosed>
+                        <Box>
+                            <PageParagraph text="An allocation "/>
+                            <Latex>$X$</Latex>
+                            <PageParagraph text="'s lexmin welfare is the vector of agents' utilities listed in non-decreasing order. Let "/>
+                            <Latex>$f(X)$</Latex>
+                            <PageParagraph text=" be the function that outputs the given allocation's lexmin welfare. Then an allocation maximises lexmin welfare if it "/>
+                            <ExternalLink href="https://en.wikipedia.org/wiki/Lexicographic_order#Definition">lexicographically</ExternalLink>
+                            <PageParagraph text=" maximises "/>
+                            <Latex>$f(X).$</Latex>
+                        </Box>
+                        <PageParagraph text="Example:"/>
+                        <RASimulator 
+                            modifiable={false} showControlBoard={false} showPropertyValues={false}
+                            allocationName='X'
+                            utilities={[
+                                [6, 2, 3, 1],
+                                [4, 1, 2, 3]
+                            ]} 
+                            allocations={[
+                                new Set([0]),
+                                new Set([1, 2, 3])
+                            ]}
+                        />
+                        <Box>
+                            <PageParagraph text="Here, allocation "/>
+                            <Latex>$X$</Latex>
+                            <PageParagraph text=" has a lexmin welfare of "/>
+                            <Latex>$(6,6).$</Latex>
+                        </Box>
+                        <RASimulator 
+                            modifiable={false} showControlBoard={false} showPropertyValues={false}
+                            allocationName='X'
+                            utilities={[
+                                [6, 2, 3, 1],
+                                [4, 1, 2, 3]
+                            ]} 
+                            allocations={[
+                                new Set([0, 1]),
+                                new Set([2, 3])
+                            ]}
+                        />
+                        <Box>
+                            <PageParagraph text="Another possible allocation "/>
+                            <Latex>$Y$</Latex>
+                            <PageParagraph text=" has a lexmin welfare of "/>
+                            <Latex>$(5,8).$</Latex>
+                            <PageParagraph text=" Since the first element of "/>
+                            <Latex>$X$</Latex>
+                            <PageParagraph text="'s vector is 6, which is greater than "/>
+                            <Latex>$Y$</Latex>
+                            <PageParagraph text="'s first element of 5, we see that "/>
+                            <Latex>$X$</Latex>
+                            <PageParagraph text="'s lexmin welfare is "/>
+                            <ExternalLink href="https://en.wikipedia.org/wiki/Lexicographic_order#Definition">lexicographically</ExternalLink>
+                            <PageParagraph text=" greater than "/>
+                            <Latex>$Y$</Latex>
+                            <PageParagraph text="'s lexmin welfare, that is: "/>
+                            <Latex>{`$$(6,6) \\gt_{lex} (5,8)$$`}</Latex>
+                            <PageParagraph text=" and so "/>
+                            <Latex>$X$</Latex>
+                            <PageParagraph text=" is a better allocation than "/>
+                            <Latex>$Y$</Latex>
+                            <PageParagraph text=" based on this standard."/>
+                        </Box>
                     </CollapseSectionBox>
                 </SectionBox>
             </SectionBox>
