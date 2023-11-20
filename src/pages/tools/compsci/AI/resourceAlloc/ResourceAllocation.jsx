@@ -214,6 +214,10 @@ export default function ResourceAllocation() {
                                         text="To prove that an allocation is not Pareto optimal, you would need to find simply 1 allocation that Pareto dominates it. 
                                               However, to prove that an allocation is Pareto optimal, you would need to show that all other allocations do not Pareto dominate it. "
                                     />
+                                </Box>,
+                                <Box>
+                                    <PageParagraph bold text="If an allocation maximises utilitarian or Nash product welfare or is a lexmin allocation, then it is Pareto optimal: "/>
+                                    <PageParagraph text="Proofs are provided in their individual sections below."/>
                                 </Box>
                             ]}
                         />
@@ -278,6 +282,16 @@ export default function ResourceAllocation() {
                         <PageTextList 
                             listName="Important notes:"
                             list={[
+                                <Box>
+                                    <PageParagraph bold text="Maximising utilitarian welfare guarantees Pareto optimality: "/>
+                                    <PageParagraph
+                                        text="Consider any allocation that maximises utilitarian welfare. Suppose that it is not Pareto optimal, then this means
+                                              there exists some allocation where no agents' utilities are worse off, and some agents' utilities are strictly improved,
+                                              then this means that the utilitarian welfare, which is the sum of all agents' utilities gained, must be strictly
+                                              larger than that of the initial allocation. This would however contradict the fact that our initial allocation maximises
+                                              utilitarian welfare, hence it must be the case that the allocation is Pareto optimal."
+                                    />
+                                </Box>,
                                 <Box>
                                     <PageParagraph bold text="Fairness concerns: "/>
                                     <PageParagraph 
@@ -428,6 +442,16 @@ export default function ResourceAllocation() {
                             listName="Important notes:"
                             list={[
                                 <Box>
+                                    <PageParagraph bold text="Maximising lexmin welfare guarantees Pareto optimality: "/>
+                                    <PageParagraph
+                                        text="Consider any allocation that maximises lexmin welfare. Suppose that it is not Pareto optimal, then this means
+                                              there exists some allocation where no agents' utilities are worse off, and some agents' utilities are strictly improved,
+                                              then this means that the lexmin welfare, which is a vector of the agents' utilities in non-descending order, 
+                                              must be lexicographically greater than that of the initial allocation. This would however contradict the fact that our 
+                                              initial allocation maximises lexmin welfare, hence it must be the case that the allocation is Pareto optimal."
+                                    />
+                                </Box>,
+                                <Box>
                                     <PageParagraph bold text="Maximising lexmin welfare also maximises egalitarian welfare but not the other way around: "/>
                                     <PageParagraph 
                                         text="Any allocation that maximises lexmin welfare must be lexicographically greater than all other possible allocations, meaning that its lexmin welfare's
@@ -446,6 +470,51 @@ export default function ResourceAllocation() {
                                         text="As with egalitarian welfare allocations, an allocation algorithm that maximises lexmin welfare is also not strategyproof.
                                               Similarly, since it still considers the lowest utility agent as its highest priority, an agent may misreport their utility values as lower
                                               than they actually are in order to be prioritised."
+                                    />
+                                </Box>
+                            ]}
+                        />
+                    </CollapseSectionBox>
+                    <CollapseSectionBox title="Nash product social welfare" titleFs={18} startClosed>
+                        <Box>
+                            <PageParagraph text="An allocation "/>
+                            <Latex>$X$</Latex>
+                            <PageParagraph text="'s Nash product welfare is "/>
+                            <Latex>{`$$\\prod\\limits_{i\\in N}u_i(X_i)$$`}</Latex>
+                            <PageParagraph
+                                text="In other words, it is the product of all agents' utilities gained. This value is similar in nature to utilitarian
+                                      social welfare, since both properties consider the utilities of all agents."
+                            />
+                        </Box>
+                        <PageTextList
+                            listName="Important notes:"
+                            list={[
+                                <Box>
+                                    <PageParagraph bold text="Maximising Nash product welfare guarantees Pareto optimality: "/>
+                                    <PageParagraph
+                                        text="Consider any allocation that maximises Nash product welfare. Suppose that it is not Pareto optimal, then this means
+                                              there exists some allocation where no agents' utilities are worse off, and some agents' utilities are strictly improved,
+                                              (from positive values to larger positive values), then this means that the Nash product welfare, which is the product of 
+                                              all agents' utilities gained, must be strictly larger than that of the initial allocation. This would however contradict 
+                                              the fact that our initial allocation maximises Nash product welfare, hence it must be the case that the allocation is Pareto optimal."
+                                    />
+                                </Box>,
+                                <Box>
+                                    <PageParagraph bold text="Incentive to allocate at least 1 item to each agent: "/>
+                                    <PageParagraph 
+                                        text="Since Nash product welfare measures the product of all agents' utility, the presence of a single 0 will
+                                              cause the overall result to equal 0 too, unlike utilitarian welfare which is unaffected when adding 0s.
+                                              Hence, if any agent is not allocated any items, they would have gained 0 utility and thereby causing the Nash
+                                              product to be 0."
+                                    />
+                                </Box>,
+                                <Box>
+                                    <PageParagraph bold text="Not strategyproof: "/>
+                                    <PageParagraph 
+                                        text="An allocation algorithm that maximises Nash product welfare is not strategyproof. Similar to utilitarian welfare,
+                                              if an agent misreports their utilities as much higher, then it would be beneficial for the algorithm to allocate the 
+                                              items to them, as that would improve the product of all agents' utilities, as long as every agent is still allocated
+                                              something (non 0 utility)."
                                     />
                                 </Box>
                             ]}
