@@ -320,22 +320,27 @@ export default function RASimulator({allocationName='X', utilities, allocations,
         let egalStr = '= \\min('
         let egalMin = 0
         let lexminStr = '= ('
-        if (netUtils.current.length === 0)  { netUtilSumStr = '= undefined'; egalStr = '= undefined'; lexminStr = '= undefined' }
+        let nashStr = '= '
+        let nashProd = 1
+        if (netUtils.current.length === 0)  { netUtilSumStr = '= undefined'; egalStr = '= undefined'; lexminStr = '= undefined'; nashStr = '= undefined' }
         else {
             netUtils.current.forEach((value, i) => {
                 netUtilSum += value
                 netUtilSumStr += value
                 egalStr += value
                 if (value < egalMin || egalMin === 0) egalMin = value
+                nashStr += value
+                nashProd *= value
                 if (i === netUtils.current.length - 1) {
                     if (netUtils.current.length !== 1) {
-                        netUtilSumStr += '='
-                        netUtilSumStr += ` ${netUtilSum}`
+                        netUtilSumStr += `= ${netUtilSum}`
+                        nashStr += `= ${nashProd}`
                     }
                     egalStr += `) = ${egalMin}`
                 } else {
                     netUtilSumStr += ' + '
                     egalStr += ', '
+                    nashStr += ' \\times '
                 }
             })
             const orderedUtils = [...netUtils.current]
@@ -352,7 +357,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                     width="1"
                     borderBottom={1}
                     contents={
-                        <PageParagraph text="Property values:"/>
+                        <PageParagraph text="Properties of interest:"/>
                     }
                 />
                 <Stack direction="row" columnGap={1}>
@@ -375,6 +380,12 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                                 <PageParagraph text="Lexmin welfare"/>
                             }
                         />
+                        <TableBox
+                            width='fit-content'
+                            contents={
+                                <PageParagraph text="Nash product welfare"/>
+                            }
+                        />
                     </Stack>
                     <Stack direction="column">
                         <TableBox
@@ -393,6 +404,12 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                             width='fit-content'
                             contents={
                                 <Latex>{`$${lexminStr}$`}</Latex>
+                            }
+                        />
+                        <TableBox
+                            width='fit-content'
+                            contents={
+                                <Latex>{`$${nashStr}$`}</Latex>
                             }
                         />
                     </Stack>
