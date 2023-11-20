@@ -521,6 +521,60 @@ export default function ResourceAllocation() {
                         />
                     </CollapseSectionBox>
                 </SectionBox>
+                <SectionBox title="Fairness concepts">
+                    <CollapseSectionBox title="Envy-freeness" titleFs={18} startClosed>
+                        <Box>
+                            <PageParagraph text="An allocation "/>
+                            <Latex>$X$</Latex>
+                            <PageParagraph text=" satisfies envy-freeness if for all "/>
+                            <Latex>$i, j\in N,$</Latex>
+                            <Latex>{`$$X_i\\succeq_i X_j, \\text{ or in terms of utilities, } u_i(X_i) \\geq u_i(X_j)$$`}</Latex>
+                            <PageParagraph 
+                                text="that is, no agents are envious of any other agent's allocated bundle of items, or, no agents would gain more
+                                      utility by having any other agent's allocated bundle of items."/>
+                        </Box>
+                        <Box>
+                            <PageParagraph text="It is important to understand that in this context, envy only depends on each individual agent's "/>
+                            <PageParagraph bold text="own preferences, "/>
+                            <PageParagraph text="meaning that for agents "/>
+                            <Latex>$i$</Latex>
+                            <PageParagraph text=" and "/>
+                            <Latex>$j$</Latex>
+                            <PageParagraph text=", agent "/>
+                            <Latex>$i$</Latex>
+                            <PageParagraph text=" will only be envious of agent "/>
+                            <Latex>$j$</Latex>
+                            <PageParagraph text=" if agent "/>
+                            <Latex>$i$</Latex>
+                            <PageParagraph text=" would personally benefit more from having agent "/>
+                            <Latex>$j$</Latex>
+                            <PageParagraph text="'s bundle according to "/>
+                            <Latex>$i$</Latex>
+                            <PageParagraph text="'s own preferences and utility values, and it does not matter how much "/>
+                            <Latex>$j$</Latex>
+                            <PageParagraph text=" values their own bundle."/>
+                        </Box>
+                        <PageParagraph text="Example:"/>
+                        <RASimulator 
+                            modifiable={false} showControlBoard={false} showPropertyValues={false}
+                            allocationName='X'
+                            utilities={[[10, 30], [20, 5]]} 
+                            allocations={[
+                                new Set([0]),
+                                new Set([1])
+                            ]}
+                        />
+                        <Box>
+                            <PageParagraph 
+                                text="Here, we can see that the two agents are envious of each other. Agent 1 is envious of agent 2 since item 2 is worth 30
+                                    utility points, and so "
+                            />
+                            <Latex>$u_1(X_1) \lt u_1(X_2),$</Latex>
+                            <PageParagraph text=" and similarly, agent 2 is envious of agent 1 since "/>
+                            <Latex>$u_2(X_2) \lt u_2(X_1).$</Latex>
+                        </Box>
+                    </CollapseSectionBox>
+                </SectionBox>
             </SectionBox>
         </Box>
     )
