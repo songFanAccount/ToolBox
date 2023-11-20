@@ -319,7 +319,8 @@ export default function RASimulator({allocationName='X', utilities, allocations,
         let netUtilSum = 0
         let egalStr = '= \\min('
         let egalMin = 0
-        if (netUtils.current.length === 0)  { netUtilSumStr = '= undefined'; egalStr = '= undefined' }
+        let lexminStr = '= ('
+        if (netUtils.current.length === 0)  { netUtilSumStr = '= undefined'; egalStr = '= undefined'; lexminStr = '= undefined' }
         else {
             netUtils.current.forEach((value, i) => {
                 netUtilSum += value
@@ -337,6 +338,13 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                     egalStr += ', '
                 }
             })
+            const orderedUtils = [...netUtils.current]
+            orderedUtils.sort((a,b) => a-b)
+            for (let i = 0; i < orderedUtils.length; i++) {
+                lexminStr += orderedUtils[i]
+                if (i === orderedUtils.length - 1) lexminStr += ')'
+                else lexminStr += ', '
+            }
         }
         return (
             <Stack direction="column" width="fit-content">
@@ -361,6 +369,12 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                                 <PageParagraph text="Egalitarian social welfare"/>
                             }
                         />
+                        <TableBox
+                            width='fit-content'
+                            contents={
+                                <PageParagraph text="Lexmin welfare"/>
+                            }
+                        />
                     </Stack>
                     <Stack direction="column">
                         <TableBox
@@ -373,6 +387,12 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                             width='fit-content'
                             contents={
                                 <Latex>{`$${egalStr}$`}</Latex>
+                            }
+                        />
+                        <TableBox
+                            width='fit-content'
+                            contents={
+                                <Latex>{`$${lexminStr}$`}</Latex>
                             }
                         />
                     </Stack>
