@@ -3,6 +3,8 @@ import { Box } from "@mui/material";
 import { CollapseSectionBox, ExternalLink, PageParagraph, PageTextList, SectionBox } from "../../../../../components/UI/DefaultLayout";
 import Latex from 'react-latex-next';
 import RASimulator from './RASimulator';
+import 'katex/dist/katex.min.css';
+import { BlockMath, InlineMath } from 'react-katex';
 
 export default function ResourceAllocation() {
     return (
@@ -572,6 +574,25 @@ export default function ResourceAllocation() {
                             <Latex>$u_1(X_1) \lt u_1(X_2),$</Latex>
                             <PageParagraph text=" and similarly, agent 2 is envious of agent 1 since "/>
                             <Latex>$u_2(X_2) \lt u_2(X_1).$</Latex>
+                        </Box>
+                        <PageParagraph text='Since there is at least 1 agent that is envious of some other agent, we say this allocation is not "envy-free".'/>
+                    </CollapseSectionBox>
+                    <CollapseSectionBox title="Proportionality" titleFs={18} startClosed>
+                        <Box>
+                            <PageParagraph text="An allocation "/>
+                            <Latex>$X$</Latex>
+                            <PageParagraph text=" satisfies proportionality if for all "/>
+                            <Latex>$i\in N,$</Latex>
+                            <BlockMath math={`u_i(X_i) \\geq \\frac{u_i(O)}{n}`}/>
+                            <PageParagraph text="where "/>
+                            <Latex>$O$</Latex>
+                            <PageParagraph text=" is the set of all items in question. One way to understand this is to think of "/>
+                            <InlineMath math={`\\frac{u_i(O)}{n}`}/>
+                            <PageParagraph text=" as what agent "/>
+                            <Latex>$i$</Latex>
+                            <PageParagraph text=" considers to be the amount each agent should get if all items are theoretically evenly distributed. Since this amount is what agent "/>
+                            <Latex>$i$</Latex>
+                            <PageParagraph text=' believes to be the "fair" amount, they consider the allocation to be proportional if they are getting at least as much utility as that amount. If this is the case for all agents, the allocation is considered proportional.'/>
                         </Box>
                     </CollapseSectionBox>
                 </SectionBox>
