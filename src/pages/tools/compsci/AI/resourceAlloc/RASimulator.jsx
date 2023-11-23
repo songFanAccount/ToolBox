@@ -314,6 +314,21 @@ export default function RASimulator({allocationName='X', utilities, allocations,
             </Stack>
         )
     }
+    function allPreferencesFilled() { 
+        return netUtils.current.every((value) => /^[1-9]\d*$/.test(value))
+    }
+    function allItemsAllocated () {
+        let numAllocated = 0
+        allocation.forEach((allocSet) => numAllocated += allocSet.size)
+        return numAllocated === numItems
+    }
+    const EnvyFreeStr = () => {
+        return (
+            <Box>
+
+            </Box>
+        )
+    }
     const PropertyValues = () => {
         let netUtilSumStr = '= ' 
         let netUtilSum = 0
@@ -322,8 +337,14 @@ export default function RASimulator({allocationName='X', utilities, allocations,
         let lexminStr = '= ('
         let nashStr = '= '
         let nashProd = 1
-        if (netUtils.current.length === 0)  { netUtilSumStr = '= undefined'; egalStr = '= undefined'; lexminStr = '= undefined'; nashStr = '= undefined' }
-        else {
+        let envyFreeStr = ''
+        if (netUtils.current.length === 0)  { 
+            netUtilSumStr = '= undefined'; 
+            egalStr = '= undefined'; 
+            lexminStr = '= undefined'; 
+            nashStr = '= undefined' 
+            envyFreeStr = ' undefined'
+        } else {
             netUtils.current.forEach((value, i) => {
                 netUtilSum += value
                 netUtilSumStr += value
@@ -422,6 +443,16 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                             width='fit-content'
                             contents={
                                 <Latex>{`$${nashStr}$`}</Latex>
+                            }
+                        />
+                        <TableBox
+                            width='fit-content'
+                            contents={
+                                (allPreferencesFilled() && allItemsAllocated()) 
+                                ?
+                                    <EnvyFreeStr/>
+                                :
+                                    <PageParagraph text="Please fill out the preference table and allocate all items!"/>
                             }
                         />
                     </Stack>
