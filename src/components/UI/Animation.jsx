@@ -8,14 +8,14 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import FastForwardIcon from '@mui/icons-material/FastForward';
 import { PageParagraph } from './DefaultLayout';
 
-export function ControlBoardBox({label, children, maxWidth}) {
+export function ControlBoardBox({label, children, maxWidth, mt}) {
     return (
         <Stack
             direction="column"
             rowGap={1.5}
             alignItems="center"
             sx={{
-                p: 1.5,
+                p: 1.5, mt: mt,
                 width: 'fit-content',
                 maxWidth: maxWidth,
                 border:5,

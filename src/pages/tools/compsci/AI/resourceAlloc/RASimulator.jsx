@@ -386,6 +386,18 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                                 <PageParagraph text="Nash product welfare"/>
                             }
                         />
+                        <TableBox
+                            width='fit-content'
+                            contents={
+                                <PageParagraph text="Envy-freeness: "/>
+                            }
+                        />
+                        <TableBox
+                            width='fit-content'
+                            contents={
+                                <PageParagraph text="Proportionality: "/>
+                            }
+                        />
                     </Stack>
                     <Stack direction="column">
                         <TableBox
