@@ -315,7 +315,9 @@ export default function RASimulator({allocationName='X', utilities, allocations,
         )
     }
     function allPreferencesFilled() { 
-        return netUtils.current.every((value) => /^[1-9]\d*$/.test(value))
+        return inputs.current.every((row) =>
+            row.every((value) => /^[1-9]\d*$/.test(value))
+        )
     }
     function allItemsAllocated () {
         let numAllocated = 0
@@ -323,10 +325,45 @@ export default function RASimulator({allocationName='X', utilities, allocations,
         return numAllocated === numItems
     }
     const EnvyFreeStr = () => {
+        if (numAgents === 0 && numItems === 0) return <PageParagraph text="Please add agents and items to get started!"/>
+        const ValidEnvyFreeStr = () => {
+            let enviousAgent = -1
+            let enviousOfAgent = -1
+            let ownUtility = 0
+            let iUtilityOfJsBundle = 0
+            for (let i = 0; i < numAgents; i++) {
+                ownUtility = netUtils.current[i]
+                for (let j = 0; j < numAgents; j++) {
+                    if (j === i) continue
+                    const jsAllocation = allocation[j]
+                    iUtilityOfJsBundle = 0
+                    for (const itemIndex of jsAllocation) {
+                        // For each of agent j's allocated items, figure out how much agent i values it, and determine how much total utility their bundle would give agent i
+                        iUtilityOfJsBundle += parseInt(inputs.current[i][itemIndex])
+                    }
+                    if (iUtilityOfJsBundle > ownUtility) {
+                        enviousAgent = i
+                        enviousOfAgent = j
+                        break
+                    }
+                }
+                if (enviousAgent !== -1) break
+            }
+            return enviousAgent === -1
+            ?
+                <PageParagraph bold text="Satisfied!"/>
+            :
+                <Box>
+                    <PageParagraph text={`Agent ${enviousAgent+1} is envious of agent ${enviousOfAgent+1}, since `}/>
+                    <Latex>{`$u_${enviousAgent+1}(${allocationName}_${enviousOfAgent+1}) = ${iUtilityOfJsBundle} > u_${enviousAgent+1}(${allocationName}_${enviousAgent+1}) = ${ownUtility}.$`}</Latex>
+                </Box>
+        }
         return (
-            <Box>
-
-            </Box>
+            (allPreferencesFilled() && allItemsAllocated()) 
+            ?
+                <ValidEnvyFreeStr/>
+            :
+                <PageParagraph text="Please fill out the preference table and allocate all items!"/>
         )
     }
     const PropertyValues = () => {
@@ -337,13 +374,11 @@ export default function RASimulator({allocationName='X', utilities, allocations,
         let lexminStr = '= ('
         let nashStr = '= '
         let nashProd = 1
-        let envyFreeStr = ''
         if (netUtils.current.length === 0)  { 
             netUtilSumStr = '= undefined'; 
             egalStr = '= undefined'; 
             lexminStr = '= undefined'; 
             nashStr = '= undefined' 
-            envyFreeStr = ' undefined'
         } else {
             netUtils.current.forEach((value, i) => {
                 netUtilSum += value
@@ -447,13 +482,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                         />
                         <TableBox
                             width='fit-content'
-                            contents={
-                                (allPreferencesFilled() && allItemsAllocated()) 
-                                ?
-                                    <EnvyFreeStr/>
-                                :
-                                    <PageParagraph text="Please fill out the preference table and allocate all items!"/>
-                            }
+                            contents={<EnvyFreeStr/>}
                         />
                     </Stack>
                 </Stack>
