@@ -158,7 +158,8 @@ export default function ResourceAllocation() {
                                     />
                                 <PageParagraph text="?" color="red"/>
                                 <PageParagraph text="."/>
-                            </Box>
+                            </Box>,
+                            <PageParagraph text="For envy-freeness and proportionality, if an allocation does not satisfy either one, it will find and display the first instance where the property is violated, but does not show all violations."/>
                         ]}
                     />
                     <RASimulator/>
@@ -524,6 +525,7 @@ export default function ResourceAllocation() {
                     </CollapseSectionBox>
                 </SectionBox>
                 <SectionBox title="Fairness concepts">
+                    <PageParagraph text='Where efficiency focus on the utility output of allocations, fairness concepts aim to make sure no agents feel like they are receiving too little, and thereby treated "unfairly".'/>
                     <CollapseSectionBox title="Envy-freeness" titleFs={18} startClosed>
                         <Box>
                             <PageParagraph text="An allocation "/>
