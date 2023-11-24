@@ -86,16 +86,16 @@ function Contents({noBorder, children, mb=3, rowGap=2}) {
     )
 }
 
-export function SectionBox({title, noBorder, children, usePageTitle, mb=3, rowGap=2}) {
+export function SectionBox({title, noBorder, children, usePageTitle, mb=2, rowGap=2}) {
     return (
         <Box>
-            {title && usePageTitle ? <PageTitle title={title}/> : <PageSectionTitle title={title}/>}
+            {title && usePageTitle ? <PageTitle title={title} mb={1}/> : <PageSectionTitle title={title}/>}
             <Contents noBorder={noBorder} children={children} mb={mb} rowGap={rowGap}/>
         </Box>
     )
 }
 
-export function CollapseSectionBox({title, children, startClosed, usePageTitle}) {
+export function CollapseSectionBox({title, titleFs, children, startClosed, usePageTitle}) {
     if(!title) {throw new Error("CollapseSectionBox: Cannot be collapsible without title!")}
     const [open, setOpen] = React.useState(startClosed ? false : true)
     function handleClick() {
@@ -127,7 +127,7 @@ export function CollapseSectionBox({title, children, startClosed, usePageTitle})
                     }
                 }}
             >
-                {usePageTitle ? <PageTitle title={title}/> : <PageSectionTitle title={title}/>}
+                {usePageTitle ? <PageTitle title={title} mb={1}/> : <PageSectionTitle title={title} fs={titleFs}/>}
                 {open ? <KeyboardArrowUpIcon sx={iconSx}/> : <KeyboardArrowDownIcon sx={iconSx}/>}
             </Button>
         )
@@ -178,12 +178,12 @@ export function PageTitle({title, color, fs=30, underline='inherit', align, mb, 
     )
 }
 
-export function PageSectionTitle({title}) {
+export function PageSectionTitle({title, fs=24}) {
     return (
         <Typography
             id={title}
             sx={{
-                fontSize: 24,
+                fontSize: fs,
                 fontFamily: 'Montserrat',
             }}
         >
@@ -195,13 +195,15 @@ export function PageSectionTitle({title}) {
 /*
 By default, paragraphs are inline, since it is common to insert link or want to modify part of the paragraph.
 */
-export function PageParagraph({text, bold, block, color='inherit', fs='medium'}) {
+export function PageParagraph({text, bold, underline=false, block, color='inherit', fs='medium', mt, mb}) {
     if(!text) {return <></>}
     return (
         <Typography display={block ? 'block' : 'inline'}
             sx={{
+                mb: mb, mt: mt,
                 fontFamily: 'Verdana',
                 fontWeight: bold ? 'bold' : 'normal',
+                textDecoration: underline ? 'underline' : 'none',
                 color: color,
                 fontSize: fs
             }}
@@ -211,19 +213,19 @@ export function PageParagraph({text, bold, block, color='inherit', fs='medium'})
     )
 }
 
-export function PageTextList({list, listName, noPaddingsY}) {
+export function PageTextList({list, listName, noPaddingsY, py='inherit', mt=0, listStyleType='square'}) {
     if(!list) {throw new Error("Need input list in PageTextList!")}
     const ListElement = ({element}) => {
         if(typeof element === 'string') {
-            return <ListItemText primaryTypographyProps={{fontFamily: 'Verdana'}} sx={{display: 'list-item'}}>{element}</ListItemText>
+            return <ListItemText primaryTypographyProps={{fontFamily: 'Verdana'}} sx={{display: 'list-item', py: py}}>{element}</ListItemText>
         } else {
-            return <Box sx={{display: 'list-item'}}>{element}</Box>
+            return <Box sx={{display: 'list-item', py: py}}>{element}</Box>
         }
     }
     return (
         <Box>
             <PageParagraph text={listName}/>
-            <List sx={{pl: 4, listStyleType: 'square', py: noPaddingsY ? 0 : 'inherit',}}>
+            <List sx={{mt: mt, pl: 4, listStyleType: listStyleType, fontFamily: 'Verdana', py: noPaddingsY ? 0 : 'inherit',}}>
                 {list.map((e) => (
                     <ListElement element={e}/>
                 ))}
@@ -295,7 +297,7 @@ export function LatexBox({latex, fs=20, pb=2}) {
     )
 }
 
-export function TBButton({buttonText, onClick}) {
+export function TBButton({buttonText, onClick, p=1, mt=2, ml=2, mr=2, mb=2}) {
     return (
         <Button 
             variant="outlined"
@@ -303,8 +305,11 @@ export function TBButton({buttonText, onClick}) {
             disableRipple
             sx={{
                 width: 'fit-content',
-                p:1,
-                m:2,
+                p:p,
+                mt:mt,
+                ml:ml,
+                mr:mr,
+                mb:mb,
                 backgroundColor: '#011627',
                 borderColor: '#011627',
                 '&:hover': {
@@ -330,7 +335,36 @@ export function ExternalLink({href, target, children}) {
         </Link>
     )
 }
-
+const categoryNameToPath = {
+    'Resource Allocation': '/tools/compsci/AI/resourceAlloc',
+}
+export function hasCategoryInfo(cat) {
+    return categoryNameToPath.hasOwnProperty(cat)
+}
+export function getCategoryInfoPath(cat) {
+    // Assumes has ^^^
+    return categoryNameToPath[cat]
+}
+export function CategoryLink({name, linkText, textDecoration='none', fs=14, color='#011627', onClick = () => window.scrollTo(0,0)}) {
+    const categoryPath = categoryNameToPath[name]
+    if(!categoryPath) {throw new Error("No matching category for given name!")}
+    return (
+        <Link
+            component={RouterLink}
+            to={categoryPath}
+            onClick={onClick}
+            sx={{
+                fontFamily: 'Verdana',
+                color:color,
+                textDecorationColor: color,
+                fontSize: fs,
+                textDecoration: textDecoration
+            }}
+        >
+            {linkText}
+        </Link>
+    )
+}
 /*
 Remember to update this every time a new tool is done.
 */
@@ -344,7 +378,7 @@ const toolnameToPath = {
     'chemistry equation balancer': '/tools/chemistry/chem-equation-balancer',
     'stationary points': '/'
 }
-export function ToolLink({name, linkText, textDecoration='none', fs=14, color='#011627'}) {
+export function ToolLink({name, linkText, textDecoration='underline', fs='inherit', color='#011627'}) {
     const toolPath = toolnameToPath[name]
     if(!toolPath) {throw new Error("No matching tool path for given name!")}
     return (

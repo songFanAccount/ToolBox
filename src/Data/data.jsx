@@ -126,7 +126,18 @@ const compsciTools = {
                 }
             },
             subCategories: null
-        }
+        },
+        AI: {
+            displayName: 'Artificial Intelligence',
+            tools: null,
+            subCategories: {
+                resourceAlloc: {
+                    displayName: "Resource Allocation",
+                    tools: null,
+                    subCategories: null
+                }
+            }
+        },
     }
 }
 

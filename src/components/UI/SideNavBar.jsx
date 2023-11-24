@@ -10,6 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import CallMadeIcon from '@mui/icons-material/CallMade';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import { tools } from '../../Data/data';
+import { getCategoryInfoPath, hasCategoryInfo } from './DefaultLayout';
 
 function SideNavBar(props) {
 	const inHeader = props.inHeader // Used to determine how the sideNavBar toggle is rendered based on viewport width (passed from DefaultLayout)
@@ -228,6 +229,49 @@ function SideNavBar(props) {
 			<Divider/>
 		</Box>
 	)
+	const CategoryInfo = () => (
+		<ListItemButton
+			component={Link}
+			to={getCategoryInfoPath(curCategory.displayName)}
+			onClick={clickTool}
+			sx={{
+				...listItemStyle,
+				my: 1
+			}}
+		>
+			<ListItemText
+				primary=
+				{
+					<Typography
+						sx={{
+							...listItemTextStyle,
+							textDecoration: "underline",
+							textUnderlineOffset: '4px',
+							ml: 3
+						}}
+					>
+						{"Learn more about this topic!"}
+					</Typography>
+				}
+			/>
+			<ListItemIcon
+				className="go"
+				sx={{
+					visibility: 'hidden'
+				}}
+			>
+				<CallMadeIcon
+					sx={{
+						fontSize: 20,
+						alignSelf: 'flex-start',
+						mr: 3,
+						ml: .8,
+						color: '#495057',
+					}}
+				/>
+			</ListItemIcon>
+		</ListItemButton>
+	)
 	function clickTool() {
 		toggleOff()
 		window.scrollTo(0, 0)
@@ -370,7 +414,7 @@ function SideNavBar(props) {
 		return (
 			<Button
 				component={Link}
-				to={newPath}
+				to="/tools"
 				onClick={toggleOff}
 				sx={{
 					mt: 'auto',
@@ -395,7 +439,7 @@ function SideNavBar(props) {
 							color: '#fdfffc'
 						}}
 					>
-						Explore {categories.length === 0 ? 'all categories' : 'current category'}
+						Explore all categories
 					</Typography>
 					<Icon
 						sx={{
@@ -432,7 +476,8 @@ function SideNavBar(props) {
 				<Box sx={{minHeight: 100}}>
 					<PrevPath/>
 					<Heading/>
-				</Box>	
+				</Box>
+				{hasCategoryInfo(curCategory.displayName) && <CategoryInfo name={curCategory.displayName} linkText={"Learn more about " + curCategory.displayName} onClick={clickTool}/>}
 				{curCategory.tools && <Tools/>}
 				{curCategory.subCategories && <SubCategories/>}
 				

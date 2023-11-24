@@ -2,8 +2,8 @@ import React from "react"
 import { Box } from "@mui/material"
 import { useLocation } from "react-router-dom"
 import ToolPageLayout from "../toolPage/ToolPageLayout"
-import CategoryPageLayout from "../categoryPage/CategoryPageLayout";
 import { tools } from "../../../Data/data"
+import TopicPageLayout from "../topicPage/TopicPageLayout";
 
 export default function DynamicPageLayout() {
     let isCategory = true
@@ -11,16 +11,16 @@ export default function DynamicPageLayout() {
     const pathname = location.pathname
     
     let page
-    let firstCat
+    let lastCat
     if (pathname.startsWith('/tools')) {
         const routes = pathname.split("/")
         let cat = tools
-        if (routes.length === 2) {firstCat = cat}
+        if (routes.length === 2) {lastCat = cat}
         for(let i = 2; i < routes.length; i++) {
             const newCat = cat.subCategories?.[routes[i]]
             if(newCat) { // Valid subcategory case
                 cat = newCat
-                if (i === 2) {firstCat = cat}
+                lastCat = cat
             } else { // Not subcategory, check if it is a tool
                 const tool = cat.tools?.[routes[i]]
                 if(tool) {
@@ -29,7 +29,7 @@ export default function DynamicPageLayout() {
                 break
             }
         }
-        page = isCategory ? <CategoryPageLayout category={firstCat}/> : <ToolPageLayout/>
+        page = isCategory ? <TopicPageLayout topic={lastCat.displayName}/> : <ToolPageLayout/>
     }
 
     return (

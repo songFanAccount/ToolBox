@@ -1,4 +1,4 @@
-import { IconButton, Stack, Tooltip } from '@mui/material'
+import { Button, IconButton, Stack, Tooltip } from '@mui/material'
 import React from 'react'
 import { motion } from 'framer-motion';
 
@@ -8,15 +8,16 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import FastForwardIcon from '@mui/icons-material/FastForward';
 import { PageParagraph } from './DefaultLayout';
 
-export function ControlBoard({label, play, back, next, skipToEnd, tooltips}) {
+export function ControlBoardBox({label, children, maxWidth, mt}) {
     return (
         <Stack
             direction="column"
             rowGap={1.5}
             alignItems="center"
             sx={{
-                p: 1.5,
+                p: 1.5, mt: mt,
                 width: 'fit-content',
+                maxWidth: maxWidth,
                 border:5,
                 borderRadius: 5,
                 borderStyle: 'double',
@@ -27,20 +28,60 @@ export function ControlBoard({label, play, back, next, skipToEnd, tooltips}) {
             <Stack
                 direction="row"
                 alignItems="center"
-                flexWrap="wrap"
+                justifyContent='center'
+                flexWrap='wrap'
                 rowGap={3}
                 columnGap={3}
             >
-                {play && <CBIconButton tooltip={tooltips?.play ? tooltips.play : "Play animation"} onClick={play} icon={<PlayArrowIcon />}/>}
-                {back && <CBIconButton tooltip={tooltips?.back ? tooltips.back : "Decrement animation"} onClick={back} icon={<ArrowBackIcon />}/>}
-                {next && <CBIconButton tooltip={tooltips?.next ? tooltips.next : "Increment animation"} onClick={next} icon={<ArrowForwardIcon />}/>}
-                {skipToEnd && <CBIconButton tooltip={tooltips?.skipToEnd ? tooltips.skipToEnd : "Skip to end state"} onClick={skipToEnd} icon={<FastForwardIcon />}/>}
+                {children}
             </Stack>
         </Stack>
     )
 }
+export function AnimControlBoard({label, play, back, next, skipToEnd, tooltips}) {
+    return (
+        <ControlBoardBox label={label}>
+            {play && <CBIconButton tooltip={tooltips?.play ? tooltips.play : "Play animation"} onClick={play} icon={<PlayArrowIcon />}/>}
+            {back && <CBIconButton tooltip={tooltips?.back ? tooltips.back : "Decrement animation"} onClick={back} icon={<ArrowBackIcon />}/>}
+            {next && <CBIconButton tooltip={tooltips?.next ? tooltips.next : "Increment animation"} onClick={next} icon={<ArrowForwardIcon />}/>}
+            {skipToEnd && <CBIconButton tooltip={tooltips?.skipToEnd ? tooltips.skipToEnd : "Skip to end state"} onClick={skipToEnd} icon={<FastForwardIcon />}/>}
+        </ControlBoardBox>
+    )
+}
 
-function CBIconButton({icon, label, onClick, tooltip}) {
+export function CBTextIconButton({text, endIcon, onClick, tooltip}) {
+    return (
+        <Tooltip title={tooltip}>
+            <Button disableRipple
+                onClick={onClick}
+                endIcon={endIcon}
+                variant="outlined"
+                component={motion.button}
+                whileTap={{
+                    scale: 0.9
+                }}
+                sx={{
+                    color: 'black',
+                    borderColor: 'black',
+                    borderRadius: 10,
+                    border: 2,
+                    fontFamily: 'Verdana',
+                    textTransform: 'none',
+                    boxSizing: 'content-box',
+                    '&:hover': {
+                        backgroundColor: 'black',
+                        color: 'white',
+                        borderColor: 'black',
+                        border: 2
+                    }
+                }}
+            >
+                {text}
+            </Button>
+        </Tooltip>
+    )
+}
+export function CBIconButton({icon, label, onClick, tooltip}) {
     return (
         <Tooltip title={tooltip}>
             <IconButton aria-label={label} disableRipple

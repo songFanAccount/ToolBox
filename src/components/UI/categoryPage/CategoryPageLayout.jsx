@@ -7,7 +7,8 @@ import CategoryDescription from "./CategoryDescription"
 import { tools } from "../../../Data/data"
 import CategoryTools from "./CategoryTools"
 
-export default function CategoryPageLayout({categoryObject}) {
+export default function CategoryPageLayout() {
+    let categoryObject
     const param = useQuery()
     if (param) {
         categoryObject = disPlayName2Object(param.get("category"))

@@ -4,7 +4,7 @@ import Xarrow, { Xwrapper } from 'react-xarrows';
 import { CopyButton, PageParagraph } from '../UI/DefaultLayout';
 import { useAnimate, motion } from "framer-motion"
 import { useRef } from 'react';
-import { ControlBoard, commonAnims } from '../UI/Animation';
+import { AnimControlBoard, commonAnims } from '../UI/Animation';
 export function DisplayError({errorMsg}) {
     return <PageParagraph text={`>> ${errorMsg}`} bold/>
 }
@@ -194,7 +194,7 @@ function Tree({layers, lines, name, constructOrder}) {
 
                 </Xwrapper>
             </Box>
-            <ControlBoard label="Construction" play={fullConstruction} back={stepBack} next={stepConstruction} skipToEnd={skipToEndState}
+            <AnimControlBoard label="Construction" play={fullConstruction} back={stepBack} next={stepConstruction} skipToEnd={skipToEndState}
                 tooltips={{
                     play: 'Show ordered construction',
                     next: 'Show next step',
