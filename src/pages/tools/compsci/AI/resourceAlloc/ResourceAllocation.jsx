@@ -66,7 +66,7 @@ export default function ResourceAllocation() {
                                 <Latex>$X_i \cap X_j = \varnothing.$</Latex>
                             </Box>,
                             <Box>
-                                <PageParagraph text="All items are allocated to some agent, that is, "/>
+                                <PageParagraph text="Allocations are complete, that is, all items are allocated to some agent, or mathematically, "/>
                                 <Latex>{`$\\bigcup\\limits_{i=1}^n X_i = O.$`}</Latex>
                             </Box>,
                             <Box>
@@ -578,6 +578,21 @@ export default function ResourceAllocation() {
                             <Latex>$u_2(X_2) \lt u_2(X_1).$</Latex>
                         </Box>
                         <PageParagraph text='Since there is at least 1 agent that is envious of some other agent, we say this allocation is not "envy-free".'/>
+                        <PageTextList 
+                            listName="Important notes:"
+                            list={[
+                                <Box>
+                                    <PageParagraph bold text="Envy-freeness implies proportionality: "/>
+                                    <PageParagraph text="If an allocation is complete and additive (which we are assuming), then envy-freeness implies proportionality."/>
+                                </Box>,
+                                <PageParagraph bold text="Envy-free (and proportional) allocations are not guaranteed to exist. "/>,
+                                <Box>
+                                    <PageParagraph bold text="Theorem - Demko and Hill [1988]: "/>
+                                    <PageParagraph text="For additive utilities, checking whether there exists an envy-free or proportional allocation is "/>
+                                    <ExternalLink href="https://en.wikipedia.org/wiki/NP-completeness">NP-complete.</ExternalLink>
+                                </Box>,
+                            ]}
+                        />
                     </CollapseSectionBox>
                     <CollapseSectionBox title="Proportionality" titleFs={18} startClosed>
                         <Box>
@@ -596,6 +611,97 @@ export default function ResourceAllocation() {
                             <Latex>$i$</Latex>
                             <PageParagraph text=' believes to be the "fair" amount, they consider the allocation to be proportional if they are getting at least as much utility as that amount. If this is the case for all agents, the allocation is considered proportional.'/>
                         </Box>
+                        <PageTextList 
+                            listName="Important notes:"
+                            list={[
+                                <PageParagraph bold text="Proportional (and envy-free) allocations are not guaranteed to exist. "/>,
+                                <Box>
+                                    <PageParagraph bold text="Theorem - Demko and Hill [1988]: "/>
+                                    <PageParagraph text="For additive utilities, checking whether there exists an envy-free or proportional allocation is "/>
+                                    <ExternalLink href="https://en.wikipedia.org/wiki/NP-completeness">NP-complete.</ExternalLink>
+                                </Box>
+                            ]}
+                        />
+                    </CollapseSectionBox>
+                    <CollapseSectionBox title="Maxmin Fair Share (MmS) Fairness" titleFs={18} startClosed>
+                        <Box>
+                            <PageParagraph text="Given an instance "/>
+                            <Latex>$I = (N, O, u) \Rightarrow$</Latex>
+                            <PageParagraph text=" (agents, items, utility functions). Let "/>
+                            <Latex>$\Pi_n$</Latex>
+                            <PageParagraph text=" denote the space of all partitions of "/>
+                            <Latex>$O$</Latex>
+                            <PageParagraph text=" into "/>
+                            <Latex>$n$</Latex>
+                            <PageParagraph text=" sets (space of all possible allocations). The maximin share guarantee of an agent "/>
+                            <Latex>$i\in N$</Latex>
+                            <PageParagraph text=" is "/>
+                            <Latex>{`$$\\text{MmS}_i(I) = \\max\\limits_{(P_1,...,P_n)\\in \\Pi_n} \\min\\limits_{j\\in {1,...,n}} u_i(P_j).$$`}</Latex>
+                            <PageParagraph text="An allocation "/>
+                            <Latex>$X$</Latex>
+                            <PageParagraph text=" is a maximin share (MmS) fair allocation if "/>
+                            <Latex>{`$u_i(X_i) \\geq \\text{MmS}_i(I)$`}</Latex>
+                            <PageParagraph text=" for every agent "/>
+                            <Latex>$i\in N.$</Latex>
+                        </Box>
+                        <Box>
+                            <PageParagraph text="The formula can be broken down as follows: Every partition of "/>
+                            <Latex>$O$</Latex>
+                            <PageParagraph text=" from "/>
+                            <Latex>$\Pi_n$</Latex>
+                            <PageParagraph text=" can be mathmatically represented as the vector "/>
+                            <Latex>$(P_1,...,P_n),$</Latex>
+                            <PageParagraph text=" which is essentially "/>
+                            <Latex>$n$</Latex>
+                            <PageParagraph text=" bundle of items. With this partition "/>
+                            <Latex>$P,$</Latex>
+                            <Latex>{`$\\min\\limits_{j\\in {1,...,n}} u_i(P_j)$`}</Latex>
+                            <PageParagraph text=" finds the minimum amount of utility that agent "/>
+                            <Latex>$i$</Latex>
+                            <PageParagraph text=" can gain out of all of the bundles of items. Then, repeating this process for all possible partitions of "/>
+                            <Latex>$P,$</Latex>
+                            <PageParagraph text=" "/>
+                            <Latex>{`$\\text{MmS}_i(I)$`}</Latex>
+                            <PageParagraph text=" finds the maximum of these minimum values."/>
+                        </Box>
+                        <Box>
+                            <PageParagraph text="But what does this value mean? Here is a more animated way to understand the concept. Suppose you are given the items "/>
+                            <Latex>$O$</Latex>
+                            <PageParagraph text=" and you are responsible for placing them in  "/>
+                            <Latex>$n$</Latex>
+                            <PageParagraph text=" bundles for the "/>
+                            <Latex>$n$</Latex>
+                            <PageParagraph text=" agents. However, you are not responsible for allocating which bundle goes to who, and the agents get to distribute the bundles among themselves, one bundle per agent. Now suppose that all the agents dislike agent "/>
+                            <Latex>$i$</Latex>
+                            <PageParagraph text=" and therefore gives them the worst possible bundle (according to agent "/>
+                            <Latex>$i$</Latex>
+                            <PageParagraph text="). For fairness purposes you want to help agent "/>
+                            <Latex>$i$</Latex>
+                            <PageParagraph text=", and although you cannot do this by forcefully choosing and giving them a better bundle, you are still able to alter the contents of the  "/>
+                            <Latex>$n$</Latex>
+                            <PageParagraph text=" bundles so that the worst possible bundle for agent "/>
+                            <Latex>$i$</Latex>
+                            <PageParagraph text=" is not as bad. Under this context, we can understand "/>
+                            <Latex>{`$\\text{MmS}_i(I)$`}</Latex>
+                            <PageParagraph text=" as: In what way can you make the bundles so that even though agent "/>
+                            <Latex>$i$</Latex>
+                            <PageParagraph text=" is guaranteed to get the worst bundle, it would be better than all other ways."/>
+                        </Box>
+                        <PageTextList
+                            listName="Important notes:"
+                            list={[
+                                <Box>
+                                    <PageParagraph bold text="Computing MmS value for an agent i: "/>
+                                    <PageParagraph text="Pretend all other agents have the same utility function as agent "/>
+                                    <Latex>$i$</Latex>
+                                    <PageParagraph text=" and compute the maximum egalitarian welfare."/>
+                                </Box>,
+                                <Box>
+                                    <PageParagraph bold text="Proportionality (and also envy-freeness) implies MmS fairness: "/>
+                                    <PageParagraph text="Since envy-freeness implies proportionality, it also implies MmS fairness. "/>
+                                </Box>,
+                            ]}
+                        />
                     </CollapseSectionBox>
                 </SectionBox>
             </SectionBox>
