@@ -8,6 +8,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import Latex from 'react-latex-next';
 import { TBDoubleSizedSwitch, TBText } from '../../../../../components/GeneralComponents';
 import { PageParagraph, TBButton } from '../../../../../components/UI/DefaultLayout';
+import { InlineMath } from 'react-katex';
 
 export default function RASimulator({allocationName='X', utilities, allocations, modifiable=true, showAllocDetails=true, showControlBoard=true, showPropertyValues=true}) {
     const sqrWidth = 40
@@ -325,46 +326,97 @@ export default function RASimulator({allocationName='X', utilities, allocations,
         return numAllocated === numItems
     }
     const EnvyFreeStr = () => {
-        if (numAgents === 0 && numItems === 0) return <PageParagraph text="Please add agents and items to get started!"/>
-        const ValidEnvyFreeStr = () => {
-            let enviousAgent = -1
-            let enviousOfAgent = -1
-            let ownUtility = 0
-            let iUtilityOfJsBundle = 0
-            for (let i = 0; i < numAgents; i++) {
-                ownUtility = netUtils.current[i]
-                for (let j = 0; j < numAgents; j++) {
-                    if (j === i) continue
-                    const jsAllocation = allocation[j]
-                    iUtilityOfJsBundle = 0
-                    for (const itemIndex of jsAllocation) {
-                        // For each of agent j's allocated items, figure out how much agent i values it, and determine how much total utility their bundle would give agent i
-                        iUtilityOfJsBundle += parseInt(inputs.current[i][itemIndex])
-                    }
-                    if (iUtilityOfJsBundle > ownUtility) {
-                        enviousAgent = i
-                        enviousOfAgent = j
-                        break
-                    }
+        let enviousAgent = -1
+        let enviousOfAgent = -1
+        let ownUtility = 0
+        let iUtilityOfJsBundle = 0
+        for (let i = 0; i < numAgents; i++) {
+            ownUtility = netUtils.current[i]
+            for (let j = 0; j < numAgents; j++) {
+                if (j === i) continue
+                const jsAllocation = allocation[j]
+                iUtilityOfJsBundle = 0
+                for (const itemIndex of jsAllocation) {
+                    // For each of agent j's allocated items, figure out how much agent i values it, and determine how much total utility their bundle would give agent i
+                    iUtilityOfJsBundle += parseInt(inputs.current[i][itemIndex])
                 }
-                if (enviousAgent !== -1) break
+                if (iUtilityOfJsBundle > ownUtility) {
+                    enviousAgent = i
+                    enviousOfAgent = j
+                    break
+                }
             }
-            return enviousAgent === -1
-            ?
-                <PageParagraph bold text="Satisfied!"/>
-            :
-                <Box>
-                    <PageParagraph text={`Agent ${enviousAgent+1} is envious of agent ${enviousOfAgent+1}, since `}/>
-                    <Latex>{`$u_${enviousAgent+1}(${allocationName}_${enviousOfAgent+1}) = ${iUtilityOfJsBundle} > u_${enviousAgent+1}(${allocationName}_${enviousAgent+1}) = ${ownUtility}.$`}</Latex>
-                </Box>
+            if (enviousAgent !== -1) break
         }
-        return (
-            (allPreferencesFilled() && allItemsAllocated()) 
-            ?
-                <ValidEnvyFreeStr/>
-            :
-                <PageParagraph text="Please fill out the preference table and allocate all items!"/>
+        return enviousAgent === -1
+        ?
+            <PageParagraph bold text="Satisfied!"/>
+        :
+            <Box>
+                <PageParagraph text={`Agent ${enviousAgent+1} is envious of agent ${enviousOfAgent+1}, since `}/>
+                <Latex>{`$u_${enviousAgent+1}(${allocationName}_${enviousOfAgent+1}) = ${iUtilityOfJsBundle} > u_${enviousAgent+1}(${allocationName}_${enviousAgent+1}) = ${ownUtility}.$`}</Latex>
+            </Box>
+    }
+    const ProportionalityStr = () => {
+        let unpropAgent = -1
+        let unpropUtilAll = 0
+        let avgUtil = 0
+        for (let i = 0; i < numAgents; i++) {
+            unpropUtilAll = 0
+            for (let j = 0; j < numItems; j++) {
+                unpropUtilAll += parseInt(inputs.current[i][j])
+            }
+            avgUtil = unpropUtilAll / numAgents
+            if (netUtils.current[i] < avgUtil) {
+                unpropAgent = i
+                break
+            }
+        }
+        return unpropAgent === -1
+        ?
+            <PageParagraph bold text="Satisfied!"/>
+        :
+            <Box>
+                <PageParagraph text={`Agent ${unpropAgent+1} feels unproportional, since `}/>
+                <InlineMath math={`u_{${unpropAgent+1}}(${allocationName}_{${unpropAgent+1}}) = ${netUtils.current[unpropAgent]} < \\frac{u_{${unpropAgent+1}}(O)}{n} =  \\frac{${unpropUtilAll}}{${numAgents}} = ${avgUtil.toFixed(2)}.`}/>
+            </Box>
+    }
+    const FairnessStrs = () => {
+        if (numAgents === 0 && numItems === 0) return (
+            <>
+                <TableBox
+                    width='fit-content'
+                    contents={<PageParagraph text="Please add agents and items to get started!"/>}
+                />
+                <TableBox
+                    width='fit-content'
+                    contents={<PageParagraph text="Please add agents and items to get started!"/>}
+                />
+            </>
         )
+        return (allPreferencesFilled() && allItemsAllocated()) 
+            ?
+                <>
+                    <TableBox
+                        width='fit-content'
+                        contents={<EnvyFreeStr/>}
+                    />
+                    <TableBox
+                        width='fit-content'
+                        contents={<ProportionalityStr/>}
+                    />
+                </>
+            :
+                <>
+                    <TableBox
+                        width='fit-content'
+                        contents={<PageParagraph text="Please fill out the preference table and allocate all items!"/>}
+                    />
+                    <TableBox
+                        width='fit-content'
+                        contents={<PageParagraph text="Please fill out the preference table and allocate all items!"/>}
+                    />
+                </>
     }
     const PropertyValues = () => {
         let netUtilSumStr = '= ' 
@@ -480,10 +532,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                                 <Latex>{`$${nashStr}$`}</Latex>
                             }
                         />
-                        <TableBox
-                            width='fit-content'
-                            contents={<EnvyFreeStr/>}
-                        />
+                        <FairnessStrs/>
                     </Stack>
                 </Stack>
             </Stack>
