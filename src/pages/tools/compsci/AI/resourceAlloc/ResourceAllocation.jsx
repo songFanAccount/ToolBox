@@ -591,6 +591,8 @@ export default function ResourceAllocation() {
                                     <PageParagraph text="For additive utilities, checking whether there exists an envy-free or proportional allocation is "/>
                                     <ExternalLink href="https://en.wikipedia.org/wiki/NP-completeness">NP-complete.</ExternalLink>
                                 </Box>,
+                                <PageParagraph bold text="Pareto improvement over an envy-free allocation is may not be envy-free."/>
+                                // TODO: Proof
                             ]}
                         />
                     </CollapseSectionBox>
@@ -619,7 +621,9 @@ export default function ResourceAllocation() {
                                     <PageParagraph bold text="Theorem - Demko and Hill [1988]: "/>
                                     <PageParagraph text="For additive utilities, checking whether there exists an envy-free or proportional allocation is "/>
                                     <ExternalLink href="https://en.wikipedia.org/wiki/NP-completeness">NP-complete.</ExternalLink>
-                                </Box>
+                                </Box>,
+                                <PageParagraph bold text="Pareto improvement over a proportional allocation is proportional."/>
+                                // TODO: Proof
                             ]}
                         />
                     </CollapseSectionBox>
@@ -700,8 +704,31 @@ export default function ResourceAllocation() {
                                     <PageParagraph bold text="Proportionality (and also envy-freeness) implies MmS fairness: "/>
                                     <PageParagraph text="Since envy-freeness implies proportionality, it also implies MmS fairness. "/>
                                 </Box>,
+                                <PageParagraph bold text="Pareto improvement over a MmS fair allocation is MmS fair."/>
+                                // TODO: Proof
                             ]}
                         />
+                    </CollapseSectionBox>
+                    <CollapseSectionBox title="EF1 Fairness" titleFs={18} startClosed>
+                        <Box>
+                            <PageParagraph text="Given an instance "/>
+                            <Latex>$I = (N, O, u)$</Latex>
+                            <PageParagraph text=", an allocation "/>
+                            <Latex>$X$</Latex>
+                            <PageParagraph text=" satisfies EF1 (envy-freeness up to 1 item) if for each "/>
+                            <Latex>$i,j\in N$</Latex>
+                            <PageParagraph text=", either "/>
+                            <Latex>$X_i \succeq_i X_j$</Latex>
+                            <PageParagraph text=" or there exists some item "/>
+                            <Latex>$o\in X_j$</Latex>
+                            <PageParagraph text=" such that"/>
+                            <Latex>{`$$X_i\\succeq_i X_j\\setminus \\{o\\}.$$`}</Latex>
+                        </Box>
+                            <PageParagraph text="that is, no agents are envious of any other agents' bundles, or if they are, this envy can be nullified by ignoring 1 item in the other agents' bundle. "/>
+                            {/* TODO: Example*/}
+                            {/* TODO: Algorithm for EF1*/}
+                            <PageParagraph text=" "/>
+                            <PageParagraph text=" "/>
                     </CollapseSectionBox>
                 </SectionBox>
             </SectionBox>
