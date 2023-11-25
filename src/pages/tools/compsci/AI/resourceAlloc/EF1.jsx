@@ -2,6 +2,7 @@ import React from 'react'
 import { CategoryLink, PageParagraph, SectionBox } from '../../../../../components/UI/DefaultLayout'
 import { Box } from '@mui/material'
 import Latex from 'react-latex-next'
+import RASimulator from './RASimulator'
 
 export default function EF1() {
   return (
@@ -12,8 +13,14 @@ export default function EF1() {
           <Latex>$I = (N, O, u)$</Latex>
           <PageParagraph text=" and outputs an "/>
           <CategoryLink name="Resource Allocation" linkText="EF1"/>
-          <PageParagraph text=" allocation."/>
+          {/* TODO: Should link to EF1 section */}
+          <PageParagraph text=" allocation, "/>
+          <Latex>$X.$</Latex>
         </Box>
+        <RASimulator
+          fixedMode={-1}
+          algorithm='EF1'
+        />
       </SectionBox>
     </Box>
   )

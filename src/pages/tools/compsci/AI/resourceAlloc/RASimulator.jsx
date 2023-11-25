@@ -10,11 +10,12 @@ import { TBDoubleSizedSwitch, TBText } from '../../../../../components/GeneralCo
 import { PageParagraph, TBButton } from '../../../../../components/UI/DefaultLayout';
 import { InlineMath } from 'react-katex';
 
-export default function RASimulator({allocationName='X', utilities, allocations, modifiable=true, showAllocDetails=true, showControlBoard=true, showPropertyValues=true}) {
+export default function RASimulator({allocationName='X', utilities, allocations, fixedMode=0, algorithm=null,
+                                     modifiable=true, showAllocDetails=true, showControlBoard=true, showPropertyValues=true}) {
     const sqrWidth = 40
     const [numAgents, setNumAgents] = React.useState(utilities ? utilities.length : 0)
     const [numItems, setNumItems] = React.useState(utilities ? utilities[0].length : 0)
-    const [mode, setMode] = React.useState(false) // false for edit mode, true for allocate mode
+    const [mode, setMode] = React.useState(fixedMode === 1) // false for edit mode, true for allocate mode
     const inputs = React.useRef(utilities ? utilities : [])
     const [allocation, setAllocation] = React.useState(allocations ? allocations : [])
     const netUtils = React.useRef(utilities ? Array(utilities.length).fill(0) : [])
@@ -191,6 +192,15 @@ export default function RASimulator({allocationName='X', utilities, allocations,
     const ApplyChangesButton = () => (
         <TBButton buttonText="Apply changes" onClick={applyChanges} ml={0} mb={0}/>
     )
+    const Buttons = () => {
+        const showApplyChanges = modifiable && !mode && algorithm !== 'EF1'
+        return (
+            <Stack direction="row">
+                { showApplyChanges && <ApplyChangesButton/> }
+                { algorithm === 'EF1' && <TBButton buttonText="Run EF1 algorithm"/>}
+            </Stack>
+        )
+    }
     function addAgent() {
         if (numAgents === 10) return
         setNumAgents(numAgents + 1)
@@ -545,7 +555,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                 <CBIconButton tooltip="Remove agent (bottom row)" onClick={removeAgent} icon={<PersonRemoveAlt1Icon/>}/>
                 <CBTextIconButton text="Add item" onClick={addItem} endIcon={<AddIcon/>} tooltip="Add item (up to 10)"/>
                 <CBTextIconButton text="Del item" onClick={removeItem} endIcon={<RemoveIcon/>} tooltip="Delete item (right-most column)"/>
-                <TBDoubleSizedSwitch leftText="Edit mode" rightText="Allocate mode" checked={mode} onChange={(value) => setMode(value)}/>
+                { fixedMode === 0 && <TBDoubleSizedSwitch leftText="Edit mode" rightText="Allocate mode" checked={mode} onChange={(value) => setMode(value)}/> }
             </ControlBoardBox>
         )
     }
@@ -557,7 +567,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                 >
                     <TopRow/>
                     <Preferences/>
-                    { modifiable && !mode && <ApplyChangesButton/> }
+                    <Buttons/>
                 </Stack>
                 { showAllocDetails && <AllocationDetails/> } 
                 { showPropertyValues && <PropertyValues/> }
