@@ -21,6 +21,7 @@ import ChemEquationBalancer from './pages/tools/chemistry/ChemEquationBalancer';
 import Chemistry from './pages/tools/chemistry/Chemistry';
 import ResourceAllocation from './pages/tools/compsci/AI/resourceAlloc/ResourceAllocation';
 import AI from './pages/tools/compsci/AI/AI';
+import EF1 from './pages/tools/compsci/AI/resourceAlloc/EF1';
 function App() {
 	return (
     	<BrowserRouter>
@@ -58,6 +59,7 @@ function App() {
 								<Route index element={<AI/>}/>
 								<Route path="resourceAlloc">
 									<Route index element={<ResourceAllocation/>}/>
+									<Route path="EF1-generator" element={<EF1/>}/>
 								</Route>
 							</Route>
 						</Route>

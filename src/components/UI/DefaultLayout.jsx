@@ -345,7 +345,7 @@ export function getCategoryInfoPath(cat) {
     // Assumes has ^^^
     return categoryNameToPath[cat]
 }
-export function CategoryLink({name, linkText, textDecoration='none', fs=14, color='#011627', onClick = () => window.scrollTo(0,0)}) {
+export function CategoryLink({name, linkText, textDecoration='underline', fs='inherit', color='#011627', onClick = () => window.scrollTo(0,0)}) {
     const categoryPath = categoryNameToPath[name]
     if(!categoryPath) {throw new Error("No matching category for given name!")}
     return (
@@ -376,7 +376,8 @@ const toolnameToPath = {
     'latex converter': '/tools/maths/latex-converter',
     'maths expression parser': '/tools/compsci/parsing/maths-expression-parser',
     'chemistry equation balancer': '/tools/chemistry/chem-equation-balancer',
-    'stationary points': '/'
+    'stationary points': '/',
+    'EF1': '/tools/compsci/AI/resourceAlloc/EF1-generator'
 }
 export function ToolLink({name, linkText, textDecoration='underline', fs='inherit', color='#011627'}) {
     const toolPath = toolnameToPath[name]

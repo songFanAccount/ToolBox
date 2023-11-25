@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from "@mui/material";
-import { CollapseSectionBox, ExternalLink, PageParagraph, PageTextList, SectionBox } from "../../../../../components/UI/DefaultLayout";
+import { CollapseSectionBox, ExternalLink, PageParagraph, PageTextList, SectionBox, ToolLink } from "../../../../../components/UI/DefaultLayout";
 import Latex from 'react-latex-next';
 import RASimulator from './RASimulator';
 import 'katex/dist/katex.min.css';
@@ -723,9 +723,14 @@ export default function ResourceAllocation() {
                         <PageParagraph text=" such that"/>
                         <Latex>{`$$X_i\\succeq_i X_j\\setminus \\{o\\}.$$`}</Latex>
                     </Box>
-                        <PageParagraph text="that is, no agents are envious of any other agents' bundles, or if they are, this envy can be nullified by ignoring 1 item in the other agents' bundle. "/>
+                    <PageParagraph text="that is, no agents are envious of any other agents' bundles, or if they are, this envy can be nullified by ignoring 1 item in the other agents' bundle. "/>
                         {/* TODO: Example*/}
-                        {/* TODO: Algorithm for EF1*/}
+                    <PageTextList
+                        listName="Tools:"
+                        list={[
+                            <ToolLink name="EF1" linkText="EF1 allocation generator"/>
+                        ]}
+                    />
                         <PageParagraph text=" "/>
                         <PageParagraph text=" "/>
                 </CollapseSectionBox>
