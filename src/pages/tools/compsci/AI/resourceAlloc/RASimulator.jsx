@@ -74,7 +74,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                             <TBText key={`sim(${agent},${item})`} defaultValue={inputs.current[agent][item] === -1 ? '' : inputs.current[agent][item]} 
                                     onChange={(value) => changePreference(agent, item, value)} width={sqrWidth - 10} height={sqrWidth - 10} placeholder='-' 
                                     maxLength={2} center disabled={mode || !modifiable} border={allocation[agent].has(item) ? 1 : 0}
-                                    errorInit={true} errorFunc={(str) => !(/^[1-9]\d*$/.test(str))}
+                                    errorInit={true} errorFunc={(str) => !(/^[0-9]\d*$/.test(str))}
                             />
                         </Box>
                         <Button
@@ -248,7 +248,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
         let sum = 0
         for (let i = 0; i < numAlloced; i++) {
             const value = utilValues[i]
-            if (!/^[1-9]\d*$/.test(value)) { sumStr = null; break }
+            if (!/^[0-9]\d*$/.test(value)) { sumStr = null; break }
             sumStr += value
             sum += parseInt(value)
             if (i !== numAlloced - 1) sumStr += ' + '
@@ -317,7 +317,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
     }
     function allPreferencesFilled() { 
         return inputs.current.every((row) =>
-            row.every((value) => /^[1-9]\d*$/.test(value))
+            row.every((value) => /^[0-9]\d*$/.test(value))
         )
     }
     function allItemsAllocated () {
