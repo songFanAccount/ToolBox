@@ -24,6 +24,19 @@ export default function RASimulator({allocationName='X', utilities, allocations,
         ? allocations.map((allocSet, index) => allocationToSumstr(allocSet, index))
         : []
     )
+    /* ALGORITHMS */
+    const [errorMsg, setErrorMsg] = React.useState(null)
+    const AlgorithmButton = ({buttonText, onClick}) => (
+        <Stack direction="column">
+            <TBButton buttonText={buttonText} onClick={onClick} ml={0}/>
+            { errorMsg && <PageParagraph text={errorMsg}/>}
+        </Stack>
+    )
+    function ef1() {
+        if (!allPreferencesFilled()) setErrorMsg("Please fill out all preferences!")
+        else setErrorMsg(null)
+    }
+    ////////////////
     const TableBox = ({contents, width, borderBottom}) => (
         <Box
             sx={{
@@ -197,7 +210,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
         return (
             <Stack direction="row">
                 { showApplyChanges && <ApplyChangesButton/> }
-                { algorithm === 'EF1' && <TBButton buttonText="Run EF1 algorithm"/>}
+                { algorithm === 'EF1' && <AlgorithmButton buttonText="Run EF1 algorithm" onClick={ef1}/>}
             </Stack>
         )
     }
@@ -420,11 +433,11 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                 <>
                     <TableBox
                         width='fit-content'
-                        contents={<PageParagraph text="Please fill out the preference table and allocate all items!"/>}
+                        contents={<PageParagraph text="Require all preferences and allocations!"/>}
                     />
                     <TableBox
                         width='fit-content'
-                        contents={<PageParagraph text="Please fill out the preference table and allocate all items!"/>}
+                        contents={<PageParagraph text="Require all preferences and allocations!"/>}
                     />
                 </>
     }
