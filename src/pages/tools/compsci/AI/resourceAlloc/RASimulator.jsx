@@ -32,9 +32,13 @@ export default function RASimulator({allocationName='X', utilities, allocations,
             { errorMsg && <PageParagraph text={errorMsg}/>}
         </Stack>
     )
-    function ef1() {
+    function getNumericalUtilities() {
+        return inputs.current.map((row) => row.map((val) => parseInt(val)))
+    }
+    function runEF1() {
         if (!allPreferencesFilled()) setErrorMsg("Please fill out all preferences!")
         else setErrorMsg(null)
+        ef1(getNumericalUtilities())
     }
     ////////////////
     const TableBox = ({contents, width, borderBottom}) => (
@@ -210,7 +214,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
         return (
             <Stack direction="row">
                 { showApplyChanges && <ApplyChangesButton/> }
-                { algorithm === 'EF1' && <AlgorithmButton buttonText="Run EF1 algorithm" onClick={ef1}/>}
+                { algorithm === 'EF1' && <AlgorithmButton buttonText="Run EF1 algorithm" onClick={runEF1}/>}
             </Stack>
         )
     }
@@ -588,4 +592,74 @@ export default function RASimulator({allocationName='X', utilities, allocations,
             { (showControlBoard || modifiable) && <ControlBoard/> }
         </Stack>
     )
+}
+
+function ef1(utilities) {
+    if (utilities.length === 0) throw new Error("Require non empty utility array.")
+    // Utilities is a 2D array of n (agents) by m (items' utilities)
+    const n = utilities.length
+    const m = utilities[0].length
+    // 1. Initialise allocation X = (X1, X2, ... , Xn) with Xi being all empty sets
+    const X = []
+    const relativeUtils = [] // relativeUtils[i,j] should represent the utility gained by agent i if they had agent j's allocation
+    for (let i = 0; i < n; i++) {
+        X.push(new Set())
+    }
+    // 2.0 Since at the beginning of the loop, there is no items allocated so there is no envy, we simply allocate item 1 to some random agent, simply pick agent 1
+    X[0].add(0)
+    for (let i = 0; i < n; i++) {
+        const IsRelativeUtils = [utilities[i][0]]
+        for (let j = 1; j < n; j++) {
+            IsRelativeUtils.push(0)
+        }
+        relativeUtils.push(IsRelativeUtils)
+    }
+    const G = {} // Initialise G
+    // 2. Loop through all items 2..m
+    for (let item = 1; item < 2; item++) {
+        // 3. Construct a directed envy-graph G(X) = (N, E) where an edge (i,j) exists if i is envious of j's allocation in X
+        const someoneEnviousOfList = new Set()
+        for (let agentI = 0; agentI < n; agentI++) {
+            const iEnvyList = new Set()
+            for (let agentJ = 0; agentJ < n; agentJ++) {
+                if (agentJ === agentI) continue
+                if (relativeUtils[agentI][agentJ] > relativeUtils[agentI][agentI]) {
+                    iEnvyList.add(agentJ)
+                    someoneEnviousOfList.add(agentJ)
+                }
+            }
+            G[agentI] = iEnvyList
+        }
+        // 4. Pick a vertex, i, that has no incoming edges, i.e. no agents envious of agent i. Just find first one with no envy
+        let noEnvyAgent = 0
+        for (let i = 0; i < n; i++) {
+            if (!someoneEnviousOfList.has(i)) {
+                noEnvyAgent = i
+            }
+        }
+        console.log('No envy agent =')
+        console.log(noEnvyAgent)
+        // 5. Allocate current item to this agent
+        X[noEnvyAgent].add(item)
+        relativeUtils[noEnvyAgent][noEnvyAgent] += utilities[noEnvyAgent][item]
+        // 6. Step 5 may have caused rise in new envy. If so, this would only be targeted towards the agent who received the item. Update G to reflect the changes
+        for (let i = 0; i < n; i++) {
+            if (i !== noEnvyAgent) {
+                relativeUtils[i][noEnvyAgent] += utilities[i][item]
+                if (relativeUtils[i][noEnvyAgent] > relativeUtils[i][i]) G[i].add(noEnvyAgent)
+            } else {
+                const copyEnvyList = new Set()
+                for (const enviousOfAgent of G[noEnvyAgent]) copyEnvyList.add(enviousOfAgent)
+                for (const enviousOfAgent of copyEnvyList) {
+                    if (relativeUtils[i][i] >= relativeUtils[i][enviousOfAgent]) G[i].delete(enviousOfAgent)
+                }
+            }
+        }
+    }
+    console.log('Relative utils =')
+    console.log(relativeUtils)
+    console.log('Allocation =')
+    console.log(X)
+    console.log('Envy graph =')
+    console.log(G)
 }
