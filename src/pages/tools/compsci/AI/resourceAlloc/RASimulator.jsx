@@ -9,6 +9,7 @@ import Latex from 'react-latex-next';
 import { TBDoubleSizedSwitch, TBText } from '../../../../../components/GeneralComponents';
 import { PageParagraph, TBButton } from '../../../../../components/UI/DefaultLayout';
 import { InlineMath } from 'react-katex';
+import { findCycle } from '../../../../../helpers/graphHelpers';
 
 export default function RASimulator({allocationName='X', utilities, allocations, fixedMode=0, algorithm=null,
                                      modifiable=true, showAllocDetails=true, showControlBoard=true, showPropertyValues=true}) {
@@ -39,6 +40,15 @@ export default function RASimulator({allocationName='X', utilities, allocations,
         if (!allPreferencesFilled()) setErrorMsg("Please fill out all preferences!")
         else setErrorMsg(null)
         ef1(getNumericalUtilities())
+        console.log(findCycle(
+            {
+                0: ['3'],
+                1: ['2'],
+                2: ['4'],
+                3: [],
+                4: ['1']
+            }
+        ))
     }
     ////////////////
     const TableBox = ({contents, width, borderBottom}) => (
