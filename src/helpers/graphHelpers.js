@@ -1,5 +1,4 @@
 function cycleDFS(g, curVertex, curTraversal) {
-	console.log(curTraversal)
 	if (curTraversal.includes(curVertex)) return curTraversal.slice(curTraversal.indexOf(curVertex)) // Cycle found, return this element
 	curTraversal.push(curVertex)
   const possibleNextVs = g[curVertex] // Array of vertices that there is a direct edge from curVertex

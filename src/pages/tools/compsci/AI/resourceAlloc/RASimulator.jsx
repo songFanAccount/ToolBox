@@ -39,16 +39,13 @@ export default function RASimulator({allocationName='X', utilities, allocations,
     function runEF1() {
         if (!allPreferencesFilled()) setErrorMsg("Please fill out all preferences!")
         else setErrorMsg(null)
-        ef1(getNumericalUtilities())
-        console.log(findCycle(
-            {
-                0: ['3'],
-                1: ['2'],
-                2: ['4'],
-                3: [],
-                4: ['1']
-            }
-        ))
+        const X = ef1(getNumericalUtilities())
+        setAllocation(X['allocation'])
+        setSumStrs(
+            allocation.map((allocSet, index) => (
+                allocationToSumstr(allocSet, index)
+            ))
+        )
     }
     ////////////////
     const TableBox = ({contents, width, borderBottom}) => (
@@ -626,7 +623,7 @@ function ef1(utilities) {
     }
     const G = {} // Initialise G
     // 2. Loop through all items 2..m
-    for (let item = 1; item < 2; item++) {
+    for (let item = 1; item < m; item++) {
         // 3. Construct a directed envy-graph G(X) = (N, E) where an edge (i,j) exists if i is envious of j's allocation in X
         const someoneEnviousOfList = new Set()
         for (let agentI = 0; agentI < n; agentI++) {
@@ -665,11 +662,63 @@ function ef1(utilities) {
                 }
             }
         }
+        // 7. Find any cycle in the graph and implement an exchange in which if i points to j in the cycle, then i gets j's allocation
+        function getRelativeUtil(i, j) {
+            let utilSum = 0
+            for (const jItem of X[j]) {
+                utilSum += utilities[i][jItem]
+            }
+            return utilSum
+        }
+        let cycle = findCycle(G)
+        while(cycle) {
+            console.log('cycle found: ')
+            console.log(cycle)
+            // While there is a cycle in G, repeat step 7
+            // Exchange of allocations
+            const storeFirstAlloc = new Set([...X[cycle[0]]])
+            for (let i = 0; i < cycle.length; i++) {
+                if (i === cycle.length - 1) {
+                    X[cycle[i]] = storeFirstAlloc
+                } else {
+                    X[cycle[i]] = X[cycle[i+1]]
+                }
+            }
+            // Update relative utils
+            for (let a = 0; a < n; a++) {
+                for (let i = 0; i < cycle.length; i++) {
+                    relativeUtils[a][cycle[i]] = getRelativeUtil(a, cycle[i])
+                }
+            }
+            // Update envy graph
+            for (let agentI = 0; agentI < n; agentI++) {
+                const iEnvyList = new Set()
+                for (let agentJ = 0; agentJ < n; agentJ++) {
+                    if (agentJ === agentI) continue
+                    if (relativeUtils[agentI][agentJ] > relativeUtils[agentI][agentI]) {
+                        iEnvyList.add(agentJ)
+                    }
+                }
+                G[agentI] = iEnvyList
+            }
+            console.log('Relative utils =')
+            console.log(relativeUtils)
+            console.log('Allocation =')
+            console.log(X)
+            console.log('Envy graph =')
+            console.log(G)
+            // Keep going until no cycles left
+            cycle = findCycle(G)
+        }
     }
+    console.log('final allocation:')
     console.log('Relative utils =')
     console.log(relativeUtils)
     console.log('Allocation =')
     console.log(X)
     console.log('Envy graph =')
     console.log(G)
+    return {
+        'allocation': X
+    }
 }
