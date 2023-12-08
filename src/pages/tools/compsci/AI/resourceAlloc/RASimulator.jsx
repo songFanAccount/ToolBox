@@ -507,37 +507,37 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                         <TableBox
                             width='fit-content'
                             contents={
-                                <PageParagraph text="Utilitarian social welfare"/>
+                                <PageParagraph nowrap text="Utilitarian social welfare"/>
                             }
                         />
                         <TableBox
                             width='fit-content'
                             contents={
-                                <PageParagraph text="Egalitarian social welfare"/>
+                                <PageParagraph nowrap text="Egalitarian social welfare"/>
                             }
                         />
                         <TableBox
                             width='fit-content'
                             contents={
-                                <PageParagraph text="Lexmin welfare"/>
+                                <PageParagraph nowrap text="Lexmin welfare"/>
                             }
                         />
                         <TableBox
                             width='fit-content'
                             contents={
-                                <PageParagraph text="Nash product welfare"/>
+                                <PageParagraph nowrap text="Nash product welfare"/>
                             }
                         />
                         <TableBox
                             width='fit-content'
                             contents={
-                                <PageParagraph text="Envy-freeness: "/>
+                                <PageParagraph nowrap text="Envy-freeness: "/>
                             }
                         />
                         <TableBox
                             width='fit-content'
                             contents={
-                                <PageParagraph text="Proportionality: "/>
+                                <PageParagraph nowrap text="Proportionality: "/>
                             }
                         />
                     </Stack>

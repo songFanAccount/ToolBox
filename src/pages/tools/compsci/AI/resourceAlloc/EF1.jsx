@@ -20,6 +20,7 @@ export default function EF1() {
         <RASimulator
           fixedMode={-1}
           algorithm='EF1'
+          showPropertyValues={false}
         />
       </SectionBox>
     </Box>
