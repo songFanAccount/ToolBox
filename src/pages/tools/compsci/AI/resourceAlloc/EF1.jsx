@@ -21,6 +21,11 @@ export default function EF1() {
           fixedMode={-1}
           algorithm='EF1'
           showPropertyValues={false}
+          utilities={[
+            [7,3,2,6],
+            [9,5,5,3],
+            [5,1,2,4],
+          ]}
         />
       </SectionBox>
     </Box>

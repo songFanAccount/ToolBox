@@ -37,7 +37,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
         return inputs.current.map((row) => row.map((val) => parseInt(val)))
     }
     function runEF1() {
-        if (!allPreferencesFilled()) setErrorMsg("Please fill out all preferences!")
+        if (numAgents === 0 || numItems === 0 || !allPreferencesFilled()) { setErrorMsg("Please fill out all preferences!"); return }
         else setErrorMsg(null)
         const X = ef1(getNumericalUtilities())
         setAllocation(X['allocation'])
