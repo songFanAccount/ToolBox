@@ -18,13 +18,20 @@ export default function RASimulator({allocationName='X', utilities, allocations,
     const [numItems, setNumItems] = React.useState(utilities ? utilities[0].length : 0)
     const [mode, setMode] = React.useState(fixedMode === 1) // false for edit mode, true for allocate mode
     const inputs = React.useRef(utilities ? utilities : [])
-    const [allocation, setAllocation] = React.useState(allocations ? allocations : [])
+    const [inputsChanged, setInputsChanged] = React.useState(true)
     const netUtils = React.useRef(utilities ? Array(utilities.length).fill(0) : [])
-    const [sumStrs, setSumStrs] = React.useState(
-        allocations 
-        ? allocations.map((allocSet, index) => allocationToSumstr(allocSet, index))
-        : []
-    )
+    const [allocation, setAllocation] = React.useState(allocInit())
+    const [sumStrs, setSumStrs] = React.useState(sumStrsInit())
+    function allocInit() {
+        if (allocations) return allocations
+        if (utilities) return Array(utilities.length).fill(new Set())
+        else return []
+    }
+    function sumStrsInit() {
+        if (allocations) return allocations.map((allocSet, index) => allocationToSumstr(allocSet, index))
+        if (utilities) return Array(utilities.length).fill('0')
+        else return []
+    }
     /* ALGORITHMS */
     const [errorMsg, setErrorMsg] = React.useState(null)
     const AlgorithmButton = ({buttonText, onClick}) => (
@@ -37,15 +44,17 @@ export default function RASimulator({allocationName='X', utilities, allocations,
         return inputs.current.map((row) => row.map((val) => parseInt(val)))
     }
     function runEF1() {
+        if (!inputsChanged) return
         if (numAgents === 0 || numItems === 0 || !allPreferencesFilled()) { setErrorMsg("Please fill out all preferences!"); return }
         else setErrorMsg(null)
         const X = ef1(getNumericalUtilities())
         setAllocation(X['allocation'])
         setSumStrs(
-            allocation.map((allocSet, index) => (
+            X['allocation'].map((allocSet, index) => (
                 allocationToSumstr(allocSet, index)
             ))
         )
+        setInputsChanged(false)
     }
     ////////////////
     const TableBox = ({contents, width, borderBottom}) => (
@@ -166,6 +175,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
         return agents
     }
     function changePreference(agent, item, newValue) {
+        setInputsChanged(true)
         inputs.current[agent][item] = newValue
     }
     const Preferences = () => {
