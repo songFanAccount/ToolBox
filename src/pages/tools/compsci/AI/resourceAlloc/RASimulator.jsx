@@ -34,6 +34,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
     }
     /* ALGORITHMS */
     const [errorMsg, setErrorMsg] = React.useState(null)
+    const [ef1steps, setEF1Steps] = React.useState([])
     const AlgorithmButton = ({buttonText, onClick}) => (
         <Stack direction="column">
             <TBButton buttonText={buttonText} onClick={onClick} ml={0}/>
@@ -55,6 +56,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
             ))
         )
         setInputsChanged(false)
+        setEF1Steps(X['states'])
     }
     ////////////////
     const TableBox = ({contents, width, borderBottom}) => (
@@ -607,10 +609,25 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                 { showPropertyValues && <PropertyValues/> }
             </Stack>
             { (showControlBoard || modifiable) && <ControlBoard/> }
+            { algorithm === 'EF1' && <EF1Display states={ef1steps}/>}
         </Stack>
     )
 }
 
+function EF1Display({states}) {
+    const State = ({num, state}) => {
+        if (state['type'] === 'assignment') {
+            return <PageParagraph text={`${num+1}. Item ${state['item']} assigned to agent ${state['agent']} with no envy.`}/>
+        } else {
+            return <></>
+        }
+    }
+    return (
+        <Stack direction="column">
+            {states.map((state, index) => <State num={index} state={state}/>)}
+        </Stack>
+    )
+}
 function ef1(utilities) {
     if (utilities.length === 0) throw new Error("Require non empty utility array.")
     // Utilities is a 2D array of n (agents) by m (items' utilities)
@@ -619,11 +636,17 @@ function ef1(utilities) {
     // 1. Initialise allocation X = (X1, X2, ... , Xn) with Xi being all empty sets
     const X = []
     const relativeUtils = [] // relativeUtils[i,j] should represent the utility gained by agent i if they had agent j's allocation
+    const states = []
     for (let i = 0; i < n; i++) {
         X.push(new Set())
     }
     // 2.0 Since at the beginning of the loop, there is no items allocated so there is no envy, we simply allocate item 1 to some random agent, simply pick agent 1
     X[0].add(0)
+    states.push({
+        type: 'assignment',
+        agent: 1,
+        item: 1
+    })
     for (let i = 0; i < n; i++) {
         const IsRelativeUtils = [utilities[i][0]]
         for (let j = 1; j < n; j++) {
@@ -654,10 +677,13 @@ function ef1(utilities) {
                 noEnvyAgent = i
             }
         }
-        console.log('No envy agent =')
-        console.log(noEnvyAgent)
         // 5. Allocate current item to this agent
         X[noEnvyAgent].add(item)
+        states.push({
+            type: 'assignment',
+            agent: noEnvyAgent+1,
+            item: item+1
+        })
         relativeUtils[noEnvyAgent][noEnvyAgent] += utilities[noEnvyAgent][item]
         // 6. Step 5 may have caused rise in new envy. If so, this would only be targeted towards the agent who received the item. Update G to reflect the changes
         for (let i = 0; i < n; i++) {
@@ -729,6 +755,7 @@ function ef1(utilities) {
     console.log('Envy graph =')
     console.log(G)
     return {
-        'allocation': X
+        'allocation': X,
+        'states': states
     }
 }
