@@ -10,6 +10,7 @@ import { TBDoubleSizedSwitch, TBText } from '../../../../../components/GeneralCo
 import { PageParagraph, TBButton } from '../../../../../components/UI/DefaultLayout';
 import { InlineMath } from 'react-katex';
 import { findCycle } from '../../../../../helpers/graphHelpers';
+import { Graph } from '../../../../../components/Compsci/DataStructures';
 
 export default function RASimulator({allocationName='X', utilities, allocations, fixedMode=0, algorithm=null,
                                      modifiable=true, showAllocDetails=true, showControlBoard=true, showPropertyValues=true}) {
@@ -614,11 +615,12 @@ export default function RASimulator({allocationName='X', utilities, allocations,
     )
 }
 
-function EF1Display({states}) {
+function EF1Display({numVertices, states}) {
+    const v = Array.from(Array(numVertices).keys())
     const State = ({num, state}) => {
         const type = state['type']
         if (type === 'initial') {
-            return <></>
+            return <Graph vertices={v}/>
         } else if (type === 'assignment') {
             return <PageParagraph text={`${num+1}. No one has envy towards agent ${state['agent']}, assign them next item ${state['item']}.`}/>
         } else if (type === 'cycle') {

@@ -387,7 +387,7 @@ export function BinaryTree({tree, name, maxLayers, constructOrder}) {
     )
 }
 
-function NormalNode({nodeName, nodeRadius, ml, mr, color, value}) {
+function NormalNode({nodeName, nodeRadius=16, ml=0, mr=0, color, value, top, left}) {
     return (
         <Box
             className={nodeName}
@@ -395,6 +395,8 @@ function NormalNode({nodeName, nodeRadius, ml, mr, color, value}) {
             component={motion.div}
             sx={{
                 zIndex: 1,
+                position: 'relative',
+                top: top-nodeRadius, left: left-nodeRadius,
                 width: nodeRadius * 2 - 2,
                 maxWidth: nodeRadius * 2 - 2,
                 height: nodeRadius * 2 - 2,
@@ -417,5 +419,19 @@ function NormalNode({nodeName, nodeRadius, ml, mr, color, value}) {
     )
 }
 export function Graph({graphName="G", vertices, edges}) {
-
+    console.log(edges)
+    const canvasRadius = 300
+    const nodeRadius = 16
+    return (
+        <Box
+            sx={{
+                width: canvasRadius,
+                height: canvasRadius,
+                border: 1
+            }}
+        >
+            {/* <NormalNode nodeName={`${graphName}-0`} nodeRadius={nodeRadius} value={0} top={20} left={20}/> */}
+            <NormalNode nodeName={`${graphName}-1`} nodeRadius={nodeRadius} value={1} top={40} left={40}/>
+        </Box>
+    )
 }

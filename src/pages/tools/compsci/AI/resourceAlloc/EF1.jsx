@@ -23,7 +23,7 @@ export default function EF1() {
           showPropertyValues={false}
           utilities={[
             [7,3,2,6],
-            [9,5,5,3],
+            [9,6,5,3],
             [5,1,2,4],
           ]}
         />
