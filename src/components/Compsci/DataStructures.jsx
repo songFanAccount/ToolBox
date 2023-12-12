@@ -386,3 +386,36 @@ export function BinaryTree({tree, name, maxLayers, constructOrder}) {
         <Tree layers={[layers]} lines={lines} name={name} constructOrder={constructOrderIDs}/>
     )
 }
+
+function NormalNode({nodeName, nodeRadius, ml, mr, color, value}) {
+    return (
+        <Box
+            className={nodeName}
+            id={nodeName}
+            component={motion.div}
+            sx={{
+                zIndex: 1,
+                width: nodeRadius * 2 - 2,
+                maxWidth: nodeRadius * 2 - 2,
+                height: nodeRadius * 2 - 2,
+                border: 1,
+                borderRadius: '50%',
+                ml: `${ml}px`,
+                mr: `${mr}px`,
+                display: 'flex',
+                alignItems: 'center',
+                backgroundColor: '#fdfffc',
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis'
+            }}
+        >
+            <Typography sx={{width:nodeRadius * 2 - 2, textAlign: 'center', color: color, fontSize: 14}}>
+                {value}
+            </Typography>
+        </Box>
+    )
+}
+export function Graph({graphName="G", vertices, edges}) {
+
+}

@@ -616,8 +616,21 @@ export default function RASimulator({allocationName='X', utilities, allocations,
 
 function EF1Display({states}) {
     const State = ({num, state}) => {
-        if (state['type'] === 'assignment') {
-            return <PageParagraph text={`${num+1}. Item ${state['item']} assigned to agent ${state['agent']} with no envy.`}/>
+        const type = state['type']
+        if (type === 'initial') {
+            return <></>
+        } else if (type === 'assignment') {
+            return <PageParagraph text={`${num+1}. No one has envy towards agent ${state['agent']}, assign them next item ${state['item']}.`}/>
+        } else if (type === 'cycle') {
+            let cycleStr = ''
+            for (const agent of state['cycle']) cycleStr += `${agent} \\rightarrow `
+            cycleStr += `${state['cycle'][0]}`
+            return (
+                <Box>
+                    <PageParagraph text={`${num+1}. Cycle detected: `}/>
+                    <Latex>{`$${cycleStr}$`}</Latex>
+                </Box>
+            )
         } else {
             return <></>
         }
@@ -643,9 +656,21 @@ function ef1(utilities) {
     // 2.0 Since at the beginning of the loop, there is no items allocated so there is no envy, we simply allocate item 1 to some random agent, simply pick agent 1
     X[0].add(0)
     states.push({
+        type: 'initial',
+        envyGraph: {}
+    })
+    const firstEnvyGraph = {}
+    firstEnvyGraph[0] = new Set()
+    for (let i = 1; i < n; i++) {
+        const s = new Set()
+        s.add(0)
+        firstEnvyGraph[i] = s
+    }
+    states.push({
         type: 'assignment',
         agent: 1,
-        item: 1
+        item: 1,
+        envyGraph: firstEnvyGraph
     })
     for (let i = 0; i < n; i++) {
         const IsRelativeUtils = [utilities[i][0]]
@@ -708,8 +733,10 @@ function ef1(utilities) {
         }
         let cycle = findCycle(G)
         while(cycle) {
-            console.log('cycle found: ')
-            console.log(cycle)
+            states.push({
+                type: 'cycle',
+                cycle
+            })
             // While there is a cycle in G, repeat step 7
             // Exchange of allocations
             const storeFirstAlloc = new Set([...X[cycle[0]]])
