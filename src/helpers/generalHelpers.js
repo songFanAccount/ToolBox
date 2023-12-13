@@ -3,3 +3,5 @@ export function getLinear(minY, maxY, minX, maxX, curX) {
     const b = maxY - gradient * maxX
     return Math.min(Math.max(gradient * curX + b, minY), maxY)
 }
+
+export function degToRad(deg) { return deg * Math.PI / (180 * 1.0) }

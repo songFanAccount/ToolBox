@@ -610,7 +610,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                 { showPropertyValues && <PropertyValues/> }
             </Stack>
             { (showControlBoard || modifiable) && <ControlBoard/> }
-            { algorithm === 'EF1' && <EF1Display states={ef1steps}/>}
+            { algorithm === 'EF1' && <EF1Display numVertices={numAgents} states={ef1steps}/>}
         </Stack>
     )
 }
@@ -766,23 +766,10 @@ function ef1(utilities) {
                 }
                 G[agentI] = iEnvyList
             }
-            console.log('Relative utils =')
-            console.log(relativeUtils)
-            console.log('Allocation =')
-            console.log(X)
-            console.log('Envy graph =')
-            console.log(G)
             // Keep going until no cycles left
             cycle = findCycle(G)
         }
     }
-    console.log('final allocation:')
-    console.log('Relative utils =')
-    console.log(relativeUtils)
-    console.log('Allocation =')
-    console.log(X)
-    console.log('Envy graph =')
-    console.log(G)
     return {
         'allocation': X,
         'states': states

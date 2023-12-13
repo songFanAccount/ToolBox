@@ -5,6 +5,7 @@ import { CopyButton, PageParagraph } from '../UI/DefaultLayout';
 import { useAnimate, motion } from "framer-motion"
 import { useRef } from 'react';
 import { AnimControlBoard, commonAnims } from '../UI/Animation';
+import { degToRad } from '../../helpers/generalHelpers';
 export function DisplayError({errorMsg}) {
     return <PageParagraph text={`>> ${errorMsg}`} bold/>
 }
@@ -395,7 +396,7 @@ function NormalNode({nodeName, nodeRadius=16, ml=0, mr=0, color, value, top, lef
             component={motion.div}
             sx={{
                 zIndex: 1,
-                position: 'relative',
+                position: 'absolute',
                 top: top-nodeRadius, left: left-nodeRadius,
                 width: nodeRadius * 2 - 2,
                 maxWidth: nodeRadius * 2 - 2,
@@ -419,19 +420,37 @@ function NormalNode({nodeName, nodeRadius=16, ml=0, mr=0, color, value, top, lef
     )
 }
 export function Graph({graphName="G", vertices, edges}) {
+    console.log(vertices)
     console.log(edges)
-    const canvasRadius = 300
+    const canvasWidth = 300
     const nodeRadius = 16
+    const center = canvasWidth / 2
+    function generateCoords() {
+        const coords = []
+        const numVertices = vertices.length
+        const angleBetween = 360*1.0 / numVertices
+        for (let i = 0; i < numVertices; i++) {
+            const xOffset = Math.cos(degToRad(i * angleBetween)) * canvasWidth / 2
+            const yOffset = Math.sin(degToRad(i * angleBetween)) * canvasWidth / 2
+            const x = center + xOffset
+            const y = center + yOffset
+            coords.push([x,y])
+        }
+        return coords
+    }
+    const verticesCoords = generateCoords()
+    console.log(verticesCoords)
     return (
         <Box
             sx={{
-                width: canvasRadius,
-                height: canvasRadius,
-                border: 1
+                width: canvasWidth,
+                height: canvasWidth,
+                border: 1,
+                position: 'relative'
             }}
         >
-            {/* <NormalNode nodeName={`${graphName}-0`} nodeRadius={nodeRadius} value={0} top={20} left={20}/> */}
-            <NormalNode nodeName={`${graphName}-1`} nodeRadius={nodeRadius} value={1} top={40} left={40}/>
+            {/* <Box width={20} height={20} border={1} position={'relative'} top={center - 10} left={center - 10}></Box> */}
+            { verticesCoords.map((coord, index) => <NormalNode nodeName={`${graphName}-${index}`} nodeRadius={nodeRadius} value={vertices[index]} top={coord[1]} left={coord[0]}/>)}
         </Box>
     )
 }
