@@ -617,10 +617,9 @@ export default function RASimulator({allocationName='X', utilities, allocations,
 
 function EF1Display({numVertices, states}) {
     const v = Array.from(Array(numVertices).keys())
-    const State = ({num, state}) => {
-        const type = state['type']
+    const Explanation = ({num, type, state}) => {
         if (type === 'initial') {
-            return <Graph vertices={v}/>
+            return <PageParagraph text={`${num+1}. Initially, no items are allocated, so there is no envy.`}/>
         } else if (type === 'assignment') {
             return <PageParagraph text={`${num+1}. No one has envy towards agent ${state['agent']}, assign them next item ${state['item']}.`}/>
         } else if (type === 'cycle') {
@@ -636,6 +635,15 @@ function EF1Display({numVertices, states}) {
         } else {
             return <></>
         }
+    }
+    const State = ({num, state}) => {
+        const type = state['type']
+        return (
+            <Box>
+                <Explanation num={num} type={type} state={state}/>
+                <Graph vertices={v} edges={state['envyGraph']}/>
+            </Box>
+        )
     }
     return (
         <Stack direction="column">

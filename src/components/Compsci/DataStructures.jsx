@@ -9,6 +9,11 @@ import { degToRad } from '../../helpers/generalHelpers';
 export function DisplayError({errorMsg}) {
     return <PageParagraph text={`>> ${errorMsg}`} bold/>
 }
+const Arrow = ({start, end, lineID}) => (
+    <Box zIndex={-1} className={lineID}>
+        <Xarrow zIndex={-1} strokeWidth={1} color="black" start={start} end={end} path="straight" showHead={false} startAnchor="middle" endAnchor="middle"/>
+    </Box>
+)
 /*
 Use this for an input array of already created DOMs
 */
@@ -305,11 +310,6 @@ export function BinaryTree({tree, name, maxLayers, constructOrder}) {
             </Typography>
         </Box>
     )
-    const Arrow = ({start, end, lineID}) => (
-        <Box zIndex={-1} className={lineID}>
-            <Xarrow zIndex={-1} strokeWidth={1} color="black" start={start} end={end} path="straight" showHead={false} startAnchor="middle" endAnchor="middle"/>
-        </Box>
-    )
     /* 
     Returns the width of the node including its subtrees, used to provide parent nodes their margins
     A null node should return 0
@@ -422,7 +422,7 @@ function NormalNode({nodeName, nodeRadius=16, ml=0, mr=0, color, value, top, lef
 export function Graph({graphName="G", vertices, edges}) {
     console.log(vertices)
     console.log(edges)
-    const canvasWidth = 300
+    const canvasWidth = 150
     const nodeRadius = 16
     const center = canvasWidth / 2
     function generateCoords() {
@@ -445,12 +445,13 @@ export function Graph({graphName="G", vertices, edges}) {
             sx={{
                 width: canvasWidth,
                 height: canvasWidth,
-                border: 1,
+                m: 3,
                 position: 'relative'
             }}
         >
             {/* <Box width={20} height={20} border={1} position={'relative'} top={center - 10} left={center - 10}></Box> */}
             { verticesCoords.map((coord, index) => <NormalNode nodeName={`${graphName}-${index}`} nodeRadius={nodeRadius} value={vertices[index]} top={coord[1]} left={coord[0]}/>)}
+            {/* { Object.entries(edges).map((edgePairs) => )} */}
         </Box>
     )
 }
