@@ -641,7 +641,7 @@ function EF1Display({numVertices, states}) {
         return (
             <Box>
                 <Explanation num={num} type={type} state={state}/>
-                <Graph vertices={v} edges={state['envyGraph']}/>
+                <Graph vertices={v} edges={state['envyGraph']} figure={num} numOffset={1}/>
             </Box>
         )
     }
@@ -717,7 +717,8 @@ function ef1(utilities) {
         states.push({
             type: 'assignment',
             agent: noEnvyAgent+1,
-            item: item+1
+            item: item+1,
+            envyGraph: G
         })
         relativeUtils[noEnvyAgent][noEnvyAgent] += utilities[noEnvyAgent][item]
         // 6. Step 5 may have caused rise in new envy. If so, this would only be targeted towards the agent who received the item. Update G to reflect the changes
@@ -745,7 +746,8 @@ function ef1(utilities) {
         while(cycle) {
             states.push({
                 type: 'cycle',
-                cycle
+                cycle,
+                envyGraph: G
             })
             // While there is a cycle in G, repeat step 7
             // Exchange of allocations

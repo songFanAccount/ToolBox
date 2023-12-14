@@ -419,9 +419,7 @@ function NormalNode({nodeName, nodeRadius=16, ml=0, mr=0, color, value, top, lef
         </Box>
     )
 }
-export function Graph({graphName="G", vertices, edges}) {
-    console.log(vertices)
-    console.log(edges)
+export function Graph({graphName="G", vertices, edges, figure=0, numOffset=0}) {
     const canvasWidth = 150
     const nodeRadius = 16
     const center = canvasWidth / 2
@@ -439,7 +437,6 @@ export function Graph({graphName="G", vertices, edges}) {
         return coords
     }
     const verticesCoords = generateCoords()
-    console.log(verticesCoords)
     return (
         <Box
             sx={{
@@ -450,8 +447,10 @@ export function Graph({graphName="G", vertices, edges}) {
             }}
         >
             {/* <Box width={20} height={20} border={1} position={'relative'} top={center - 10} left={center - 10}></Box> */}
-            { verticesCoords.map((coord, index) => <NormalNode nodeName={`${graphName}-${index}`} nodeRadius={nodeRadius} value={vertices[index]} top={coord[1]} left={coord[0]}/>)}
-            {/* { Object.entries(edges).map((edgePairs) => )} */}
+            { verticesCoords.map((coord, index) => <NormalNode nodeName={`${graphName}-${vertices[index]}$${figure}`} nodeRadius={nodeRadius} value={vertices[index]+numOffset} top={coord[1]} left={coord[0]}/>)}
+            { edges && Object.entries(edges).map((edgePairs) => {
+                return Array.from(edgePairs[1]).map((toNode) => <Arrow start={`${graphName}-${edgePairs[0]}$${figure}`} end={`${graphName}-${toNode}$${figure}`} lineID={`${graphName}-${edgePairs[0]},${toNode}$${figure}`}/>)
+            })}
         </Box>
     )
 }
