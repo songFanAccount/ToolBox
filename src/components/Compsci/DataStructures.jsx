@@ -9,7 +9,7 @@ import { degToRad } from '../../helpers/generalHelpers';
 export function DisplayError({errorMsg}) {
     return <PageParagraph text={`>> ${errorMsg}`} bold/>
 }
-const Arrow = ({start, end, lineID, showHead=false, zIndex=-1, startAnchor="middle", endAnchor="middle", startOffset={x: 0, y: 0}, endOffset={x: 0, y: 0}}) => {
+const Arrow = ({start, end, lineID, showHead=false, zIndex=-1, startAnchor="middle", endAnchor="middle", startOffset={x: 0, y: 0}, endOffset={x: 0, y: 0}, color="black"}) => {
     const startA = {
         position: startAnchor,
         offset: startOffset
@@ -20,11 +20,11 @@ const Arrow = ({start, end, lineID, showHead=false, zIndex=-1, startAnchor="midd
     }
     return (
         <Box zIndex={zIndex} className={lineID}>
-            <Xarrow zIndex={-1} strokeWidth={1} color="black" start={start} end={end} path="straight" showHead={showHead} startAnchor={startA} endAnchor={endA} headSize={7}/>
+            <Xarrow zIndex={zIndex} strokeWidth={1} color={color} start={start} end={end} path="straight" showHead={showHead} startAnchor={startA} endAnchor={endA} headSize={7}/>
         </Box>
     )
 }
-const DirectedArrow = ({start, end, lineID, coordsStart, coordsEnd, nodeRadius=16}) => {
+const DirectedArrow = ({start, end, lineID, coordsStart, coordsEnd, nodeRadius=16, color}) => {
     // From the end coords, find the x and y offsets to make the arrow end at the radius of the node.
     const xDir = coordsEnd[0] > coordsStart[0] ? -1 : 1
     const yDir = coordsEnd[1] > coordsStart[1] ? -1 : 1
@@ -32,7 +32,7 @@ const DirectedArrow = ({start, end, lineID, coordsStart, coordsEnd, nodeRadius=1
     const theta = Math.abs(Math.atan(m))
     const xOffset = nodeRadius * Math.cos(theta) * xDir
     const yOffset = nodeRadius * Math.sin(theta) * yDir
-    return <Arrow start={start} end={end} lineID={lineID} showHead endOffset={{x: xOffset, y: yOffset}}/>
+    return <Arrow start={start} end={end} lineID={lineID} showHead endOffset={{x: xOffset, y: yOffset}} color={color} zIndex={color ? 0 : -1}/>
 }
 /*
 Use this for an input array of already created DOMs
@@ -439,7 +439,7 @@ function NormalNode({nodeName, nodeRadius=16, ml=0, mr=0, color, value, top, lef
         </Box>
     )
 }
-export function Graph({graphName="G", vertices, edges, figure=0, numOffset=0, directed=false, nodeRadius=16}) {
+export function Graph({graphName="G", vertices, edges, figure=0, numOffset=0, directed=false, nodeRadius=16, colors}) {
     const canvasWidth = 150
     const center = canvasWidth / 2
     function generateCoords() {
@@ -467,13 +467,22 @@ export function Graph({graphName="G", vertices, edges, figure=0, numOffset=0, di
         >
             {/* <Box width={20} height={20} border={1} position={'relative'} top={center - 10} left={center - 10}></Box> */}
             { Object.entries(verticesCoords).map((vertexPairs) => <NormalNode nodeName={`${graphName}-${vertexPairs[0]}$${figure}`} nodeRadius={nodeRadius} value={parseInt(vertexPairs[0])+numOffset} top={vertexPairs[1][1]} left={vertexPairs[1][0]}/>)}
-            { !directed && edges && Object.entries(edges).map((edgePairs) => {
-                return Array.from(edgePairs[1]).map((toNode) => <Arrow start={`${graphName}-${edgePairs[0]}$${figure}`} end={`${graphName}-${toNode}$${figure}`} lineID={`${graphName}-${edgePairs[0]},${toNode}$${figure}`}/>)
+            { edges && Object.entries(edges).map((edgePairs) => {
+                return Array.from(edgePairs[1]).map((toNode) => {
+                    const startName = `${graphName}-${edgePairs[0]}$${figure}`
+                    const endName = `${graphName}-${toNode}$${figure}`
+                    const lineID = `${graphName}-${edgePairs[0]},${toNode}$${figure}`
+                    const color = colors?.[edgePairs[0]]?.[toNode]
+                    return (
+                        directed 
+                        ?
+                        <DirectedArrow start={startName} end={endName} lineID={lineID} nodeRadius={nodeRadius} coordsStart={verticesCoords[edgePairs[0]]} coordsEnd={verticesCoords[toNode]} color={color}/>
+                        :
+                        <Arrow start={startName} end={endName} lineID={lineID} color={color}/>
+                    )
+                }
+                )
             })}
-            { directed && edges && Object.entries(edges).map((edgePairs) => {
-                return Array.from(edgePairs[1]).map((toNode) => <DirectedArrow start={`${graphName}-${edgePairs[0]}$${figure}`} end={`${graphName}-${toNode}$${figure}`} lineID={`${graphName}-${edgePairs[0]},${toNode}$${figure}`} nodeRadius={nodeRadius} coordsStart={verticesCoords[edgePairs[0]]} coordsEnd={verticesCoords[toNode]}/>)
-            })
-            }
         </Box>
     )
 }

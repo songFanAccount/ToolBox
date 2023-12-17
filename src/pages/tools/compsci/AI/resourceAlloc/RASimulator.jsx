@@ -624,8 +624,8 @@ function EF1Display({numVertices, states}) {
             return <PageParagraph text={`${num+1}. No one has envy towards agent ${state['agent']}, assign them next item ${state['item']}.`}/>
         } else if (type === 'cycle') {
             let cycleStr = ''
-            for (const agent of state['cycle']) cycleStr += `${agent} \\rightarrow `
-            cycleStr += `${state['cycle'][0]}`
+            for (const agent of state['cycle']) cycleStr += `${agent+1} \\rightarrow `
+            cycleStr += `${state['cycle'][0] + 1}`
             return (
                 <Box>
                     <PageParagraph text={`${num+1}. Cycle detected: `}/>
@@ -638,10 +638,24 @@ function EF1Display({numVertices, states}) {
     }
     const State = ({num, state}) => {
         const type = state['type']
+        let colors = null
+        if (type === 'cycle') {
+            colors = {}
+            const cycle = state['cycle']
+            for (let i = 0; i < cycle.length; i++) {
+                if (i === cycle.length - 1) {
+                    colors[cycle[i]] = {}
+                    colors[cycle[i]][cycle[0]] = 'red'
+                } else { 
+                    colors[cycle[i]] = {}
+                    colors[cycle[i]][cycle[i+1]] = 'red'
+                }
+            }
+        }
         return (
             <Box>
                 <Explanation num={num} type={type} state={state}/>
-                <Graph vertices={v} edges={state['envyGraph']} figure={num} numOffset={1} directed/>
+                <Graph vertices={v} edges={state['envyGraph']} figure={num} numOffset={1} directed colors={colors}/>
             </Box>
         )
     }
