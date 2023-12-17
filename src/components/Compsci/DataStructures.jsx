@@ -9,11 +9,24 @@ import { degToRad } from '../../helpers/generalHelpers';
 export function DisplayError({errorMsg}) {
     return <PageParagraph text={`>> ${errorMsg}`} bold/>
 }
-const Arrow = ({start, end, lineID}) => (
-    <Box zIndex={-1} className={lineID}>
-        <Xarrow zIndex={-1} strokeWidth={1} color="black" start={start} end={end} path="straight" showHead={false} startAnchor="middle" endAnchor="middle"/>
-    </Box>
-)
+const Arrow = ({start, end, lineID, showHead=false, zIndex=-1, startAnchor="middle", endAnchor="middle", startOffset={x: 0, y: 0}, endOffset={x: 0, y: 0}}) => {
+    const startA = {
+        position: startAnchor,
+        offset: startOffset
+    }
+    const endA = {
+        position: endAnchor,
+        offset: endOffset
+    }
+    return (
+        <Box zIndex={zIndex} className={lineID}>
+            <Xarrow zIndex={-1} strokeWidth={1} color="black" start={start} end={end} path="straight" showHead={showHead} startAnchor={startA} endAnchor={endA} headSize={7}/>
+        </Box>
+    )
+}
+const DirectedArrow = ({start, end, lineID, coordsStart, coordsEnd, nodeRadius=16}) => {
+    
+}
 /*
 Use this for an input array of already created DOMs
 */
@@ -419,12 +432,11 @@ function NormalNode({nodeName, nodeRadius=16, ml=0, mr=0, color, value, top, lef
         </Box>
     )
 }
-export function Graph({graphName="G", vertices, edges, figure=0, numOffset=0}) {
+export function Graph({graphName="G", vertices, edges, figure=0, numOffset=0, directed=false, nodeRadius=16}) {
     const canvasWidth = 150
-    const nodeRadius = 16
     const center = canvasWidth / 2
     function generateCoords() {
-        const coords = []
+        const coords = {}
         const numVertices = vertices.length
         const angleBetween = 360*1.0 / numVertices
         for (let i = 0; i < numVertices; i++) {
@@ -432,11 +444,16 @@ export function Graph({graphName="G", vertices, edges, figure=0, numOffset=0}) {
             const yOffset = Math.sin(degToRad(i * angleBetween)) * canvasWidth / 2
             const x = center + xOffset
             const y = center + yOffset
-            coords.push([x,y])
+            coords[vertices[i]] = [x,y]
         }
         return coords
     }
     const verticesCoords = generateCoords()
+    function generateOffsets(start, end) {
+        const startCoords = verticesCoords[start]
+        const endCoords = verticesCoords[end]
+
+    }
     return (
         <Box
             sx={{
@@ -447,9 +464,9 @@ export function Graph({graphName="G", vertices, edges, figure=0, numOffset=0}) {
             }}
         >
             {/* <Box width={20} height={20} border={1} position={'relative'} top={center - 10} left={center - 10}></Box> */}
-            { verticesCoords.map((coord, index) => <NormalNode nodeName={`${graphName}-${vertices[index]}$${figure}`} nodeRadius={nodeRadius} value={vertices[index]+numOffset} top={coord[1]} left={coord[0]}/>)}
+            { Object.entries(verticesCoords).map((vertexPairs) => <NormalNode nodeName={`${graphName}-${vertexPairs[0]}$${figure}`} nodeRadius={nodeRadius} value={parseInt(vertexPairs[0])+numOffset} top={vertexPairs[1][1]} left={vertexPairs[1][0]}/>)}
             { edges && Object.entries(edges).map((edgePairs) => {
-                return Array.from(edgePairs[1]).map((toNode) => <Arrow start={`${graphName}-${edgePairs[0]}$${figure}`} end={`${graphName}-${toNode}$${figure}`} lineID={`${graphName}-${edgePairs[0]},${toNode}$${figure}`}/>)
+                return Array.from(edgePairs[1]).map((toNode) => <Arrow start={`${graphName}-${edgePairs[0]}$${figure}`} end={`${graphName}-${toNode}$${figure}`} lineID={`${graphName}-${edgePairs[0]},${toNode}$${figure}`} showHead={directed}/>)
             })}
         </Box>
     )

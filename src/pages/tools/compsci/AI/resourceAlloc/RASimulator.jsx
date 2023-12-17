@@ -641,7 +641,7 @@ function EF1Display({numVertices, states}) {
         return (
             <Box>
                 <Explanation num={num} type={type} state={state}/>
-                <Graph vertices={v} edges={state['envyGraph']} figure={num} numOffset={1}/>
+                <Graph vertices={v} edges={state['envyGraph']} figure={num} numOffset={1} directed/>
             </Box>
         )
     }
