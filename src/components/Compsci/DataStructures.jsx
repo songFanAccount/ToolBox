@@ -25,7 +25,14 @@ const Arrow = ({start, end, lineID, showHead=false, zIndex=-1, startAnchor="midd
     )
 }
 const DirectedArrow = ({start, end, lineID, coordsStart, coordsEnd, nodeRadius=16}) => {
-    
+    // From the end coords, find the x and y offsets to make the arrow end at the radius of the node.
+    const xDir = coordsEnd[0] > coordsStart[0] ? -1 : 1
+    const yDir = coordsEnd[1] > coordsStart[1] ? -1 : 1
+    const m = (coordsEnd[1] - coordsStart[1]) / (coordsEnd[0] - coordsStart[0])
+    const theta = Math.abs(Math.atan(m))
+    const xOffset = nodeRadius * Math.cos(theta) * xDir
+    const yOffset = nodeRadius * Math.sin(theta) * yDir
+    return <Arrow start={start} end={end} lineID={lineID} showHead endOffset={{x: xOffset, y: yOffset}}/>
 }
 /*
 Use this for an input array of already created DOMs
@@ -449,11 +456,6 @@ export function Graph({graphName="G", vertices, edges, figure=0, numOffset=0, di
         return coords
     }
     const verticesCoords = generateCoords()
-    function generateOffsets(start, end) {
-        const startCoords = verticesCoords[start]
-        const endCoords = verticesCoords[end]
-
-    }
     return (
         <Box
             sx={{
@@ -465,9 +467,13 @@ export function Graph({graphName="G", vertices, edges, figure=0, numOffset=0, di
         >
             {/* <Box width={20} height={20} border={1} position={'relative'} top={center - 10} left={center - 10}></Box> */}
             { Object.entries(verticesCoords).map((vertexPairs) => <NormalNode nodeName={`${graphName}-${vertexPairs[0]}$${figure}`} nodeRadius={nodeRadius} value={parseInt(vertexPairs[0])+numOffset} top={vertexPairs[1][1]} left={vertexPairs[1][0]}/>)}
-            { edges && Object.entries(edges).map((edgePairs) => {
-                return Array.from(edgePairs[1]).map((toNode) => <Arrow start={`${graphName}-${edgePairs[0]}$${figure}`} end={`${graphName}-${toNode}$${figure}`} lineID={`${graphName}-${edgePairs[0]},${toNode}$${figure}`} showHead={directed}/>)
+            { !directed && edges && Object.entries(edges).map((edgePairs) => {
+                return Array.from(edgePairs[1]).map((toNode) => <Arrow start={`${graphName}-${edgePairs[0]}$${figure}`} end={`${graphName}-${toNode}$${figure}`} lineID={`${graphName}-${edgePairs[0]},${toNode}$${figure}`}/>)
             })}
+            { directed && edges && Object.entries(edges).map((edgePairs) => {
+                return Array.from(edgePairs[1]).map((toNode) => <DirectedArrow start={`${graphName}-${edgePairs[0]}$${figure}`} end={`${graphName}-${toNode}$${figure}`} lineID={`${graphName}-${edgePairs[0]},${toNode}$${figure}`} nodeRadius={nodeRadius} coordsStart={verticesCoords[edgePairs[0]]} coordsEnd={verticesCoords[toNode]}/>)
+            })
+            }
         </Box>
     )
 }
