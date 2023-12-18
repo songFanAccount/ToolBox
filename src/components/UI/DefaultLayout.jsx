@@ -7,6 +7,7 @@ import Header from './Header/Header';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { HashLink } from 'react-router-hash-link';
 
 function DefaultLayout() {
     /*
@@ -346,14 +347,14 @@ export function getCategoryInfoPath(cat) {
     // Assumes has ^^^
     return categoryNameToPath[cat]
 }
-export function CategoryLink({name, linkText, textDecoration='underline', fs='inherit', color='#011627', onClick = () => window.scrollTo(0,0)}) {
+export function CategoryLink({name, linkText, textDecoration='underline', fs='inherit', color='#011627', toSection='', onClick = () => window.scrollTo(0,0)}) {
     const categoryPath = categoryNameToPath[name]
     if(!categoryPath) {throw new Error("No matching category for given name!")}
     return (
         <Link
-            component={RouterLink}
-            to={categoryPath}
-            onClick={onClick}
+            component={toSection === '' ? RouterLink : HashLink}
+            smooth to={`${categoryPath}${toSection}`}
+            onClick={toSection === '' ? onClick : null}
             sx={{
                 fontFamily: 'Verdana',
                 color:color,

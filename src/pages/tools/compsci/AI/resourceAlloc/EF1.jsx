@@ -14,7 +14,7 @@ export default function EF1() {
           Lipton et al.'s algorithm
           </ExternalLink>
           <PageParagraph text=" that produces an "/>
-          <CategoryLink name="Resource Allocation" linkText="EF1"/>
+          <CategoryLink name="Resource Allocation" linkText="EF1" toSection="#EF1 Fairness"/>
           <PageParagraph text=" allocation, "/>
           <Latex>$X$</Latex>
           <PageParagraph text=", under any preference settings."/>
