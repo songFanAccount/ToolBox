@@ -28,10 +28,17 @@ const DirectedArrow = ({start, end, lineID, coordsStart, coordsEnd, nodeRadius=1
     // From the end coords, find the x and y offsets to make the arrow end at the radius of the node.
     const xDir = coordsEnd[0] > coordsStart[0] ? -1 : 1
     const yDir = coordsEnd[1] > coordsStart[1] ? -1 : 1
-    const m = (coordsEnd[1] - coordsStart[1]) / (coordsEnd[0] - coordsStart[0])
-    const theta = Math.abs(Math.atan(m))
-    const xOffset = nodeRadius * Math.cos(theta) * xDir
-    const yOffset = nodeRadius * Math.sin(theta) * yDir
+    const diffX = coordsEnd[0] - coordsStart[0]
+    let xOffset, yOffset
+    if (diffX === 0) {
+        xOffset = 0
+        yOffset = nodeRadius * yDir
+    } else {
+        const m = (coordsEnd[1] - coordsStart[1]) / diffX
+        const theta = Math.abs(Math.atan(m))
+        xOffset = nodeRadius * Math.cos(theta) * xDir
+        yOffset = nodeRadius * Math.sin(theta) * yDir
+    }
     return <Arrow start={start} end={end} lineID={lineID} showHead endOffset={{x: xOffset, y: yOffset}} color={color} zIndex={color ? 0 : -1}/>
 }
 /*
