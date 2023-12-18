@@ -619,7 +619,7 @@ function EF1Display({numVertices, states}) {
     const v = Array.from(Array(numVertices).keys())
     const Explanation = ({num, type, state}) => {
         if (type === 'initial') {
-            return <PageParagraph text={`${num+1}. Initially, no items are allocated, so there is no envy.`}/>
+            return <PageParagraph text={`${num+1}. Initially, no items are allocated, and therefore also no envy.`}/>
         } else if (type === 'assignment') {
             return <PageParagraph text={`${num+1}. No one has envy towards agent ${state['agent']}, assign them next item ${state['item']}.`}/>
         } else if (type === 'cycle') {
@@ -632,6 +632,10 @@ function EF1Display({numVertices, states}) {
                     <Latex>{`$${cycleStr}$`}</Latex>
                 </Box>
             )
+        } else if (type === 'postCycle') {
+            return <PageParagraph text={`${num+1}. The above cycle is removed by exchanging bundles along the cycle: `}/>
+        } else if (type === 'done') {
+            return <PageParagraph text={`${num+1}. All items are now assigned without violating EF1. Refer back to the preference table to see the obtained allocation.`}/>
         } else {
             return <></>
         }
@@ -655,7 +659,7 @@ function EF1Display({numVertices, states}) {
         return (
             <Box>
                 <Explanation num={num} type={type} state={state}/>
-                <Graph vertices={v} edges={state['envyGraph']} figure={num} numOffset={1} directed colors={colors}/>
+                { type !== 'done' && <Graph vertices={v} edges={state['envyGraph']} figure={num} numOffset={1} directed colors={colors}/> }
             </Box>
         )
     }
@@ -724,6 +728,7 @@ function ef1(utilities) {
         for (let i = 0; i < n; i++) {
             if (!someoneEnviousOfList.has(i)) {
                 noEnvyAgent = i
+                break
             }
         }
         // 5. Allocate current item to this agent
@@ -790,10 +795,17 @@ function ef1(utilities) {
                 }
                 G[agentI] = iEnvyList
             }
+            states.push({
+                type: 'postCycle',
+                envyGraph: {...G}
+            })
             // Keep going until no cycles left
             cycle = findCycle(G)
         }
     }
+    states.push({
+        type: 'done'
+    })
     return {
         'allocation': X,
         'states': states
