@@ -7,7 +7,7 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Latex from 'react-latex-next';
 import { TBDoubleSizedSwitch, TBText } from '../../../../../components/GeneralComponents';
-import { PageParagraph, TBButton } from '../../../../../components/UI/DefaultLayout';
+import { CollapseSectionBox, PageParagraph, TBButton } from '../../../../../components/UI/DefaultLayout';
 import { InlineMath } from 'react-katex';
 import { findCycle } from '../../../../../helpers/graphHelpers';
 import { Graph } from '../../../../../components/Compsci/DataStructures';
@@ -610,7 +610,11 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                 { showPropertyValues && <PropertyValues/> }
             </Stack>
             { (showControlBoard || modifiable) && <ControlBoard/> }
-            { algorithm === 'EF1' && <EF1Display numVertices={numAgents} states={ef1steps}/>}
+            {algorithm === 'EF1' && 
+                <CollapseSectionBox title="Algorithm steps:">
+                    <EF1Display numVertices={numAgents} states={ef1steps}/>
+                </CollapseSectionBox>
+            }
         </Stack>
     )
 }
