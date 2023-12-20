@@ -632,7 +632,7 @@ function EF1Display({numVertices, states}) {
             cycleStr += `${state['cycle'][0] + 1}`
             return (
                 <Box>
-                    <PageParagraph text={`${num+1}. Cycle detected: `}/>
+                    <PageParagraph text={`${num+1}. Cycle detected in envy graph: `}/>
                     <Latex>{`$${cycleStr}$`}</Latex>
                 </Box>
             )
