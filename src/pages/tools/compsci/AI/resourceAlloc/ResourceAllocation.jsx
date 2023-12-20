@@ -724,15 +724,30 @@ export default function ResourceAllocation() {
                         <Latex>{`$$X_i\\succeq_i X_j\\setminus \\{o\\}.$$`}</Latex>
                     </Box>
                     <PageParagraph text="that is, no agents are envious of any other agents' bundles, or if they are, this envy can be nullified by ignoring 1 item in the other agents' bundle. "/>
-                        {/* TODO: Example*/}
+                    <PageParagraph text="Example:"/>
+                    <RASimulator 
+                        modifiable={false} showControlBoard={false} showPropertyValues={false}
+                        allocationName='X'
+                        utilities={[[10, 20, 15], [10, 5, 20]]} 
+                        allocations={[
+                            new Set([0,1]),
+                            new Set([2])
+                        ]}
+                    />
+                    <PageParagraph text=""/>
                     <PageTextList
                         listName="Tools:"
                         list={[
                             <ToolLink name="EF1" linkText="EF1 allocation generator"/>
                         ]}
                     />
-                        <PageParagraph text=" "/>
-                        <PageParagraph text=" "/>
+                    <PageTextList
+                        listName="Important notes:"
+                        list={[
+                            <PageParagraph text="Envy-freeness implies EF1 fairness."/>,
+                            <PageParagraph text="An EF1 allocation always exists and can be computed in polynomial time."/>
+                        ]}
+                    />
                 </CollapseSectionBox>
             </SectionBox>
         </SectionBox>
