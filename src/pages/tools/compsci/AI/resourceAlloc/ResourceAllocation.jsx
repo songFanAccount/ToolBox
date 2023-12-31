@@ -749,6 +749,40 @@ export default function ResourceAllocation() {
                         ]}
                     />
                 </CollapseSectionBox>
+                <CollapseSectionBox title="Strategyproofness" titleFs={18} startClosed>
+                    <Box>
+                        <PageParagraph text="An allocation rule, "/>
+                        <Latex>$f,$</Latex>
+                        <PageParagraph text=" is strategyproof if agents are unable to manipulate the resulting allocations in favour of their own preferences. "/>
+                    </Box>
+                    <Box>
+                        <PageParagraph text="More formally, consider a setting with "/>
+                        <Latex>$n$</Latex>
+                        <PageParagraph text=" agents, where "/>
+                        <Latex>$\succeq_1, ..., \succeq_n$</Latex>
+                        <PageParagraph text=" represent the agents' preferences/utility functions over the "/>
+                        <Latex>$m$</Latex>
+                        <PageParagraph text=" items. Note that these represent the agents' REAL preferences, meaning that the agents can misreport their preferences if they wish to. In this setting, the allocation outcome is given by "/>
+                        <Latex>$f(\succeq_1, ..., \succeq_i, ..., \succeq_n)$</Latex>
+                        <PageParagraph text=". Now suppose some agent "/>
+                        <Latex>$i$</Latex>
+                        <PageParagraph text=" misreports their preferences as "/>
+                        <Latex>{`$\\succeq_i^{'}$`}</Latex>
+                        <PageParagraph text=", which is some other utility function over the items, instead of their real preferences "/>
+                        <Latex>$\succeq_i$</Latex>
+                        <PageParagraph text=", and consequentially changes the allocation outcome such that agent "/>
+                        <Latex>$i$</Latex>
+                        <PageParagraph text=" is strictly better off, that is, "/>
+                        <Latex>{`$f(\\succeq_1, ..., \\succeq_i^{'}, ..., \\succeq_n) \\succ_i f(\\succeq_1, ..., \\succeq_i, ..., \\succeq_n)$`}</Latex>
+                        <PageParagraph text=". As a result, the allocation rule is therefore vulnerable to exploitation and manipulation, and we consider "/>
+                        <Latex>$f$</Latex>
+                        <PageParagraph text=" to be not strategyproof."/>
+                    </Box>
+                    <PageParagraph text="Example:"/>
+                    <Box>
+                        <PageParagraph text="Consider an allocation rule that maximises utilitarian social welfare. To recap, this means that each item is allocated to the agent that gains the most utility from that item. Then, it is easy to see that an agent is more likely to receive any item simply by reporting that it is worth more to them than it actually does. Agents can set all utilities to be infinitely high, and theoretically be allocated all items, which is clearly unfair."/>
+                    </Box>
+                </CollapseSectionBox>
             </SectionBox>
         </SectionBox>
     )
