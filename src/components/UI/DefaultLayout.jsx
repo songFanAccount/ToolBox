@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, IconButton, Link, List, ListItemText, Collapse, Typography, useMediaQuery, Button, Stack, Alert, AlertTitle } from '@mui/material';
-import { Outlet, Link as RouterLink } from 'react-router-dom';
+import { Outlet, Link as RouterLink, useLocation } from 'react-router-dom';
 import { ToastContainer, Slide } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import Header from './Header/Header';
@@ -98,7 +98,13 @@ export function SectionBox({title, noBorder, children, usePageTitle, mb=2, rowGa
 
 export function CollapseSectionBox({title, titleFs, children, startClosed, usePageTitle}) {
     if(!title) {throw new Error("CollapseSectionBox: Cannot be collapsible without title!")}
-    const [open, setOpen] = React.useState(startClosed ? false : true)
+    let initState = startClosed ? false : true
+    const location = useLocation()
+    if (location.hash !== "") {
+        const sectionStr = location.hash.slice(1)
+        if (sectionStr === title) initState = true
+    }
+    const [open, setOpen] = React.useState(initState)
     function handleClick() {
         setOpen(!open)
     }

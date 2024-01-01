@@ -47,6 +47,32 @@ export default function SPDA() {
 						</Box>,
 					]}
 				/>
+				<PageTextList 
+					listName="Student Proposing DA produces an allocation that satisfies the following properties:"
+					list={[
+						<Box>
+							<PageParagraph text="The allocation satisfies "/>
+							<PageParagraph bold text="justified envy-freeness"/>
+							<PageParagraph text=" (Roth and Sotomayor [1990]): An agent "/>
+							<Latex>$i$</Latex>
+							<PageParagraph text=" has justified envy towards an agent "/>
+							<Latex>$j$</Latex>
+							<PageParagraph text=" if "/>
+							<Latex>$i$</Latex>
+							<PageParagraph text=" is envious of "/>
+							<Latex>$j$</Latex>
+							<PageParagraph text="'s allocated school "/>
+							<Latex>$c$</Latex>
+							<PageParagraph text=", AND, the school "/>
+							<Latex>$c$</Latex>
+							<PageParagraph text=" also prefers agent "/>
+							<Latex>$j$</Latex>
+							<PageParagraph text=" more than agent "/>
+							<Latex>$i.$</Latex>
+						</Box>,
+						<CategoryLink name="Resource Allocation" linkText="Strategyproof" toSection="#Strategyproofness"/>
+					]}
+				/>
 			</SectionBox>
     </Box>
   )
