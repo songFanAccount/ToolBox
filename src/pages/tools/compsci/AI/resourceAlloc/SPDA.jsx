@@ -47,7 +47,8 @@ export default function SPDA() {
 						</Box>,
 					]}
 				/>
-				<PageTextList 
+				<PageTextList
+					mt={2}
 					listName="Student Proposing DA produces an allocation that satisfies the following properties:"
 					list={[
 						<Box>
@@ -70,9 +71,15 @@ export default function SPDA() {
 							<PageParagraph text=" more than agent "/>
 							<Latex>$i.$</Latex>
 						</Box>,
-						<CategoryLink name="Resource Allocation" linkText="Strategyproof" toSection="#Strategyproofness"/>
+						<Box>
+							<CategoryLink name="Resource Allocation" linkText="Strategyproof:" toSection="#Strategyproofness"/>
+							<PageParagraph text=" Additionally, the resulting allocation Pareto-dominates ALL other allocations that satisfy justified envy-freeness. However, since Student Proposing DA also takes into account the schools' preferences, this does not mean the allocation is necessarily Pareto-optimal with regards to only students' preferences."/>
+						</Box>
 					]}
 				/>
+			</SectionBox>
+			<SectionBox title="How it works">
+					
 			</SectionBox>
     </Box>
   )
