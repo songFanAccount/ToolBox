@@ -2,6 +2,7 @@ import { Box } from '@mui/material'
 import React from 'react'
 import { CategoryLink, ExternalLink, PageParagraph, PageTextList, SectionBox } from '../../../../../components/UI/DefaultLayout'
 import Latex from 'react-latex-next'
+import SCSimulator from './SCSimulator'
 
 export default function SPDA() {
   return (
@@ -79,7 +80,7 @@ export default function SPDA() {
 				/>
 			</SectionBox>
 			<SectionBox title="How it works">
-					
+					<SCSimulator/>
 			</SectionBox>
     </Box>
   )

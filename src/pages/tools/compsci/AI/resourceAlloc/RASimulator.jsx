@@ -11,22 +11,9 @@ import { CollapseSectionBox, PageParagraph, TBButton } from '../../../../../comp
 import { InlineMath } from 'react-katex';
 import { findCycle } from '../../../../../helpers/graphHelpers';
 import { Graph } from '../../../../../components/Compsci/DataStructures';
+import { TableBox } from '../../../../../helpers/Tables';
 
 const sqrWidth = 40
-const TableBox = ({contents, width, borderBottom}) => (
-    <Box
-        sx={{
-            width: width ? width : sqrWidth,
-            height: sqrWidth,
-            borderBottom: borderBottom,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-        }}
-    >
-        {contents}
-    </Box>
-)
 export default function RASimulator({allocationName='X', utilities, allocations, fixedMode=0, algorithm=null,
                                      modifiable=true, showPreferences=true, showAllocDetails=true, showControlBoard=true, showPropertyValues=true}) {
     const [numAgents, setNumAgents] = React.useState(utilities ? utilities.length : 0)

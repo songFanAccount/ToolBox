@@ -708,7 +708,7 @@ export default function ResourceAllocation() {
                         ]}
                     />
                 </CollapseSectionBox>
-                <CollapseSectionBox title="EF1 Fairness" titleFs={18} startClosed>
+                <CollapseSectionBox title="EF1-Fairness" titleFs={18} startClosed>
                     <Box>
                         <PageParagraph text="Given an instance "/>
                         <Latex>$I = (N, O, u)$</Latex>
