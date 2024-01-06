@@ -59,7 +59,8 @@ export default function SCSimulator() {
     if (numStudents >= 10) return
     setNumStudents(numStudents + 1)
     const newPrefs = [...studentPrefs]
-    newPrefs.push([])
+    const newPref = Array.from(Array(numSchools).keys())
+    newPrefs.push(newPref)
     setStudentPrefs(newPrefs)
   }
   function removeStudent() {
