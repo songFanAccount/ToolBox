@@ -17,6 +17,9 @@ export default function SCSimulator() {
 
   const squareWidth = 40
   /* Student preference table */
+  function prefMove(e) {
+    console.log(e)
+  }
   const StudentRows = () => {
     const nums = []
     const Row = ({studentIndex}) => {
@@ -25,7 +28,9 @@ export default function SCSimulator() {
           <TableBox borderRight={1} contents={<PageParagraph text={`${studentIndex+1}`}/>}/>
           {
             studentPrefs[studentIndex].map((value) => <TableBox contents={
-              <Draggable>
+              <Draggable
+                onStop={(e) => prefMove(e)}
+              >
                 <div>
                   <Latex>{`$c_{${value+1}}$`}</Latex>
                 </div>
@@ -48,8 +53,12 @@ export default function SCSimulator() {
   }
   const StudentPrefs = () => (
     <Stack direction="column">
-      <Stack direction="row">
+      <Stack direction="row" columnGap={1.5}>
         <TableBox borderRight={1}/>
+        <TableBox
+          width="fit-content"
+          contents={<PageParagraph text="Students' preferences"/>}
+        />
       </Stack>
       <StudentRows/>
     </Stack>
