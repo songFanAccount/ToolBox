@@ -12,7 +12,7 @@ import Latex from 'react-latex-next';
 
 export default function SCSimulator({initNumStudents=2, initNumSchools=2, initStudentPrefs}) {
   const [numStudents, setNumStudents] = React.useState(initNumStudents)
-  const [numSchools, setNumSchools] = React.useState(0)
+  const [numSchools, setNumSchools] = React.useState(initNumSchools)
   const sPrefs = []
   if (initStudentPrefs) sPrefs = initStudentPrefs
   else {
