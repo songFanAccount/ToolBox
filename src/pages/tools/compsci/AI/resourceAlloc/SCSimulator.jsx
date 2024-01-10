@@ -10,10 +10,18 @@ import { PageParagraph } from '../../../../../components/UI/DefaultLayout';
 import Draggable from 'react-draggable';
 import Latex from 'react-latex-next';
 
-export default function SCSimulator() {
-  const [numStudents, setNumStudents] = React.useState(0)
+export default function SCSimulator({initNumStudents=2, initNumSchools=2, initStudentPrefs}) {
+  const [numStudents, setNumStudents] = React.useState(initNumStudents)
   const [numSchools, setNumSchools] = React.useState(0)
-  const [studentPrefs, setStudentPrefs] = React.useState([])
+  const sPrefs = []
+  if (initStudentPrefs) sPrefs = initStudentPrefs
+  else {
+    for (let i = 0; i < initNumStudents; i++) {
+      const initPref = Array.from(Array(initNumSchools).keys())
+      sPrefs.push(initPref)
+    }
+  }
+  const [studentPrefs, setStudentPrefs] = React.useState(sPrefs)
 
   const squareWidth = 40
   /* Student preference table */
