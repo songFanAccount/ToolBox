@@ -27,6 +27,7 @@ export default function SCSimulator({initNumStudents=2, initNumSchools=2, initSt
   /* Student preference table */
   function prefMove(data, studentIndex, index) {
     let { x, y } = data
+    if (Math.abs(y) > squareWidth / 2) return
     const moveDir = Math.sign(x)
     x = Math.abs(x)
     if (x <= squareWidth / 2) return
@@ -92,6 +93,18 @@ export default function SCSimulator({initNumStudents=2, initNumSchools=2, initSt
       <StudentRows/>
     </Stack>
   )
+  const SchoolPrefs = () => (
+    <Stack direction="column">
+      <Stack direction="row" columnGap={1.5}>
+        <TableBox borderRight={1}/>
+        <TableBox
+          width="fit-content"
+          contents={<PageParagraph text="Schools' preferences"/>}
+        />
+      </Stack>
+      <StudentRows/>
+    </Stack>
+  )
   /* Control board */
   function addStudent() {
     if (numStudents >= 10) return
@@ -142,10 +155,12 @@ export default function SCSimulator({initNumStudents=2, initNumSchools=2, initSt
   }
   return (
     <Box>
-      <Stack direction="column" rowGap={2}>
+      <Stack direction="row" columnGap={2}>
         <StudentPrefs/>
-        <ControlBoard/>
+        <SchoolPrefs/>
       </Stack>
+      <br></br>
+      <ControlBoard/>
     </Box>
   )
 }
