@@ -25,8 +25,28 @@ export default function SCSimulator({initNumStudents=2, initNumSchools=2, initSt
 
   const squareWidth = 40
   /* Student preference table */
-  function prefMove(e) {
-    console.log(e)
+  function prefMove(data, studentIndex, index) {
+    let { x, y } = data
+    const moveDir = Math.sign(x)
+    x = Math.abs(x)
+    if (x <= squareWidth / 2) return
+    const squaresShifted =  Math.floor((x - squareWidth / 2) / squareWidth) + 1
+    const maxPossibleShift = moveDir === 1 ? numSchools - 1 - index : index
+    if (squaresShifted > maxPossibleShift) return
+    const studentNewPrefs = [...studentPrefs[studentIndex]]
+    const newIndex = index + moveDir * squaresShifted
+    const schoolMoved = studentNewPrefs[index]
+    for (let i = 0; i < squaresShifted; i++) {
+      const ind = index + moveDir * i
+      studentNewPrefs[ind] = studentNewPrefs[ind + moveDir]
+    }
+    studentNewPrefs[newIndex] = schoolMoved
+    const newStudentPrefs = []
+    for (let i = 0; i < numStudents; i++) {
+      if (i === studentIndex) newStudentPrefs.push(studentNewPrefs)
+      else newStudentPrefs.push(studentPrefs[i])
+    }
+    setStudentPrefs(newStudentPrefs)
   }
   const StudentRows = () => {
     const nums = []
@@ -35,9 +55,10 @@ export default function SCSimulator({initNumStudents=2, initNumSchools=2, initSt
         <Stack direction="row">
           <TableBox borderRight={1} contents={<PageParagraph text={`${studentIndex+1}`}/>}/>
           {
-            studentPrefs[studentIndex].map((value) => <TableBox contents={
+            studentPrefs[studentIndex].map((value, index) => <TableBox contents={
               <Draggable
-                onStop={(e) => prefMove(e)}
+                position={{x: 0, y: 0}}
+                onStop={(_, data) => prefMove(data, studentIndex, index)}
               >
                 <div>
                   <Latex>{`$c_{${value+1}}$`}</Latex>
