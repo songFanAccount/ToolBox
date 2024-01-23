@@ -89,7 +89,7 @@ export default function SCSimulator({initNumStudents=2, initNumSchools=2, initSt
         <Stack direction="row">
           <TableBox borderRight={1} contents={<PageParagraph text={`${studentIndex+1}`}/>}/>
           {
-            studentPrefs[studentIndex].map((value, index) => <TableBox contents={
+            studentPrefs[studentIndex].map((value, index) => <TableBox cursor="grab" contents={
               <Draggable
                 position={{x: 0, y: 0}}
                 onStop={(_, data) => studentPrefMove(data, studentIndex, index)}

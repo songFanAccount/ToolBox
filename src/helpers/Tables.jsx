@@ -2,7 +2,7 @@ import { Box } from '@mui/material'
 import React from 'react'
 
 const sqrWidth = 40
-export function TableBox({contents, width=sqrWidth, borderBottom, borderRight}) {
+export function TableBox({contents, width=sqrWidth, borderBottom, borderRight, cursor}) {
   return (
     <Box
         sx={{
@@ -13,6 +13,7 @@ export function TableBox({contents, width=sqrWidth, borderBottom, borderRight}) 
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
+            cursor: cursor
         }}
     >
         {contents}
