@@ -10,10 +10,10 @@ import { PageParagraph } from '../../../../../components/UI/DefaultLayout';
 import Draggable from 'react-draggable';
 import Latex from 'react-latex-next';
 
-export default function SCSimulator({initNumStudents=2, initNumSchools=2, initStudentPrefs}) {
+export default function SCSimulator({initNumStudents=2, initNumSchools=2, initStudentPrefs, initSchoolPrefs}) {
   const [numStudents, setNumStudents] = React.useState(initNumStudents)
   const [numSchools, setNumSchools] = React.useState(initNumSchools)
-  const sPrefs = []
+  let sPrefs = []
   if (initStudentPrefs) sPrefs = initStudentPrefs
   else {
     for (let i = 0; i < initNumStudents; i++) {
@@ -22,10 +22,19 @@ export default function SCSimulator({initNumStudents=2, initNumSchools=2, initSt
     }
   }
   const [studentPrefs, setStudentPrefs] = React.useState(sPrefs)
+  let scPrefs = []
+  if (initSchoolPrefs) scPrefs = initSchoolPrefs
+  else {
+    for (let i = 0; i < initNumSchools; i++) {
+      const initPref = Array.from(Array(initNumStudents).keys())
+      scPrefs.push(initPref)
+    }
+  }
+  const [schoolPrefs, setSchoolPrefs] = React.useState(scPrefs)
 
   const squareWidth = 40
   /* Student preference table */
-  function prefMove(data, studentIndex, index) {
+  function studentPrefMove(data, studentIndex, index) {
     let { x, y } = data
     if (Math.abs(y) > squareWidth / 2) return
     const moveDir = Math.sign(x)
@@ -49,8 +58,32 @@ export default function SCSimulator({initNumStudents=2, initNumSchools=2, initSt
     }
     setStudentPrefs(newStudentPrefs)
   }
+  function schoolPrefMove(data, schoolIndex, index) {
+    let { x, y } = data
+    if (Math.abs(y) > squareWidth / 2) return
+    const moveDir = Math.sign(x)
+    x = Math.abs(x)
+    if (x <= squareWidth / 2) return
+    const squaresShifted =  Math.floor((x - squareWidth / 2) / squareWidth) + 1
+    const maxPossibleShift = moveDir === 1 ? numStudents - 1 - index : index
+    if (squaresShifted > maxPossibleShift) return
+    const schoolNewPrefs = [...schoolPrefs[schoolIndex]]
+    const newIndex = index + moveDir * squaresShifted
+    const studentMoved = schoolNewPrefs[index]
+    for (let i = 0; i < squaresShifted; i++) {
+      const ind = index + moveDir * i
+      schoolNewPrefs[ind] = schoolNewPrefs[ind + moveDir]
+    }
+    schoolNewPrefs[newIndex] = studentMoved
+    const newSchoolPrefs = []
+    for (let i = 0; i < numSchools; i++) {
+      if (i === schoolIndex) newSchoolPrefs.push(schoolNewPrefs)
+      else newSchoolPrefs.push(schoolPrefs[i])
+    }
+    setSchoolPrefs(newSchoolPrefs)
+  }
   const StudentRows = () => {
-    const nums = []
+    const rows = []
     const Row = ({studentIndex}) => {
       return (
         <Stack direction="row">
@@ -59,7 +92,7 @@ export default function SCSimulator({initNumStudents=2, initNumSchools=2, initSt
             studentPrefs[studentIndex].map((value, index) => <TableBox contents={
               <Draggable
                 position={{x: 0, y: 0}}
-                onStop={(_, data) => prefMove(data, studentIndex, index)}
+                onStop={(_, data) => studentPrefMove(data, studentIndex, index)}
               >
                 <div>
                   <Latex>{`$c_{${value+1}}$`}</Latex>
@@ -71,13 +104,13 @@ export default function SCSimulator({initNumStudents=2, initNumSchools=2, initSt
       )
     }
     for (let i = 0; i < numStudents; i++) {
-      nums.push(
+      rows.push(
         <Row studentIndex={i}/>
       )
     }
     return (
       <Stack direction="column" borderTop={1}>
-        {nums}
+        {rows}
       </Stack>
     )
   }
@@ -93,6 +126,38 @@ export default function SCSimulator({initNumStudents=2, initNumSchools=2, initSt
       <StudentRows/>
     </Stack>
   )
+  const SchoolRows = () => {
+    const rows = []
+    const Row = ({schoolIndex}) => {
+      return (
+        <Stack direction="row">
+          <TableBox borderRight={1} contents={<Latex>{`$c_{${schoolIndex + 1}}$`}</Latex>}/>
+          {
+            schoolPrefs[schoolIndex].map((value, index) => <TableBox contents={
+              <Draggable
+                position={{x: 0, y: 0}}
+                onStop={(_, data) => schoolPrefMove(data, schoolIndex, index)}
+              >
+                <div>
+                  <PageParagraph text={`${value+1}`}/>
+                </div>
+              </Draggable>
+            }/>)
+          }
+        </Stack>
+      )
+    }
+    for (let i = 0; i < numSchools; i++) {
+      rows.push(
+        <Row schoolIndex={i}/>
+      )
+    }
+    return (
+      <Stack direction="column" borderTop={1}>
+        {rows}
+      </Stack>
+    )
+  }
   const SchoolPrefs = () => (
     <Stack direction="column">
       <Stack direction="row" columnGap={1.5}>
@@ -102,7 +167,7 @@ export default function SCSimulator({initNumStudents=2, initNumSchools=2, initSt
           contents={<PageParagraph text="Schools' preferences"/>}
         />
       </Stack>
-      <StudentRows/>
+      <SchoolRows/>
     </Stack>
   )
   /* Control board */
@@ -113,6 +178,13 @@ export default function SCSimulator({initNumStudents=2, initNumSchools=2, initSt
     const newPref = Array.from(Array(numSchools).keys())
     newPrefs.push(newPref)
     setStudentPrefs(newPrefs)
+    const newSchoolPrefs = []
+    for (let i = 0; i < numSchools; i++) {
+      const newSchoolPref = [...schoolPrefs[i]]
+      newSchoolPref.push(numStudents)
+      newSchoolPrefs.push(newSchoolPref)
+    }
+    setSchoolPrefs(newSchoolPrefs)
   }
   function removeStudent() {
     if (numStudents === 0) return
@@ -120,6 +192,13 @@ export default function SCSimulator({initNumStudents=2, initNumSchools=2, initSt
     const newPrefs = [...studentPrefs]
     newPrefs.pop()
     setStudentPrefs(newPrefs)
+    const newSchoolPrefs = []
+    for (let i = 0; i < numSchools; i++) {
+      const newScPref = [...schoolPrefs[i]]
+      newScPref.splice(newScPref.indexOf(numStudents - 1), 1)
+      newSchoolPrefs.push(newScPref)
+    }
+    setSchoolPrefs(newSchoolPrefs)
   }
   function addSchool() {
     if (numSchools >= 10) return
@@ -131,6 +210,10 @@ export default function SCSimulator({initNumStudents=2, initNumSchools=2, initSt
       newPrefs.push(newPref)
     }
     setStudentPrefs(newPrefs)
+    const newSchoolPrefs = [...schoolPrefs]
+    const newScPref = Array.from(Array(numStudents).keys())
+    newSchoolPrefs.push(newScPref)
+    setSchoolPrefs(newSchoolPrefs)
   }
   function removeSchool() {
     if (numSchools === 0) return
@@ -138,10 +221,13 @@ export default function SCSimulator({initNumStudents=2, initNumSchools=2, initSt
     const newPrefs = []
     for (let i = 0; i < numStudents; i++) {
       const newPref = [...studentPrefs[i]]
-      newPref.pop()
+      newPref.splice(newPref.indexOf(numSchools - 1), 1)
       newPrefs.push(newPref)
     }
     setStudentPrefs(newPrefs)
+    const newSchoolPrefs = [...schoolPrefs]
+    newSchoolPrefs.pop()
+    setSchoolPrefs(newSchoolPrefs)
   }
   const ControlBoard = () => {
     return (
