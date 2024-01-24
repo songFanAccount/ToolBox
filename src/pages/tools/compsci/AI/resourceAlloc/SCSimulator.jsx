@@ -31,6 +31,7 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
     }
   }
   const [schoolPrefs, setSchoolPrefs] = React.useState(scPrefs)
+  const [quotas, setQuotas] = React.useState(Array(initNumSchools).fill(1))
 
   const squareWidth = 40
   /* Student preference table */
@@ -126,6 +127,18 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
       <StudentRows/>
     </Stack>
   )
+  function incQuota(schoolIndex) {
+    if (quotas[schoolIndex] >= 10) return
+    const newQuotas = [...quotas]
+    newQuotas[schoolIndex]++
+    setQuotas(newQuotas)
+  }
+  function decQuota(schoolIndex) {
+    if (quotas[schoolIndex] <= 1) return
+    const newQuotas = [...quotas]
+    newQuotas[schoolIndex]--
+    setQuotas(newQuotas)
+  }
   const SchoolRows = () => {
     const rows = []
     const Row = ({schoolIndex}) => {
@@ -133,7 +146,7 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
         <Stack direction="row">
           <TableBox borderRight={1} contents={<Latex>{`$c_{${schoolIndex + 1}}$`}</Latex>}/>
           {
-            schoolPrefs[schoolIndex].map((value, index) => <TableBox contents={
+            schoolPrefs[schoolIndex].map((value, index) => <TableBox cursor="grab" contents={
               <Draggable
                 position={{x: 0, y: 0}}
                 onStop={(_, data) => schoolPrefMove(data, schoolIndex, index)}
@@ -144,6 +157,15 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
               </Draggable>
             }/>)
           }
+          <TableBox width="fit-content" contents={
+            <Stack direction="row" ml={1} alignItems="center" columnGap={2}>
+              <PageParagraph nowrap bold text={`Quota: ${quotas[schoolIndex]}`}/>
+              <Stack direction="row">
+                <CBIconButton onClick={() => incQuota(schoolIndex)} noBorder icon={<AddIcon />}/>
+                <CBIconButton onClick={() => decQuota(schoolIndex)} noBorder icon={<RemoveIcon />}/>
+              </Stack>
+            </Stack>
+          }/>
         </Stack>
       )
     }
@@ -214,6 +236,9 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
     const newScPref = Array.from(Array(numStudents).keys())
     newSchoolPrefs.push(newScPref)
     setSchoolPrefs(newSchoolPrefs)
+    const newQuotas = [...quotas]
+    newQuotas.push(1)
+    setQuotas(newQuotas)
   }
   function removeSchool() {
     if (numSchools === 0) return
@@ -228,6 +253,9 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
     const newSchoolPrefs = [...schoolPrefs]
     newSchoolPrefs.pop()
     setSchoolPrefs(newSchoolPrefs)
+    const newQuotas = [...quotas]
+    newQuotas.pop()
+    setQuotas(newQuotas)
   }
   const ControlBoard = () => {
     return (

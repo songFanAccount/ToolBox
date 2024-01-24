@@ -7,6 +7,7 @@ export function TableBox({contents, width=sqrWidth, borderBottom, borderRight, c
     <Box
         sx={{
             width: width ? width : sqrWidth,
+            minWidth: width ? width : sqrWidth,
             height: sqrWidth,
             borderBottom: borderBottom,
             borderRight: borderRight,

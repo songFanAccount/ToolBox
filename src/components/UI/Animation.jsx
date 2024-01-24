@@ -81,7 +81,7 @@ export function CBTextIconButton({text, endIcon, onClick, tooltip}) {
         </Tooltip>
     )
 }
-export function CBIconButton({icon, label, onClick, tooltip}) {
+export function CBIconButton({icon, label, onClick, tooltip, noBorder}) {
     return (
         <Tooltip title={tooltip}>
             <IconButton aria-label={label} disableRipple
@@ -92,10 +92,10 @@ export function CBIconButton({icon, label, onClick, tooltip}) {
                     scale: 0.9
                 }}
                 sx={{
-                    border: 2,
+                    border: noBorder ? 0 : 2,
                     borderColor: 'black',
                     color: 'black',
-                    '&:hover': {
+                    '&:hover': noBorder ? null : {
                         backgroundColor: 'black',
                         color: 'white',
                         borderColor: 'none'
