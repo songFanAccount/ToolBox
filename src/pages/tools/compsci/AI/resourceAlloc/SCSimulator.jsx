@@ -6,11 +6,11 @@ import PersonRemoveAlt1Icon from '@mui/icons-material/PersonRemoveAlt1';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { TableBox } from '../../../../../helpers/Tables';
-import { PageParagraph } from '../../../../../components/UI/DefaultLayout';
+import { CollapseSectionBox, PageParagraph, TBButton } from '../../../../../components/UI/DefaultLayout';
 import Draggable from 'react-draggable';
 import Latex from 'react-latex-next';
 
-export default function SCSimulator({initNumStudents=2, initNumSchools=2, initStudentPrefs, initSchoolPrefs}) {
+export default function SCSimulator({algorithm, initNumStudents=2, initNumSchools=2, initStudentPrefs, initSchoolPrefs}) {
   const [numStudents, setNumStudents] = React.useState(initNumStudents)
   const [numSchools, setNumSchools] = React.useState(initNumSchools)
   let sPrefs = []
@@ -239,14 +239,49 @@ export default function SCSimulator({initNumStudents=2, initNumSchools=2, initSt
       </ControlBoardBox>
     )
   }
+  function SPDA() {
+
+  }
+  const SPDADisplay = () => {
+
+  }
+  const AlgorithmButton = () => {
+    let buttonText = ""
+    let onClick
+    if (algorithm === 'SPDA') {
+      buttonText = 'Run SPDA'
+      onClick = SPDA
+    }
+    return (
+      <TBButton buttonText={buttonText} onClick={onClick} ml={0}/>
+    )
+  }
+  const AlgorithmDisplay = () => {
+    if (algorithm === 'SPDA') return <SPDADisplay/>
+    else return <></>
+  }
   return (
     <Box>
       <Stack direction="row" columnGap={2}>
         <StudentPrefs/>
         <SchoolPrefs/>
       </Stack>
+      { algorithm &&
+        <>
+          <br></br>
+          <AlgorithmButton/>
+        </>
+      }
       <br></br>
       <ControlBoard/>
+      { algorithm &&
+        <>
+          <br></br>
+          <CollapseSectionBox title="Algorithm Steps:">
+            <AlgorithmDisplay/>
+          </CollapseSectionBox>
+        </>
+      }
     </Box>
   )
 }

@@ -80,7 +80,7 @@ export default function SPDA() {
 				/>
 			</SectionBox>
 			<SectionBox title="How it works">
-					<SCSimulator/>
+				<SCSimulator algorithm="SPDA"/>
 			</SectionBox>
     </Box>
   )
