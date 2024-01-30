@@ -13,6 +13,7 @@ export function copyListOfSets(list) {
         const copySet = new Set()
         for (const el of ithSet) {
             copySet.add(el)
+            console.log('added ' + el)
         }
         copyList.push(copySet)
     }

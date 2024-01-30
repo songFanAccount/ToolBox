@@ -274,7 +274,10 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
     const states = []
     const assigned = Array(numStudents).fill(-1)
     const nextSchoolIndex = Array(numStudents).fill(0)
-    const curSchoolApplied = Array(numSchools).fill(new Set())
+    const curSchoolApplied = []
+    for (let i = 0; i < numSchools; i++) {
+      curSchoolApplied.push(new Set())
+    }
     while (true) {
       /* For all unassigned students, apply to the next most preferred school */
       const newApplicants = []
@@ -285,6 +288,7 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
           const schoolToApply = studentPrefs[i][nsi]
           curSchoolApplied[schoolToApply].add(i)
           nextSchoolIndex[i]++
+          assigned[i] = 1
           newApplicants.push(i)
         }
       }
@@ -300,7 +304,7 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
           const newApplicationList = new Set()
           for (const student of schoolPrefs[i]) {
             if (curSchoolApplied[i].has(student)) {
-              if (newApplicationList === quotas[i]) {
+              if (newApplicationList.size === quotas[i]) {
                 assigned[student] = -1
                 rejected.push(student)
               } else newApplicationList.add(student)
@@ -323,13 +327,14 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
     const Explanation = ({step, state}) => {
       const type = state['type']
       if (type === 'apply') {
+        
         return (
-          <PageParagraph text={`${step}. Students ${state['applicants']?.join(", ")} apply to their next most preferred school.`}/>
+          <PageParagraph text={`${step}. Students ${state['applicants']?.map((student) => student+1).join(", ")} apply to their next most preferred school.`}/>
         )
       } else if (type === 'reject') {
         console.log(state['rejectList'])
         return (
-          <PageParagraph text={`${step}. Students ${state['rejectList']?.join(", ")} are rejected by their applied school.`}/>
+          <PageParagraph text={`${step}. Students ${state['rejectList']?.map((student) => student+1).join(", ")} are rejected by their applied school.`}/>
         )
       }
     }
