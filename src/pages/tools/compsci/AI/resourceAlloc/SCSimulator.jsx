@@ -9,6 +9,7 @@ import { TableBox } from '../../../../../helpers/Tables';
 import { CollapseSectionBox, PageParagraph, TBButton } from '../../../../../components/UI/DefaultLayout';
 import Draggable from 'react-draggable';
 import Latex from 'react-latex-next';
+import { copyListOfSets } from '../../../../../helpers/generalHelpers';
 
 export default function SCSimulator({algorithm, initNumStudents=2, initNumSchools=2, initStudentPrefs, initSchoolPrefs}) {
   const [numStudents, setNumStudents] = React.useState(initNumStudents)
@@ -32,6 +33,8 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
   }
   const [schoolPrefs, setSchoolPrefs] = React.useState(scPrefs)
   const [quotas, setQuotas] = React.useState(Array(initNumSchools).fill(1))
+  /* Algorithm states */
+  const [SPDAsteps, setSPDAsteps] = React.useState(null)
 
   const squareWidth = 40
   /* Student preference table */
@@ -268,10 +271,96 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
     )
   }
   function SPDA() {
-
+    const states = []
+    const assigned = Array(numStudents).fill(-1)
+    const nextSchoolIndex = Array(numStudents).fill(0)
+    const curSchoolApplied = Array(numSchools).fill(new Set())
+    while (true) {
+      /* For all unassigned students, apply to the next most preferred school */
+      const newApplicants = []
+      for (let i = 0; i < numStudents; i++) {
+        if (assigned[i] === -1) {
+          const nsi = nextSchoolIndex[i]
+          if (nsi >= numSchools) continue
+          const schoolToApply = studentPrefs[i][nsi]
+          curSchoolApplied[schoolToApply].add(i)
+          nextSchoolIndex[i]++
+          newApplicants.push(i)
+        }
+      }
+      if (newApplicants.length === 0) break
+      states.push({
+        type: 'apply',
+        applicants: [...newApplicants],
+        applicationList: copyListOfSets(curSchoolApplied)
+      })
+      const rejected = []
+      for (let i = 0; i < numSchools; i++) {
+        if (curSchoolApplied[i].size > quotas[i]) {
+          const newApplicationList = new Set()
+          for (const student of schoolPrefs[i]) {
+            if (curSchoolApplied[i].has(student)) {
+              if (newApplicationList === quotas[i]) {
+                assigned[student] = -1
+                rejected.push(student)
+              } else newApplicationList.add(student)
+            }
+          }
+          curSchoolApplied[i] = newApplicationList
+        }
+      }
+      if (rejected.length > 0) {
+        states.push({
+          type: 'reject',
+          rejectList: [...rejected],
+          applicationList: copyListOfSets(curSchoolApplied)
+        })
+      }
+    }
+    setSPDAsteps(states)
   }
   const SPDADisplay = () => {
-
+    const Explanation = ({step, state}) => {
+      const type = state['type']
+      if (type === 'apply') {
+        return (
+          <PageParagraph text={`${step}. Students ${state['applicants']?.join(", ")} apply to their next most preferred school.`}/>
+        )
+      } else if (type === 'reject') {
+        console.log(state['rejectList'])
+        return (
+          <PageParagraph text={`${step}. Students ${state['rejectList']?.join(", ")} are rejected by their applied school.`}/>
+        )
+      }
+    }
+    const ApplicationList = ({list}) => (
+      <Stack direction="column">
+        { list && list.map((set, index) => {
+          let setStr = ''
+          const studentList = Array.from(set)
+          for (let i = 0; i < studentList.length; i++) {
+            setStr += `${studentList[i]}`
+            if (i < studentList.length - 1) setStr += ', '
+          }
+          return (
+            <Stack direction="row">
+              <Latex>{`$c_${index + 1}: \\{${setStr}\\}$`}</Latex>
+            </Stack>
+          )
+        })}
+      </Stack>
+    )
+    const State = ({step, state}) => (
+      <Stack direction="column">
+        <Explanation step={step} state={state}/>
+        <ApplicationList list={state['applicationList']}/>
+      </Stack>
+    )
+    return (
+      <Stack direction="column">
+        {SPDAsteps && SPDAsteps.map((value, index) => <State step={index+1} state={value}/>)}
+      </Stack>
+    )
   }
   const AlgorithmButton = () => {
     let buttonText = ""

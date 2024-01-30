@@ -12,6 +12,7 @@ import { InlineMath } from 'react-katex';
 import { findCycle } from '../../../../../helpers/graphHelpers';
 import { Graph } from '../../../../../components/Compsci/DataStructures';
 import { TableBox } from '../../../../../helpers/Tables';
+import { copyListOfSets } from '../../../../../helpers/generalHelpers';
 
 const sqrWidth = 40
 export default function RASimulator({allocationName='X', utilities, allocations, fixedMode=0, algorithm=null,
@@ -683,18 +684,6 @@ function ef1(utilities) {
     // Utilities is a 2D array of n (agents) by m (items' utilities)
     const n = utilities.length
     const m = utilities[0].length
-    function copyAlloc(alloc) {
-        const copyA = []
-        for (let i = 0; i < alloc.length; i++) {
-            const ithSet = alloc[i]
-            const copySet = new Set()
-            for (const el of ithSet) {
-                copySet.add(el)
-            }
-            copyA.push(copySet)
-        }
-        return copyA
-    }
     // 1. Initialise allocation X = (X1, X2, ... , Xn) with Xi being all empty sets
     const X = []
     const relativeUtils = [] // relativeUtils[i,j] should represent the utility gained by agent i if they had agent j's allocation
@@ -706,7 +695,7 @@ function ef1(utilities) {
     states.push({
         type: 'initial',
         envyGraph: {},
-        allocation: copyAlloc(X)
+        allocation: copyListOfSets(X)
     })
     X[0].add(0)
     const firstEnvyGraph = {}
@@ -721,7 +710,7 @@ function ef1(utilities) {
         agent: 1,
         item: 1,
         envyGraph: firstEnvyGraph,
-        allocation: copyAlloc(X)
+        allocation: copyListOfSets(X)
     })
     for (let i = 0; i < n; i++) {
         const IsRelativeUtils = [utilities[i][0]]
@@ -761,7 +750,7 @@ function ef1(utilities) {
             agent: noEnvyAgent+1,
             item: item+1,
             envyGraph: {...G},
-            allocation: copyAlloc(X)
+            allocation: copyListOfSets(X)
         })
         relativeUtils[noEnvyAgent][noEnvyAgent] += utilities[noEnvyAgent][item]
         // 6. Step 5 may have caused rise in new envy. If so, this would only be targeted towards the agent who received the item. Update G to reflect the changes
@@ -791,7 +780,7 @@ function ef1(utilities) {
                 type: 'cycle',
                 cycle,
                 envyGraph: {...G},
-                allocation: copyAlloc(X)
+                allocation: copyListOfSets(X)
             })
             // While there is a cycle in G, repeat step 7
             // Exchange of allocations
@@ -823,7 +812,7 @@ function ef1(utilities) {
             states.push({
                 type: 'postCycle',
                 envyGraph: {...G},
-                allocation: copyAlloc(X)
+                allocation: copyListOfSets(X)
             })
             // Keep going until no cycles left
             cycle = findCycle(G)
