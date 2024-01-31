@@ -344,7 +344,7 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
           let setStr = ''
           const studentList = Array.from(set)
           for (let i = 0; i < studentList.length; i++) {
-            setStr += `${studentList[i]}`
+            setStr += `${studentList[i]+1}`
             if (i < studentList.length - 1) setStr += ', '
           }
           return (
