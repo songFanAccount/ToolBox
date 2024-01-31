@@ -339,7 +339,7 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
       }
     }
     const ApplicationList = ({list}) => (
-      <Stack direction="column">
+      <Stack direction="column" my={2}>
         { list && list.map((set, index) => {
           let setStr = ''
           const studentList = Array.from(set)
@@ -364,6 +364,7 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
     return (
       <Stack direction="column">
         {SPDAsteps && SPDAsteps.map((value, index) => <State step={index+1} state={value}/>)}
+        <PageParagraph text={`${SPDAsteps.length + 1}. The algorithm has terminated, refer to step ${SPDAsteps.length} for the obtained allocation/assignment.`}/>
       </Stack>
     )
   }
