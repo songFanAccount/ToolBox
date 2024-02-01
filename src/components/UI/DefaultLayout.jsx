@@ -1,12 +1,13 @@
 import React from 'react';
 import { Box, IconButton, Link, List, ListItemText, Collapse, Typography, useMediaQuery, Button, Stack, Alert, AlertTitle } from '@mui/material';
-import { Outlet, Link as RouterLink } from 'react-router-dom';
+import { Outlet, Link as RouterLink, useLocation } from 'react-router-dom';
 import { ToastContainer, Slide } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import Header from './Header/Header';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { HashLink } from 'react-router-hash-link';
 
 function DefaultLayout() {
     /*
@@ -97,7 +98,13 @@ export function SectionBox({title, noBorder, children, usePageTitle, mb=2, rowGa
 
 export function CollapseSectionBox({title, titleFs, children, startClosed, usePageTitle}) {
     if(!title) {throw new Error("CollapseSectionBox: Cannot be collapsible without title!")}
-    const [open, setOpen] = React.useState(startClosed ? false : true)
+    let initState = startClosed ? false : true
+    const location = useLocation()
+    if (location.hash !== "") {
+        const sectionStr = location.hash.slice(1)
+        if (sectionStr === title) initState = true
+    }
+    const [open, setOpen] = React.useState(initState)
     function handleClick() {
         setOpen(!open)
     }
@@ -195,7 +202,7 @@ export function PageSectionTitle({title, fs=24}) {
 /*
 By default, paragraphs are inline, since it is common to insert link or want to modify part of the paragraph.
 */
-export function PageParagraph({text, bold, underline=false, block, color='inherit', fs='medium', mt, mb}) {
+export function PageParagraph({text, bold, nowrap, underline=false, block, color='inherit', fs='medium', mt, mb}) {
     if(!text) {return <></>}
     return (
         <Typography display={block ? 'block' : 'inline'}
@@ -205,7 +212,8 @@ export function PageParagraph({text, bold, underline=false, block, color='inheri
                 fontWeight: bold ? 'bold' : 'normal',
                 textDecoration: underline ? 'underline' : 'none',
                 color: color,
-                fontSize: fs
+                fontSize: fs,
+                whiteSpace: nowrap ? 'nowrap' : 'normal'
             }}
         >
             {text}
@@ -345,14 +353,14 @@ export function getCategoryInfoPath(cat) {
     // Assumes has ^^^
     return categoryNameToPath[cat]
 }
-export function CategoryLink({name, linkText, textDecoration='none', fs=14, color='#011627', onClick = () => window.scrollTo(0,0)}) {
+export function CategoryLink({name, linkText, textDecoration='underline', fs='inherit', color='#011627', toSection='', onClick = () => window.scrollTo(0,0)}) {
     const categoryPath = categoryNameToPath[name]
     if(!categoryPath) {throw new Error("No matching category for given name!")}
     return (
         <Link
-            component={RouterLink}
-            to={categoryPath}
-            onClick={onClick}
+            component={toSection === '' ? RouterLink : HashLink}
+            smooth to={`${categoryPath}${toSection}`}
+            onClick={toSection === '' ? onClick : null}
             sx={{
                 fontFamily: 'Verdana',
                 color:color,
@@ -376,7 +384,8 @@ const toolnameToPath = {
     'latex converter': '/tools/maths/latex-converter',
     'maths expression parser': '/tools/compsci/parsing/maths-expression-parser',
     'chemistry equation balancer': '/tools/chemistry/chem-equation-balancer',
-    'stationary points': '/'
+    'stationary points': '/',
+    'EF1': '/tools/compsci/AI/resourceAlloc/EF1-generator'
 }
 export function ToolLink({name, linkText, textDecoration='underline', fs='inherit', color='#011627'}) {
     const toolPath = toolnameToPath[name]

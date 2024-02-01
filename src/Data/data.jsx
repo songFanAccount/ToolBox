@@ -133,7 +133,16 @@ const compsciTools = {
             subCategories: {
                 resourceAlloc: {
                     displayName: "Resource Allocation",
-                    tools: null,
+                    tools: {
+                        'EF1-generator': {
+                            displayName: 'EF1 Allocation Algorithm',
+                            sectionTitles: ['The Tool', 'How it works']
+                        },
+                        'student-proposing-DA': {
+                            displayName: 'Student Proposing Deferred Acceptance',
+                            sectionTitles: ['The Tool', 'How it works']
+                        },
+                    },
                     subCategories: null
                 }
             }

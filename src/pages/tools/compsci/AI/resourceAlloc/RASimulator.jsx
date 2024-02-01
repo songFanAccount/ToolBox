@@ -7,36 +7,61 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Latex from 'react-latex-next';
 import { TBDoubleSizedSwitch, TBText } from '../../../../../components/GeneralComponents';
-import { PageParagraph, TBButton } from '../../../../../components/UI/DefaultLayout';
+import { CollapseSectionBox, PageParagraph, TBButton } from '../../../../../components/UI/DefaultLayout';
 import { InlineMath } from 'react-katex';
+import { findCycle } from '../../../../../helpers/graphHelpers';
+import { Graph } from '../../../../../components/Compsci/DataStructures';
+import { TableBox } from '../../../../../helpers/Tables';
+import { copyListOfSets } from '../../../../../helpers/generalHelpers';
 
-export default function RASimulator({allocationName='X', utilities, allocations, modifiable=true, showAllocDetails=true, showControlBoard=true, showPropertyValues=true}) {
-    const sqrWidth = 40
+const sqrWidth = 40
+export default function RASimulator({allocationName='X', utilities, allocations, fixedMode=0, algorithm=null,
+                                     modifiable=true, showPreferences=true, showAllocDetails=true, showControlBoard=true, showPropertyValues=true}) {
     const [numAgents, setNumAgents] = React.useState(utilities ? utilities.length : 0)
     const [numItems, setNumItems] = React.useState(utilities ? utilities[0].length : 0)
-    const [mode, setMode] = React.useState(false) // false for edit mode, true for allocate mode
+    const [mode, setMode] = React.useState(fixedMode === 1) // false for edit mode, true for allocate mode
     const inputs = React.useRef(utilities ? utilities : [])
-    const [allocation, setAllocation] = React.useState(allocations ? allocations : [])
+    const [inputsChanged, setInputsChanged] = React.useState(true)
     const netUtils = React.useRef(utilities ? Array(utilities.length).fill(0) : [])
-    const [sumStrs, setSumStrs] = React.useState(
-        allocations 
-        ? allocations.map((allocSet, index) => allocationToSumstr(allocSet, index))
-        : []
+    const [allocation, setAllocation] = React.useState(allocInit())
+    const [sumStrs, setSumStrs] = React.useState(sumStrsInit())
+    function allocInit() {
+        if (allocations) return allocations
+        if (utilities) return Array(utilities.length).fill(new Set())
+        else return []
+    }
+    function sumStrsInit() {
+        if (allocations) return allocations.map((allocSet, index) => allocationToSumstr(allocSet, index))
+        if (utilities) return Array(utilities.length).fill('0')
+        else return []
+    }
+    /* ALGORITHMS */
+    const [errorMsg, setErrorMsg] = React.useState(null)
+    const [ef1steps, setEF1Steps] = React.useState([])
+    const AlgorithmButton = ({buttonText, onClick}) => (
+        <Stack direction="column">
+            <TBButton buttonText={buttonText} onClick={onClick} ml={0}/>
+            { errorMsg && <PageParagraph text={errorMsg}/>}
+        </Stack>
     )
-    const TableBox = ({contents, width, borderBottom}) => (
-        <Box
-            sx={{
-                width: width ? width : sqrWidth,
-                height: sqrWidth,
-                borderBottom: borderBottom,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}
-        >
-            {contents}
-        </Box>
-    )
+    function getNumericalUtilities() {
+        return inputs.current.map((row) => row.map((val) => parseInt(val)))
+    }
+    function runEF1() {
+        if (!inputsChanged) return
+        if (numAgents === 0 || numItems === 0 || !allPreferencesFilled()) { setErrorMsg("Please fill out all preferences!"); return }
+        else setErrorMsg(null)
+        const X = ef1(getNumericalUtilities())
+        setAllocation(X['allocation'])
+        setSumStrs(
+            X['allocation'].map((allocSet, index) => (
+                allocationToSumstr(allocSet, index)
+            ))
+        )
+        setInputsChanged(false)
+        setEF1Steps(X['states'])
+    }
+    ////////////////
     function allocate(agent, item) {
         let agentLostIndex = -1
         const newAllocation = allocation.map((value, index) => {
@@ -74,7 +99,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                             <TBText key={`sim(${agent},${item})`} defaultValue={inputs.current[agent][item] === -1 ? '' : inputs.current[agent][item]} 
                                     onChange={(value) => changePreference(agent, item, value)} width={sqrWidth - 10} height={sqrWidth - 10} placeholder='-' 
                                     maxLength={2} center disabled={mode || !modifiable} border={allocation[agent].has(item) ? 1 : 0}
-                                    errorInit={true} errorFunc={(str) => !(/^[1-9]\d*$/.test(str))}
+                                    errorInit={true} errorFunc={(str) => !(/^[0-9]\d*$/.test(str))}
                             />
                         </Box>
                         <Button
@@ -141,6 +166,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
         return agents
     }
     function changePreference(agent, item, newValue) {
+        setInputsChanged(true)
         inputs.current[agent][item] = newValue
     }
     const Preferences = () => {
@@ -191,6 +217,15 @@ export default function RASimulator({allocationName='X', utilities, allocations,
     const ApplyChangesButton = () => (
         <TBButton buttonText="Apply changes" onClick={applyChanges} ml={0} mb={0}/>
     )
+    const Buttons = () => {
+        const showApplyChanges = modifiable && !mode && algorithm !== 'EF1'
+        return (
+            <Stack direction="row">
+                { showApplyChanges && <ApplyChangesButton/> }
+                { algorithm === 'EF1' && <AlgorithmButton buttonText="Run EF1 algorithm" onClick={runEF1}/>}
+            </Stack>
+        )
+    }
     function addAgent() {
         if (numAgents === 10) return
         setNumAgents(numAgents + 1)
@@ -248,7 +283,7 @@ export default function RASimulator({allocationName='X', utilities, allocations,
         let sum = 0
         for (let i = 0; i < numAlloced; i++) {
             const value = utilValues[i]
-            if (!/^[1-9]\d*$/.test(value)) { sumStr = null; break }
+            if (!/^[0-9]\d*$/.test(value)) { sumStr = null; break }
             sumStr += value
             sum += parseInt(value)
             if (i !== numAlloced - 1) sumStr += ' + '
@@ -257,67 +292,49 @@ export default function RASimulator({allocationName='X', utilities, allocations,
         if (sumStr !== null) netUtils.current[agentIndex] = sum
         return sumStr
     }
-    const AllocationDetails = () => {
+    const AllocationDetails = ({showTop=true, showUtilSum=true}) => {
         return (
             <Stack direction="column" width="fit-content">
-                <TableBox
-                    width="1"
-                    borderBottom={1}
-                    contents={
-                        <Box>
-                            <Latex>{`$${allocationName} = $`}</Latex>
-                            <PageParagraph text=" highlighted allocation:"/>
-                        </Box>
-                    }
-                />
+                { showTop &&
+                    <TableBox
+                        width="1"
+                        borderBottom={1}
+                        contents={
+                            <Box>
+                                <Latex>{`$${allocationName} = $`}</Latex>
+                                <PageParagraph text=" highlighted allocation:"/>
+                            </Box>
+                        }
+                    />
+                }
                 <Stack direction="row" columnGap={3}>
-                    <Stack direction="column">
-                        {
-                            allocation.map((value, index) => {
-                                let setStr = ''
-                                const a = Array.from(value)
-                                a.sort()
-                                for (let i = 0; i < value.size; i++) {
-                                    setStr += `o_{${a[i] + 1}}`
-                                    if (i !== value.size - 1) setStr += ', '
-                                }
-                                return (
-                                    <TableBox
-                                        width="fit-content"
-                                        contents={
-                                            <Box>
-                                                <Latex>{`$${allocationName}_${index + 1} = \\{${setStr}\\}$`}</Latex>
-                                            </Box>
-                                        }
-                                    />
-                                )
-                            })
-                        }
-                    </Stack>
-                    <Stack direction="column">
-                        {
-                            sumStrs.map((sumStr, index) => {
-                                return (
-                                    <TableBox
-                                        width='fit-content'
-                                        contents={
-                                            <Box>
-                                                <Latex>{`$u_{${index + 1}}(${allocationName}_{${index + 1}}) = ${sumStr ? sumStr : ''}$`}</Latex>
-                                                { sumStr === null && <PageParagraph color="red" text=" ?"/>}
-                                            </Box>
-                                        }
-                                    />
-                                )
-                            })
-                        }
-                    </Stack>
+                    <Allocation allocation={allocation} allocationName={allocationName}/>
+                    { showUtilSum &&
+                        <Stack direction="column">
+                            {
+                                sumStrs.map((sumStr, index) => {
+                                    return (
+                                        <TableBox
+                                            width='fit-content'
+                                            contents={
+                                                <Box>
+                                                    <Latex>{`$u_{${index + 1}}(${allocationName}_{${index + 1}}) = ${sumStr ? sumStr : ''}$`}</Latex>
+                                                    { sumStr === null && <PageParagraph color="red" text=" ?"/>}
+                                                </Box>
+                                            }
+                                        />
+                                    )
+                                })
+                            }
+                        </Stack>
+                    }
                 </Stack>
             </Stack>
         )
     }
     function allPreferencesFilled() { 
         return inputs.current.every((row) =>
-            row.every((value) => /^[1-9]\d*$/.test(value))
+            row.every((value) => /^[0-9]\d*$/.test(value))
         )
     }
     function allItemsAllocated () {
@@ -410,11 +427,11 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                 <>
                     <TableBox
                         width='fit-content'
-                        contents={<PageParagraph text="Please fill out the preference table and allocate all items!"/>}
+                        contents={<PageParagraph text="Require all preferences and allocations!"/>}
                     />
                     <TableBox
                         width='fit-content'
-                        contents={<PageParagraph text="Please fill out the preference table and allocate all items!"/>}
+                        contents={<PageParagraph text="Require all preferences and allocations!"/>}
                     />
                 </>
     }
@@ -473,37 +490,37 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                         <TableBox
                             width='fit-content'
                             contents={
-                                <PageParagraph text="Utilitarian social welfare"/>
+                                <PageParagraph nowrap text="Utilitarian social welfare"/>
                             }
                         />
                         <TableBox
                             width='fit-content'
                             contents={
-                                <PageParagraph text="Egalitarian social welfare"/>
+                                <PageParagraph nowrap text="Egalitarian social welfare"/>
                             }
                         />
                         <TableBox
                             width='fit-content'
                             contents={
-                                <PageParagraph text="Lexmin welfare"/>
+                                <PageParagraph nowrap text="Lexmin welfare"/>
                             }
                         />
                         <TableBox
                             width='fit-content'
                             contents={
-                                <PageParagraph text="Nash product welfare"/>
+                                <PageParagraph nowrap text="Nash product welfare"/>
                             }
                         />
                         <TableBox
                             width='fit-content'
                             contents={
-                                <PageParagraph text="Envy-freeness: "/>
+                                <PageParagraph nowrap text="Envy-freeness: "/>
                             }
                         />
                         <TableBox
                             width='fit-content'
                             contents={
-                                <PageParagraph text="Proportionality: "/>
+                                <PageParagraph nowrap text="Proportionality: "/>
                             }
                         />
                     </Stack>
@@ -545,24 +562,267 @@ export default function RASimulator({allocationName='X', utilities, allocations,
                 <CBIconButton tooltip="Remove agent (bottom row)" onClick={removeAgent} icon={<PersonRemoveAlt1Icon/>}/>
                 <CBTextIconButton text="Add item" onClick={addItem} endIcon={<AddIcon/>} tooltip="Add item (up to 10)"/>
                 <CBTextIconButton text="Del item" onClick={removeItem} endIcon={<RemoveIcon/>} tooltip="Delete item (right-most column)"/>
-                <TBDoubleSizedSwitch leftText="Edit mode" rightText="Allocate mode" checked={mode} onChange={(value) => setMode(value)}/>
+                { fixedMode === 0 && <TBDoubleSizedSwitch leftText="Edit mode" rightText="Allocate mode" checked={mode} onChange={(value) => setMode(value)}/> }
             </ControlBoardBox>
         )
     }
     return (
         <Stack direction="column" rowGap={3}>
             <Stack direction="row" columnGap={5} rowGap={3} flexWrap="wrap">
-                <Stack
-                    direction="column"
-                >
-                    <TopRow/>
-                    <Preferences/>
-                    { modifiable && !mode && <ApplyChangesButton/> }
-                </Stack>
+                {
+                    showPreferences && 
+                    <Stack
+                        direction="column"
+                    >
+                        <TopRow/>
+                        <Preferences/>
+                        <Buttons/>
+                    </Stack>
+                }
                 { showAllocDetails && <AllocationDetails/> } 
                 { showPropertyValues && <PropertyValues/> }
             </Stack>
             { (showControlBoard || modifiable) && <ControlBoard/> }
+            {algorithm === 'EF1' && 
+                <CollapseSectionBox title="Algorithm steps:">
+                    <EF1Display numVertices={numAgents} states={ef1steps} allocationName={allocationName}/>
+                </CollapseSectionBox>
+            }
         </Stack>
     )
+}
+function Allocation({allocation, allocationName}) {
+    return (
+        <Stack direction="column">
+            {
+                allocation.map((value, index) => {
+                    let setStr = ''
+                    const a = Array.from(value)
+                    a.sort()
+                    for (let i = 0; i < value.size; i++) {
+                        setStr += `o_{${a[i] + 1}}`
+                        if (i !== value.size - 1) setStr += ', '
+                    }
+                    return (
+                        <TableBox
+                            width="fit-content"
+                            contents={
+                                <Box>
+                                    <Latex>{`$${allocationName}_${index + 1} = \\{${setStr}\\}$`}</Latex>
+                                </Box>
+                            }
+                        />
+                    )
+                })
+            }
+        </Stack>
+    )
+}
+function EF1Display({numVertices, states, allocationName}) {
+    const v = Array.from(Array(numVertices).keys())
+    const Explanation = ({num, type, state}) => {
+        if (type === 'initial') {
+            return <PageParagraph text={`${num+1}. Initially, no items are allocated, and therefore also no envy.`}/>
+        } else if (type === 'assignment') {
+            return <PageParagraph text={`${num+1}. No one has envy towards agent ${state['agent']}, assign them next item ${state['item']}.`}/>
+        } else if (type === 'cycle') {
+            let cycleStr = ''
+            for (const agent of state['cycle']) cycleStr += `${agent+1} \\rightarrow `
+            cycleStr += `${state['cycle'][0] + 1}`
+            return (
+                <Box>
+                    <PageParagraph text={`${num+1}. Cycle detected in envy graph: `}/>
+                    <Latex>{`$${cycleStr}$`}</Latex>
+                </Box>
+            )
+        } else if (type === 'postCycle') {
+            return <PageParagraph text={`${num+1}. The above cycle is removed by exchanging bundles along the cycle: `}/>
+        } else if (type === 'done') {
+            return <PageParagraph text={`${num+1}. All items are now assigned without violating EF1. Refer back to the preference table to see the obtained allocation.`}/>
+        } else {
+            return <></>
+        }
+    }
+    const State = ({num, state}) => {
+        const type = state['type']
+        let colors = null
+        if (type === 'cycle') {
+            colors = {}
+            const cycle = state['cycle']
+            for (let i = 0; i < cycle.length; i++) {
+                if (i === cycle.length - 1) {
+                    colors[cycle[i]] = {}
+                    colors[cycle[i]][cycle[0]] = 'red'
+                } else { 
+                    colors[cycle[i]] = {}
+                    colors[cycle[i]][cycle[i+1]] = 'red'
+                }
+            }
+        }
+        return (
+            <Box>
+                <Explanation num={num} type={type} state={state}/>
+                { type !== 'done' && 
+                    <Stack direction="row" columnGap={2}>
+                        <Graph vertices={v} edges={state['envyGraph']} figure={num} numOffset={1} directed colors={colors}/> 
+                        <Box mt={1.2}>
+                            <Allocation allocation={state['allocation']} allocationName={allocationName}/>
+                        </Box>
+                    </Stack>
+                }
+            </Box>
+        )
+    }
+    return (
+        <Stack direction="column">
+            {states.map((state, index) => <State num={index} state={state}/>)}
+        </Stack>
+    )
+}
+function ef1(utilities) {
+    if (utilities.length === 0) throw new Error("Require non empty utility array.")
+    // Utilities is a 2D array of n (agents) by m (items' utilities)
+    const n = utilities.length
+    const m = utilities[0].length
+    // 1. Initialise allocation X = (X1, X2, ... , Xn) with Xi being all empty sets
+    const X = []
+    const relativeUtils = [] // relativeUtils[i,j] should represent the utility gained by agent i if they had agent j's allocation
+    const states = []
+    for (let i = 0; i < n; i++) {
+        X.push(new Set())
+    }
+    // 2.0 Since at the beginning of the loop, there is no items allocated so there is no envy, we simply allocate item 1 to some random agent, simply pick agent 1
+    states.push({
+        type: 'initial',
+        envyGraph: {},
+        allocation: copyListOfSets(X)
+    })
+    X[0].add(0)
+    const firstEnvyGraph = {}
+    firstEnvyGraph[0] = new Set()
+    for (let i = 1; i < n; i++) {
+        const s = new Set()
+        s.add(0)
+        firstEnvyGraph[i] = s
+    }
+    states.push({
+        type: 'assignment',
+        agent: 1,
+        item: 1,
+        envyGraph: firstEnvyGraph,
+        allocation: copyListOfSets(X)
+    })
+    for (let i = 0; i < n; i++) {
+        const IsRelativeUtils = [utilities[i][0]]
+        for (let j = 1; j < n; j++) {
+            IsRelativeUtils.push(0)
+        }
+        relativeUtils.push(IsRelativeUtils)
+    }
+    const G = {} // Initialise G
+    // 2. Loop through all items 2..m
+    for (let item = 1; item < m; item++) {
+        // 3. Construct a directed envy-graph G(X) = (N, E) where an edge (i,j) exists if i is envious of j's allocation in X
+        const someoneEnviousOfList = new Set()
+        for (let agentI = 0; agentI < n; agentI++) {
+            const iEnvyList = new Set()
+            for (let agentJ = 0; agentJ < n; agentJ++) {
+                if (agentJ === agentI) continue
+                if (relativeUtils[agentI][agentJ] > relativeUtils[agentI][agentI]) {
+                    iEnvyList.add(agentJ)
+                    someoneEnviousOfList.add(agentJ)
+                }
+            }
+            G[agentI] = iEnvyList
+        }
+        // 4. Pick a vertex, i, that has no incoming edges, i.e. no agents envious of agent i. Just find first one with no envy
+        let noEnvyAgent = 0
+        for (let i = 0; i < n; i++) {
+            if (!someoneEnviousOfList.has(i)) {
+                noEnvyAgent = i
+                break
+            }
+        }
+        // 5. Allocate current item to this agent
+        X[noEnvyAgent].add(item)
+        states.push({
+            type: 'assignment',
+            agent: noEnvyAgent+1,
+            item: item+1,
+            envyGraph: {...G},
+            allocation: copyListOfSets(X)
+        })
+        relativeUtils[noEnvyAgent][noEnvyAgent] += utilities[noEnvyAgent][item]
+        // 6. Step 5 may have caused rise in new envy. If so, this would only be targeted towards the agent who received the item. Update G to reflect the changes
+        for (let i = 0; i < n; i++) {
+            if (i !== noEnvyAgent) {
+                relativeUtils[i][noEnvyAgent] += utilities[i][item]
+                if (relativeUtils[i][noEnvyAgent] > relativeUtils[i][i]) G[i].add(noEnvyAgent)
+            } else {
+                const copyEnvyList = new Set()
+                for (const enviousOfAgent of G[noEnvyAgent]) copyEnvyList.add(enviousOfAgent)
+                for (const enviousOfAgent of copyEnvyList) {
+                    if (relativeUtils[i][i] >= relativeUtils[i][enviousOfAgent]) G[i].delete(enviousOfAgent)
+                }
+            }
+        }
+        // 7. Find any cycle in the graph and implement an exchange in which if i points to j in the cycle, then i gets j's allocation
+        function getRelativeUtil(i, j) {
+            let utilSum = 0
+            for (const jItem of X[j]) {
+                utilSum += utilities[i][jItem]
+            }
+            return utilSum
+        }
+        let cycle = findCycle(G)
+        while(cycle) {
+            states.push({
+                type: 'cycle',
+                cycle,
+                envyGraph: {...G},
+                allocation: copyListOfSets(X)
+            })
+            // While there is a cycle in G, repeat step 7
+            // Exchange of allocations
+            const storeFirstAlloc = new Set([...X[cycle[0]]])
+            for (let i = 0; i < cycle.length; i++) {
+                if (i === cycle.length - 1) {
+                    X[cycle[i]] = storeFirstAlloc
+                } else {
+                    X[cycle[i]] = X[cycle[i+1]]
+                }
+            }
+            // Update relative utils
+            for (let a = 0; a < n; a++) {
+                for (let i = 0; i < cycle.length; i++) {
+                    relativeUtils[a][cycle[i]] = getRelativeUtil(a, cycle[i])
+                }
+            }
+            // Update envy graph
+            for (let agentI = 0; agentI < n; agentI++) {
+                const iEnvyList = new Set()
+                for (let agentJ = 0; agentJ < n; agentJ++) {
+                    if (agentJ === agentI) continue
+                    if (relativeUtils[agentI][agentJ] > relativeUtils[agentI][agentI]) {
+                        iEnvyList.add(agentJ)
+                    }
+                }
+                G[agentI] = iEnvyList
+            }
+            states.push({
+                type: 'postCycle',
+                envyGraph: {...G},
+                allocation: copyListOfSets(X)
+            })
+            // Keep going until no cycles left
+            cycle = findCycle(G)
+        }
+    }
+    states.push({
+        type: 'done'
+    })
+    return {
+        'allocation': X,
+        'states': states
+    }
 }

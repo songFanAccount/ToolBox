@@ -5,8 +5,41 @@ import { CopyButton, PageParagraph } from '../UI/DefaultLayout';
 import { useAnimate, motion } from "framer-motion"
 import { useRef } from 'react';
 import { AnimControlBoard, commonAnims } from '../UI/Animation';
+import { degToRad } from '../../helpers/generalHelpers';
 export function DisplayError({errorMsg}) {
     return <PageParagraph text={`>> ${errorMsg}`} bold/>
+}
+const Arrow = ({start, end, lineID, showHead=false, zIndex=-1, startAnchor="middle", endAnchor="middle", startOffset={x: 0, y: 0}, endOffset={x: 0, y: 0}, color="black"}) => {
+    const startA = {
+        position: startAnchor,
+        offset: startOffset
+    }
+    const endA = {
+        position: endAnchor,
+        offset: endOffset
+    }
+    return (
+        <Box zIndex={zIndex} className={lineID}>
+            <Xarrow zIndex={zIndex} strokeWidth={1} color={color} start={start} end={end} path="straight" showHead={showHead} startAnchor={startA} endAnchor={endA} headSize={7}/>
+        </Box>
+    )
+}
+const DirectedArrow = ({start, end, lineID, coordsStart, coordsEnd, nodeRadius=16, color}) => {
+    // From the end coords, find the x and y offsets to make the arrow end at the radius of the node.
+    const xDir = coordsEnd[0] > coordsStart[0] ? -1 : 1
+    const yDir = coordsEnd[1] > coordsStart[1] ? -1 : 1
+    const diffX = coordsEnd[0] - coordsStart[0]
+    let xOffset, yOffset
+    if (diffX === 0) {
+        xOffset = 0
+        yOffset = nodeRadius * yDir
+    } else {
+        const m = (coordsEnd[1] - coordsStart[1]) / diffX
+        const theta = Math.abs(Math.atan(m))
+        xOffset = nodeRadius * Math.cos(theta) * xDir
+        yOffset = nodeRadius * Math.sin(theta) * yDir
+    }
+    return <Arrow start={start} end={end} lineID={lineID} showHead endOffset={{x: xOffset, y: yOffset}} color={color} zIndex={color ? 0 : -1}/>
 }
 /*
 Use this for an input array of already created DOMs
@@ -304,11 +337,6 @@ export function BinaryTree({tree, name, maxLayers, constructOrder}) {
             </Typography>
         </Box>
     )
-    const Arrow = ({start, end, lineID}) => (
-        <Box zIndex={-1} className={lineID}>
-            <Xarrow zIndex={-1} strokeWidth={1} color="black" start={start} end={end} path="straight" showHead={false} startAnchor="middle" endAnchor="middle"/>
-        </Box>
-    )
     /* 
     Returns the width of the node including its subtrees, used to provide parent nodes their margins
     A null node should return 0
@@ -384,5 +412,84 @@ export function BinaryTree({tree, name, maxLayers, constructOrder}) {
     const constructOrderIDs = generateConstructIDs()
     return (
         <Tree layers={[layers]} lines={lines} name={name} constructOrder={constructOrderIDs}/>
+    )
+}
+
+function NormalNode({nodeName, nodeRadius=16, ml=0, mr=0, color, value, top, left}) {
+    return (
+        <Box
+            className={nodeName}
+            id={nodeName}
+            component={motion.div}
+            sx={{
+                zIndex: 1,
+                position: 'absolute',
+                top: top-nodeRadius, left: left-nodeRadius,
+                width: nodeRadius * 2 - 2,
+                maxWidth: nodeRadius * 2 - 2,
+                height: nodeRadius * 2 - 2,
+                border: 1,
+                borderRadius: '50%',
+                ml: `${ml}px`,
+                mr: `${mr}px`,
+                display: 'flex',
+                alignItems: 'center',
+                backgroundColor: '#fdfffc',
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis'
+            }}
+        >
+            <Typography sx={{width:nodeRadius * 2 - 2, textAlign: 'center', color: color, fontSize: 14}}>
+                {value}
+            </Typography>
+        </Box>
+    )
+}
+export function Graph({graphName="G", vertices, edges, figure=0, numOffset=0, directed=false, nodeRadius=16, colors}) {
+    const canvasWidth = 150
+    const center = canvasWidth / 2
+    function generateCoords() {
+        const coords = {}
+        const numVertices = vertices.length
+        const angleBetween = 360*1.0 / numVertices
+        for (let i = 0; i < numVertices; i++) {
+            const xOffset = Math.cos(degToRad(i * angleBetween)) * canvasWidth / 2
+            const yOffset = Math.sin(degToRad(i * angleBetween)) * canvasWidth / 2
+            const x = center + xOffset
+            const y = center + yOffset
+            coords[vertices[i]] = [x,y]
+        }
+        return coords
+    }
+    const verticesCoords = generateCoords()
+    return (
+        <Box
+            sx={{
+                width: canvasWidth,
+                height: canvasWidth,
+                m: 3,
+                position: 'relative'
+            }}
+        >
+            {/* <Box width={20} height={20} border={1} position={'relative'} top={center - 10} left={center - 10}></Box> */}
+            { Object.entries(verticesCoords).map((vertexPairs) => <NormalNode nodeName={`${graphName}-${vertexPairs[0]}$${figure}`} nodeRadius={nodeRadius} value={parseInt(vertexPairs[0])+numOffset} top={vertexPairs[1][1]} left={vertexPairs[1][0]}/>)}
+            { edges && Object.entries(edges).map((edgePairs) => {
+                return Array.from(edgePairs[1]).map((toNode) => {
+                    const startName = `${graphName}-${edgePairs[0]}$${figure}`
+                    const endName = `${graphName}-${toNode}$${figure}`
+                    const lineID = `${graphName}-${edgePairs[0]},${toNode}$${figure}`
+                    const color = colors?.[edgePairs[0]]?.[toNode]
+                    return (
+                        directed 
+                        ?
+                        <DirectedArrow start={startName} end={endName} lineID={lineID} nodeRadius={nodeRadius} coordsStart={verticesCoords[edgePairs[0]]} coordsEnd={verticesCoords[toNode]} color={color}/>
+                        :
+                        <Arrow start={startName} end={endName} lineID={lineID} color={color}/>
+                    )
+                }
+                )
+            })}
+        </Box>
     )
 }
