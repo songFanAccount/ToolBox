@@ -18,7 +18,6 @@ export default function EF1() {
           <PageParagraph text=" allocation, "/>
           <Latex>$X$</Latex>
           <PageParagraph text=", under any preference settings."/>
-          {/* TODO: Should link to EF1 section */}
         </Box>
       </SectionBox>
       <SectionBox title="How it works">

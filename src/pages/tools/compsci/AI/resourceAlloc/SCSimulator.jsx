@@ -62,6 +62,8 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
       else newStudentPrefs.push(studentPrefs[i])
     }
     setStudentPrefs(newStudentPrefs)
+    setSPDAsteps(null)
+    setStudentsAssignment(null)
   }
   function schoolPrefMove(data, schoolIndex, index) {
     let { x, y } = data
@@ -86,6 +88,8 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
       else newSchoolPrefs.push(schoolPrefs[i])
     }
     setSchoolPrefs(newSchoolPrefs)
+    setSPDAsteps(null)
+    setStudentsAssignment(null)
   }
   const StudentRows = () => {
     const rows = []
@@ -228,7 +232,7 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
     setStudentsAssignment(null)
   }
   function removeStudent() {
-    if (numStudents === 0) return
+    if (numStudents === 1) return
     setNumStudents(numStudents - 1)
     const newPrefs = [...studentPrefs]
     newPrefs.pop()
@@ -264,7 +268,7 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
     setStudentsAssignment(null)
   }
   function removeSchool() {
-    if (numSchools === 0) return
+    if (numSchools === 1) return
     setNumSchools(numSchools - 1)
     const newPrefs = []
     for (let i = 0; i < numStudents; i++) {

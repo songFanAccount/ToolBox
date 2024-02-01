@@ -80,6 +80,17 @@ export default function SPDA() {
 				/>
 			</SectionBox>
 			<SectionBox title="How it works">
+				<PageParagraph text="Edit the students' and schools' preference tables by first adding the appropriate number of students and schools (both 1 to 10 inclusively), then dragging the entries to match the correct preference orders, where most-to-least preferred school/students are listed left-to-right. Then set the schools' quotas (1 to 10 inclusively) using the + and - buttons. Once these are all set appropriately according to your question's setting, click the RUN SPDA button to run the algorithm. The algorithm steps will be shown, where you can see the schools application lists at each step of the algorithm."/>
+				<PageTextList
+					listStyleType='decimal'
+					listName="The algorithm works as follows:"
+					list={[
+						"All students apply to their most preferred school.",
+						"If any schools' applicant count exceeds their quota, keep the 'quota' number of students based on the schools' preferences, and reject the rest.",
+						"All rejected students apply to their next most preferred school.",
+						"Repeat steps 2 and 3 until no schools exceed their quota, and all students are either assigned to a school or have been rejected by all schools."
+					]}
+				/>
 				<SCSimulator algorithm="SPDA"/>
 			</SectionBox>
     </Box>
