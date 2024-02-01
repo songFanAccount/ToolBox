@@ -35,6 +35,7 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
   const [quotas, setQuotas] = React.useState(Array(initNumSchools).fill(1))
   /* Algorithm states */
   const [SPDAsteps, setSPDAsteps] = React.useState(null)
+  const [studentsAssignment, setStudentsAssignment] = React.useState(null)
 
   const squareWidth = 40
   /* Student preference table */
@@ -91,7 +92,7 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
     const Row = ({studentIndex}) => {
       return (
         <Stack direction="row">
-          <TableBox borderRight={1} contents={<PageParagraph text={`${studentIndex+1}`}/>}/>
+          <TableBox borderRight={1} contents={<PageParagraph color={studentsAssignment && studentsAssignment[studentIndex] === -1 ? 'red' : 'inherit'} text={`${studentIndex+1}`}/>}/>
           {
             studentPrefs[studentIndex].map((value, index) => <TableBox cursor="grab" contents={
               <Draggable
@@ -99,7 +100,16 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
                 onStop={(_, data) => studentPrefMove(data, studentIndex, index)}
               >
                 <div>
-                  <Latex>{`$c_{${value+1}}$`}</Latex>
+                  <Stack
+                    sx={{
+                      width: 26, height: 26,
+                      border: studentsAssignment && studentsAssignment[studentIndex] === value ? 1 : 0,
+                      borderRadius: '50%',
+                      justifyContent: 'center', alignItems: 'center'
+                    }}
+                  >
+                    <Latex>{`$c_{${value+1}}$`}</Latex>
+                  </Stack>
                 </div>
               </Draggable>
             }/>)
@@ -135,12 +145,16 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
     const newQuotas = [...quotas]
     newQuotas[schoolIndex]++
     setQuotas(newQuotas)
+    setSPDAsteps(null)
+    setStudentsAssignment(null)
   }
   function decQuota(schoolIndex) {
     if (quotas[schoolIndex] <= 1) return
     const newQuotas = [...quotas]
     newQuotas[schoolIndex]--
     setQuotas(newQuotas)
+    setSPDAsteps(null)
+    setStudentsAssignment(null)
   }
   const SchoolRows = () => {
     const rows = []
@@ -210,6 +224,8 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
       newSchoolPrefs.push(newSchoolPref)
     }
     setSchoolPrefs(newSchoolPrefs)
+    setSPDAsteps(null)
+    setStudentsAssignment(null)
   }
   function removeStudent() {
     if (numStudents === 0) return
@@ -224,6 +240,8 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
       newSchoolPrefs.push(newScPref)
     }
     setSchoolPrefs(newSchoolPrefs)
+    setSPDAsteps(null)
+    setStudentsAssignment(null)
   }
   function addSchool() {
     if (numSchools >= 10) return
@@ -242,6 +260,8 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
     const newQuotas = [...quotas]
     newQuotas.push(1)
     setQuotas(newQuotas)
+    setSPDAsteps(null)
+    setStudentsAssignment(null)
   }
   function removeSchool() {
     if (numSchools === 0) return
@@ -259,6 +279,8 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
     const newQuotas = [...quotas]
     newQuotas.pop()
     setQuotas(newQuotas)
+    setSPDAsteps(null)
+    setStudentsAssignment(null)
   }
   const ControlBoard = () => {
     return (
@@ -321,6 +343,14 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
         })
       }
     }
+    const newStudentsAssign = Array(numStudents).fill(-1)
+    for (let i = 0; i < numSchools; i++) {
+      const studentsAtSchoolI = curSchoolApplied[i]
+      for (const student of studentsAtSchoolI) {
+        newStudentsAssign[student] = i
+      }
+    }
+    setStudentsAssignment(newStudentsAssign)
     setSPDAsteps(states)
   }
   const SPDADisplay = () => {
@@ -364,7 +394,7 @@ export default function SCSimulator({algorithm, initNumStudents=2, initNumSchool
     return (
       <Stack direction="column">
         {SPDAsteps && SPDAsteps.map((value, index) => <State step={index+1} state={value}/>)}
-        <PageParagraph text={`${SPDAsteps.length + 1}. The algorithm has terminated, refer to step ${SPDAsteps.length} for the obtained allocation/assignment.`}/>
+        {SPDAsteps && <PageParagraph text={`${SPDAsteps.length + 1}. The algorithm has terminated, refer to step ${SPDAsteps.length} for the obtained allocation/assignment.`}/>}
       </Stack>
     )
   }
