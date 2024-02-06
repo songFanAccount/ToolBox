@@ -82,7 +82,7 @@ function AboutUs() {
 			</CollapseSectionBox>
 			<SectionBox title="Our history" usePageTitle>
 				<PageParagraph text={
-					`The development of ToolBox began in May, 2023. //TODO 😴`
+					`The development of ToolBox began in May, 2023. The project was initially a 2-person job with me and Harry, but since making the basic functionalities and layouts of the website, we were stuck with our old concept and explored other website ideas instead. Our initial goal with ToolBox was too far-fetched and involved developing tools for everything we have learned from high school to university. Around the start of 2024, I continued developing ToolBox with a reimagined purpose that is selfish as I'll be primarily working on concepts I am currently learning, but much more realistic and manageable as a solo developer.`
 				}/>
 			</SectionBox>
 			<SectionBox title="Meet the devs!" usePageTitle> 

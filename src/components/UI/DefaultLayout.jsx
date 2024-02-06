@@ -383,13 +383,14 @@ const toolnameToPath = {
     'collab': '/collab',
     'latex converter': '/tools/maths/latex-converter',
     'maths expression parser': '/tools/compsci/parsing/maths-expression-parser',
+    'tools': '/tools',
     'chemistry equation balancer': '/tools/chemistry/chem-equation-balancer',
-    'stationary points': '/',
-    'EF1': '/tools/compsci/AI/resourceAlloc/EF1-generator'
+    'ef1 allocation algorithm': '/tools/compsci/AI/resourceAlloc/EF1-generator',
+    'student proposing deferred acceptance': '/tools/compsci/AI/resourceAlloc/student-proposing-DA',
 }
 export function ToolLink({name, linkText, textDecoration='underline', fs='inherit', color='#011627'}) {
     const toolPath = toolnameToPath[name]
-    if(!toolPath) {throw new Error("No matching tool path for given name!")}
+    if(!toolPath) {throw new Error("No matching tool path for given name: " + name)}
     return (
         <Link
             component={RouterLink}

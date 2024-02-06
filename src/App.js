@@ -41,10 +41,6 @@ function App() {
 						<Route path="maths">
 							<Route index element={<Maths/>}/>
 							<Route path="latex-converter" element={<LatexConverter/>}/>
-							<Route path="differentiation">
-								<Route index element={<Differentiation/>}/>
-								<Route path="stationary-points" element={<StationaryPoints/>}/>
-							</Route>
 						</Route>
 						<Route path="chemistry">
 							<Route index element={<Chemistry/>}/>

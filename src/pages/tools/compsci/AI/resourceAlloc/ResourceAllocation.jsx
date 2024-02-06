@@ -738,7 +738,7 @@ export default function ResourceAllocation() {
                     <PageTextList
                         listName="Tools:"
                         list={[
-                            <ToolLink name="EF1" linkText="EF1 allocation generator"/>
+                            <ToolLink name="ef1 allocation algorithm" linkText="EF1 allocation generator"/>
                         ]}
                     />
                     <PageTextList
