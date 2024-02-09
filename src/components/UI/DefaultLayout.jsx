@@ -384,7 +384,7 @@ const toolnameToPath = {
     'latex converter': '/tools/maths/latex-converter',
     'maths expression parser': '/tools/compsci/parsing/maths-expression-parser',
     'tools': '/tools',
-    'chemistry equation balancer': '/tools/chemistry/chem-equation-balancer',
+    'chemical equation balancer': '/tools/chemistry/chem-equation-balancer',
     'ef1 allocation algorithm': '/tools/compsci/AI/resourceAlloc/EF1-generator',
     'student proposing deferred acceptance': '/tools/compsci/AI/resourceAlloc/student-proposing-DA',
 }

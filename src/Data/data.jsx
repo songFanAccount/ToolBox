@@ -13,7 +13,7 @@ const chemistryTools = {
     displayName: 'Chemistry',
     tools: {
         'chem-equation-balancer': {
-            displayName: 'Chemistry Equation Balancer',
+            displayName: 'Chemical Equation Balancer',
             sectionTitles: ['The Tool']
         }
     },

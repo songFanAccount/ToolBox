@@ -5,8 +5,6 @@ import Contact from './pages/Contact';
 import NotFound from './pages/NotFound';
 import DefaultLayout from './components/UI/DefaultLayout';
 import Maths from './pages/tools/maths/Maths';
-import Differentiation from './pages/tools/maths/differentiation/Differentiation';
-import StationaryPoints from './pages/tools/maths/differentiation/StationaryPoints';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LatexConverter from './pages/tools/maths/LatexConverter';

@@ -37,10 +37,10 @@ function AboutUs() {
 				}/>
 				<SectionBox title="Personal motivation">
 					<PageParagraph text={
-						`As a postgraduate student in computer science, it is in my best interest to develop a strong portfolio of programming projects before leaving uni and joining the job hunt. Having debated and tried some different ideas, ToolBox stood out as the project that suited me the most and is aligned with my passion in teaching, visualising concepts, and being of help to others.`
+						`Before joining the job hunt in the software engineering field, it is in my best interest to develop a strong portfolio of programming projects before leaving uni. Having debated and tried some different ideas, ToolBox stood out as the project that suited me the most and is aligned with my passion in teaching, visualising concepts, and being of help to others.`
 					}/>
 					<PageParagraph text={
-						'Additionally, in order to be qualified in explaining concepts and developing tools that I am currently learning in my uni courses, I am therefore required to understand these concepts quite thoroughly myself. As such, I will have to procrastinate less and put more effort into my current studies, which is obviously beneficial. '
+						'Additionally, in order to be qualified in explaining concepts and developing tools that I am currently learning in my uni courses, I am therefore required to understand these concepts quite thoroughly myself. As such, I will have to procrastinate less (🙂) and put more effort into my current studies, which is obviously beneficial. '
 					}/>
 					<PageParagraph text={
 						"On a different note, I am an avid believer in the visualisation of concepts and problem solving and I don't believe there is enough of it in the available resources online, or even in many university courses I have attended. Therefore, this is another motivation that will be central to the development of any tool."
