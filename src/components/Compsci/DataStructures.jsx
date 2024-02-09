@@ -337,6 +337,11 @@ export function BinaryTree({tree, name, maxLayers, constructOrder}) {
             </Typography>
         </Box>
     )
+    const TreeArrow = ({start, end, lineID}) => (
+        <Box zIndex={-1} className={lineID}>
+            <Xarrow zIndex={-1} strokeWidth={1} color="black" start={start} end={end} path="straight" showHead={false} startAnchor="middle" endAnchor="middle"/>
+        </Box>
+    )
     /* 
     Returns the width of the node including its subtrees, used to provide parent nodes their margins
     A null node should return 0
@@ -363,11 +368,11 @@ export function BinaryTree({tree, name, maxLayers, constructOrder}) {
         layers[curLayerNum].push(<Node value={`${node.value.negate ? '-' : ''}${node.value.token}`} color={node.value.autoAdded ? 'red' : 'inherit'} ml={marginLeft} mr={marginRight} nodeName={nodeName}/>)
         if(left.nodeName) {
             const leftLineID = `${name}-${curLayerNum}-${arrayInd}-${left.arrayInd}`
-            lines.push(<Arrow lineID={leftLineID} start={nodeName} end={left.nodeName}/>)
+            lines.push(<TreeArrow lineID={leftLineID} start={nodeName} end={left.nodeName}/>)
         }
         if(right.nodeName) {
             const rightLineID = `${name}-${curLayerNum}-${arrayInd}-${right.arrayInd}`
-            lines.push(<Arrow lineID={rightLineID} start={nodeName} end={right.nodeName}/>)
+            lines.push(<TreeArrow lineID={rightLineID} start={nodeName} end={right.nodeName}/>)
         }
         return {width: Math.max(widthLeft, nodeRadius / 2) + Math.max(widthRight, nodeRadius / 2) + nodeRadius, nodeName: nodeName, arrayInd: arrayInd}
     }
