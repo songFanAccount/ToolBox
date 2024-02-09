@@ -363,11 +363,11 @@ export function BinaryTree({tree, name, maxLayers, constructOrder}) {
         layers[curLayerNum].push(<Node value={`${node.value.negate ? '-' : ''}${node.value.token}`} color={node.value.autoAdded ? 'red' : 'inherit'} ml={marginLeft} mr={marginRight} nodeName={nodeName}/>)
         if(left.nodeName) {
             const leftLineID = `${name}-${curLayerNum}-${arrayInd}-${left.arrayInd}`
-            lines.push(<Arrow lineID={leftLineID} zIndex={5} start={nodeName} end={left.nodeName}/>)
+            lines.push(<Arrow lineID={leftLineID} start={nodeName} end={left.nodeName}/>)
         }
         if(right.nodeName) {
             const rightLineID = `${name}-${curLayerNum}-${arrayInd}-${right.arrayInd}`
-            lines.push(<Arrow lineID={rightLineID} zIndex={5} start={nodeName} end={right.nodeName}/>)
+            lines.push(<Arrow lineID={rightLineID} start={nodeName} end={right.nodeName}/>)
         }
         return {width: Math.max(widthLeft, nodeRadius / 2) + Math.max(widthRight, nodeRadius / 2) + nodeRadius, nodeName: nodeName, arrayInd: arrayInd}
     }
