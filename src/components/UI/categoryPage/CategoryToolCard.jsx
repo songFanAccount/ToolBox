@@ -32,8 +32,17 @@ export default function CategoryToolCard({catWithTool}) {
 					<Typography variant="h5" sx={{fontFamily: 'Verdana', mb: 0.5, textDecoration: 'underline', mt: 1}}>
 						{catWithTool.tool.displayName}
 					</Typography>
-					<Box sx={{maxHeight: 80, overflow: 'auto', mt: 1.5}}>
-						<Typography variant="body2" sx={{fontFamily: 'Verdana', ml: 0.5, pb: 1}}>
+					<Box 
+						sx={{maxHeight: 80, overflow: 'auto', mt: 1.5,
+							'&::-webkit-scrollbar': {
+								display: 'none', // Hide the scrollbar for WebKit browsers (Chrome, Safari, Edge, etc.)
+							},
+							'&-ms-overflow-style:': {
+								display: 'none', // Hide the scrollbar for IE
+							}
+						}}
+					>
+						<Typography variant="body2" sx={{fontFamily: 'Verdana', ml: 0.5, pb: 2}}>
 							{desc}
 						</Typography>
 					</Box>
