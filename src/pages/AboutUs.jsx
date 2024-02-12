@@ -1,6 +1,7 @@
 import { Box } from "@mui/material"
 import { Helmet } from "react-helmet"
 import { CollapseSectionBox, ExternalLink, PageParagraph, PageTextList, SectionBox, ToolLink } from "../components/UI/DefaultLayout"
+import meImage from '../images/jenolanme.jpeg';
 
 function AboutUs() {
 	return (
@@ -99,8 +100,8 @@ function AboutUs() {
 					</Box>
 				</CollapseSectionBox>
 			</SectionBox>
-			<SectionBox title="Meet the devs!" usePageTitle> 
-				<PageParagraph text="//TODO 😴"/>
+			<SectionBox title="Meet the dev!" usePageTitle>
+				<img src={meImage} alt="Developer - Daniel Song" width="270rem"/>
 			</SectionBox>
 		</Box>  
 	)
