@@ -82,8 +82,22 @@ function AboutUs() {
 			</CollapseSectionBox>
 			<SectionBox title="Our history" usePageTitle>
 				<PageParagraph text={
-					`The development of ToolBox began in May, 2023. The project was initially a 2-person job with me and Harry, but since making the basic functionalities and layouts of the website, we were stuck with our old concept and explored other website ideas instead. Our initial goal with ToolBox was too far-fetched and involved developing tools for everything we have learned from high school to university. Around the start of 2024, I continued developing ToolBox with a reimagined purpose that is selfish as I'll be primarily working on concepts I am currently learning, but much more realistic and manageable as a solo developer.`
+					`The development of ToolBox began in May, 2023. The project was initially a 2-person job with me and Harry, but since making the basic functionalities and layouts of the website, we were stuck with our old concept and explored other website ideas instead. Our initial goal with ToolBox was too far-fetched and involved developing tools for everything we have learned from high school to university. Around the start of 2024, I continued developing ToolBox with a reimagined purpose that almost entirely focuses on concepts that I am currently learning, this scale of work is much more realistic and manageable as a solo developer.`
 				}/>
+				<CollapseSectionBox title="Development timeline">
+					<Box>
+						<PageParagraph text="May - June 2023 - Developed the tools "/>
+						<ToolLink name="latex converter" linkText="Latex Converter"/>
+						<PageParagraph text=" and "/>
+						<ToolLink name="maths expression parser" linkText="Maths Expression Parser"/>
+					</Box>
+					<Box>
+						<PageParagraph text="Dec 2023 - Jan 2024 - [UNSW COMP4418 Knowledge Representation] Written notes on Resource Allocation, exploring concepts of efficiency and fairness in allocation algorithms. Developed tools "/>
+						<ToolLink name="ef1 allocation algorithm" linkText="EF1 allocation algorithm"/>
+						<PageParagraph text=" and "/>
+						<ToolLink name="student proposing deferred acceptance" linkText="Student Proposing Deferred Acceptance algorithm."/>
+					</Box>
+				</CollapseSectionBox>
 			</SectionBox>
 			<SectionBox title="Meet the devs!" usePageTitle> 
 				<PageParagraph text="//TODO 😴"/>
