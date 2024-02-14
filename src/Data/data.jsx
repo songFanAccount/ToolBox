@@ -54,6 +54,11 @@ const compsciTools = {
                 }
             }
         },
+        compilers: {
+            displayName: 'Compilers',
+            tools: null,
+            subCategories: null
+        }
     }
 }
 

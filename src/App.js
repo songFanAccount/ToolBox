@@ -21,6 +21,7 @@ import ResourceAllocation from './pages/tools/compsci/AI/resourceAlloc/ResourceA
 import AI from './pages/tools/compsci/AI/AI';
 import EF1 from './pages/tools/compsci/AI/resourceAlloc/EF1';
 import SPDA from './pages/tools/compsci/AI/resourceAlloc/SPDA';
+import Compilers from './pages/tools/compsci/compilers/Compilers';
 function App() {
 	return (
     	<BrowserRouter>
@@ -57,6 +58,9 @@ function App() {
 									<Route path="EF1-generator" element={<EF1/>}/>
 									<Route path="student-proposing-DA" element={<SPDA/>}/>
 								</Route>
+							</Route>
+							<Route path="compilers">
+								<Route index element={<Compilers/>}/>
 							</Route>
 						</Route>
 					</Route>
