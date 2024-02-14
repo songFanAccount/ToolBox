@@ -119,41 +119,63 @@ function SideNavBar(props) {
             <ArrowForwardIosIcon/>
         </SvgIcon>
     )
-    const PrevText = (text) => (
-        <Typography
-            sx={{
-                mx: 0.5,
-                px: 0,
-                fontSize: 14,
-            }}
-        >
-            {text}
-        </Typography>
+    const PrevText = (text, moreThan3) => (
+			<Box
+				sx={{
+					width: 'fit-content',
+					maxWidth: moreThan3 ? '110px' : '130px',
+				}}
+			>
+				<Typography
+					sx={{
+						mx: 0.5,
+						px: 0,
+						fontSize: 14,
+						overflow: 'hidden',
+						textOverflow: 'ellipsis',
+						whiteSpace: 'nowrap'
+					}}
+				>
+					{text}
+				</Typography>
+			</Box>
     )
     const PrevPath = () => {
         const len = namePath.length
         return (
-            <Box
-                sx={{
-					display: 'flex',
-					alignItems: 'flex-end',
-                    width: "100%",
-					height: 55,
-					maxHeight: 55
-                }}
-            >
-				<Box
-					sx={{
-						display: "flex",
-						alignItems: 'center',
-						ml: 3,
-						maxWidth: "100%",
-						maxHeight: "100%"
-					}}
-				>
-					{len > 3 && (<>{PrevText("...")}{<PrevArrow/>}</>)}
-					{len >= 3 && (<>{PrevText(namePath[len - 3])}{<PrevArrow/>}</>)}
-					{len >= 2 && (<>{PrevText(namePath[len - 2])}{<PrevArrow/>}</>)}
+					<Box
+						sx={{
+							display: 'flex',
+							alignItems: 'flex-end',
+							width: "100%",
+							height: 55,
+							maxHeight: 55
+						}}
+					>
+					<Box
+						sx={{
+							display: "flex",
+							alignItems: 'center',
+							ml: 3,
+							maxWidth: "100%",
+							maxHeight: "100%"
+						}}
+					>
+					{len > 3 && (<>{<Typography
+														sx={{
+															mx: 0.5,
+															px: 0,
+															fontSize: 14,
+															overflow: 'hidden',
+															textOverflow: 'ellipsis',
+															whiteSpace: 'nowrap'
+														}}
+													>
+														...
+													</Typography>
+					}{<PrevArrow/>}</>)}
+					{len >= 3 && (<>{PrevText(namePath[len - 3], len > 3)}{<PrevArrow/>}</>)}
+					{len >= 2 && (<>{PrevText(namePath[len - 2], len > 3)}{<PrevArrow/>}</>)}
 				</Box>
             </Box>
         )

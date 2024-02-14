@@ -51,7 +51,11 @@ const compsciTools = {
                         },
                     },
                     subCategories: null
-                }
+                },
+                machineLearning: {
+                    displayName: "Machine Learning",
+                    subCategories: null
+                },
             }
         },
     }
