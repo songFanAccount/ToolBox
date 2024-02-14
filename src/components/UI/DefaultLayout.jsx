@@ -87,10 +87,10 @@ function Contents({noBorder, children, mb=3, rowGap=2}) {
     )
 }
 
-export function SectionBox({title, noBorder, children, usePageTitle, mb=2, rowGap=2}) {
+export function SectionBox({title, titleFs, noBorder, children, usePageTitle, mb=2, rowGap=2}) {
     return (
         <Box>
-            {title && usePageTitle ? <PageTitle title={title} mb={1}/> : <PageSectionTitle title={title}/>}
+            {title && usePageTitle ? <PageTitle title={title} mb={1} fs={titleFs}/> : <PageSectionTitle title={title} fs={titleFs}/>}
             <Contents noBorder={noBorder} children={children} mb={mb} rowGap={rowGap}/>
         </Box>
     )
