@@ -345,6 +345,7 @@ export function ExternalLink({href, target, children}) {
 }
 const categoryNameToPath = {
     'Resource Allocation': '/tools/compsci/AI/resourceAlloc',
+    'Machine Learning': '/tools/compsci/AI/machine-learning'
 }
 export function hasCategoryInfo(cat) {
     return categoryNameToPath.hasOwnProperty(cat)

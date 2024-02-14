@@ -21,6 +21,7 @@ import ResourceAllocation from './pages/tools/compsci/AI/resourceAlloc/ResourceA
 import AI from './pages/tools/compsci/AI/AI';
 import EF1 from './pages/tools/compsci/AI/resourceAlloc/EF1';
 import SPDA from './pages/tools/compsci/AI/resourceAlloc/SPDA';
+import MachineLearning from './pages/tools/compsci/AI/machineLearning/MachineLearning';
 function App() {
 	return (
     	<BrowserRouter>
@@ -56,6 +57,9 @@ function App() {
 									<Route index element={<ResourceAllocation/>}/>
 									<Route path="EF1-generator" element={<EF1/>}/>
 									<Route path="student-proposing-DA" element={<SPDA/>}/>
+								</Route>
+								<Route path="machine-learning">
+									<Route index element={<MachineLearning/>}/>
 								</Route>
 							</Route>
 						</Route>
