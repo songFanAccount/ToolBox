@@ -57,7 +57,17 @@ const compsciTools = {
         compilers: {
             displayName: 'Compilers',
             tools: null,
-            subCategories: null
+            subCategories: {
+                regex: {
+                    displayName: "Regex",
+                    tools: {
+                        'thompsons-construction': {
+                            displayName: "Thompson's Construction Algorithm",
+                            sectionTitles: ['The Tool', 'How it works']
+                        }
+                    }
+                }
+            }
         }
     }
 }

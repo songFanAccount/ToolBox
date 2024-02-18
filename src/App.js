@@ -22,6 +22,7 @@ import AI from './pages/tools/compsci/AI/AI';
 import EF1 from './pages/tools/compsci/AI/resourceAlloc/EF1';
 import SPDA from './pages/tools/compsci/AI/resourceAlloc/SPDA';
 import Compilers from './pages/tools/compsci/compilers/Compilers';
+import ThompsonsConstruction from './pages/tools/compsci/compilers/ThompsonsConstruction';
 function App() {
 	return (
     	<BrowserRouter>
@@ -61,6 +62,9 @@ function App() {
 							</Route>
 							<Route path="compilers">
 								<Route index element={<Compilers/>}/>
+								<Route path="regex">
+									<Route path="thompsons-construction" element={<ThompsonsConstruction/>}/>
+								</Route>
 							</Route>
 						</Route>
 					</Route>
