@@ -420,7 +420,7 @@ export function BinaryTree({tree, name, maxLayers, constructOrder}) {
     )
 }
 
-function NormalNode({nodeName, nodeRadius=16, ml=0, mr=0, color, value, top, left}) {
+export function NormalNode({nodeName, nodeRadius=16, ml=0, mr=0, color, value, top, left}) {
     return (
         <Box
             className={nodeName}
