@@ -3,11 +3,12 @@ import { ExternalLink, PageParagraph, SectionBox, TBButton } from '../../../../c
 import { Box } from '@mui/material'
 import { MEPTextField } from '../../../../components/GeneralComponents'
 import { isLetterOrDigit, removeSpaces } from '../../../../helpers/generalHelpers'
-import { NormalNode } from '../../../../components/Compsci/DataStructures'
+import { Arrow, DirectedArrow, NormalNode } from '../../../../components/Compsci/DataStructures'
 
 function ThompsonsConstruction() {
   const [regex, setRegex] = React.useState('')
   const [algoOutputs, setAlgoOutputs] = React.useState(null)
+  const nodeRadius = 12
   function handleChange(value) {
     setRegex(value)
   }
@@ -15,20 +16,36 @@ function ThompsonsConstruction() {
     setAlgoOutputs(parse(regex))
   }
   const Node = ({nodeName, value, top, left}) => (
-    <NormalNode nodeRadius={12} nodeName={nodeName} value={value} top={top} left={left}/> 
+    <NormalNode nodeRadius={nodeRadius} nodeName={nodeName} value={value} top={top} left={left}/> 
+  )
+  const PlaceholderBox = ({name, top, left}) => (
+    <Box
+      className={name}
+      id={name} 
+      sx={{
+        position: 'absolute',
+        top: top, left: left
+      }}
+    />
   )
   const ConstructionGraph = () => {
     const tokens = algoOutputs['tokens']
     console.log(tokens)
-    // const intervalLen = 100
+    const currentCoords = [0, 150]
+    let currentNodeName = "start"
+    const edgeLen = 80
     const nodes = []
     const edges = []
-    nodes.push(<Node nodeName="start" value="S" top={150}/>)
+    const boxes = []
+    nodes.push(<Node nodeName="start" value="S" left={0} top={150}/>)
     for (let i = 0; i < tokens.length; i++) {
       processToken(tokens[i])
     }
     function processToken(token) {
       const type = token['type']
+      let height, width, relativeTop
+      let coordsStart, newNodeName, storeStartCoords, storeStartNodeName
+      let boxTop, boxBottom
       console.log(type)
       switch (type) {
         case '|':
@@ -40,7 +57,42 @@ function ThompsonsConstruction() {
           }
           break
         case '*':
-          processToken(token['token'])
+          storeStartCoords = [...currentCoords]
+          storeStartNodeName = currentNodeName
+          // Epsilon branch (start)
+          coordsStart = [...currentCoords]
+          currentCoords[0] += edgeLen
+          newNodeName = `node-${nodes.length}`
+          nodes.push(<Node nodeName={newNodeName} value={''} left={currentCoords[0]} top={currentCoords[1]}/>)
+          edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={`line-${edges.length}`} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels="ϵ"/>)
+          currentNodeName = newNodeName
+          // Process the token * is applied to
+          const tokenInfo = processToken(token['token'])
+          // Epsilon branch for the repeat feature of *
+          boxTop = currentCoords[1] - edgeLen/2 - tokenInfo['relativeTop']
+          boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxTop} left={currentCoords[0] - nodeRadius/2}/>)
+          boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxTop} left={currentCoords[0] - tokenInfo['width'] + nodeRadius/2}/>)
+          edges.push(<Arrow start={currentNodeName} end={`box-${boxes.length - 2}`} lineID={`line-${edges.length}`}/>)
+          edges.push(<Arrow start={`box-${boxes.length - 2}`} end={`box-${boxes.length - 1}`} lineID={`line-${edges.length}`} labels="ϵ"/>)
+          edges.push(<DirectedArrow start={`box-${boxes.length - 1}`} end={`node-${nodes.length - 2}`} lineID={`line-${edges.length}`} coordsStart={[currentCoords[0] - tokenInfo['width']+ nodeRadius/2, boxTop]} coordsEnd={[currentCoords[0] - tokenInfo['width'], boxTop + edgeLen/2]} nodeRadius={nodeRadius}/>)
+          // Another epsilon branch (end)
+          coordsStart = [...currentCoords]
+          currentCoords[0] += edgeLen
+          newNodeName = `node-${nodes.length}`
+          nodes.push(<Node nodeName={newNodeName} value={''} left={currentCoords[0]} top={currentCoords[1]}/>)
+          edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={`line-${edges.length}`} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels="ϵ"/>)
+          currentNodeName = newNodeName
+          // Last epsilon branch (from very beginning to end)
+          boxBottom = currentCoords[1] + edgeLen/2 + tokenInfo['height'] - tokenInfo['relativeTop']
+          boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxBottom} left={storeStartCoords[0] + nodeRadius/2}/>)
+          boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxBottom} left={storeStartCoords[0] + tokenInfo['width'] + 2*edgeLen - nodeRadius/2}/>)
+          edges.push(<Arrow start={storeStartNodeName} end={`box-${boxes.length - 2}`} lineID={`line-${edges.length}`}/>)
+          edges.push(<Arrow start={`box-${boxes.length - 2}`} end={`box-${boxes.length - 1}`} lineID={`line-${edges.length}`} labels="ϵ"/>)
+          edges.push(<DirectedArrow start={`box-${boxes.length - 1}`} end={currentNodeName} lineID={`line-${edges.length}`} coordsStart={[currentCoords[0] - nodeRadius/2, boxBottom]} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius}/>)
+          // Setting return vals
+          height = boxBottom - boxTop
+          width = 2*edgeLen + tokenInfo['width']
+          relativeTop = currentCoords[1] - boxTop
           break
         case '+':
           break
@@ -51,10 +103,20 @@ function ThompsonsConstruction() {
           }
           break
         case 'char':
+          coordsStart = [...currentCoords]
+          currentCoords[0] += edgeLen
+          newNodeName = `node-${nodes.length}`
+          nodes.push(<Node nodeName={newNodeName} value={''} left={currentCoords[0]} top={currentCoords[1]}/>)
+          edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={`line-${edges.length}`} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={token['value']}/>)
+          currentNodeName = newNodeName
+          height = 0
+          width = edgeLen
+          relativeTop = 0
           break
         default:
           throw new Error("processToken: Invalid type = " + type)
       }
+      return { height, width, relativeTop }
     }
     return (
       <Box
@@ -67,6 +129,7 @@ function ThompsonsConstruction() {
       >
         {nodes}
         {edges}
+        {boxes}
       </Box>
     )
   }
@@ -192,12 +255,18 @@ function parse(regex) {
               }
               tokens.push(orCompoundToken)
             }
-            const compoundToken = {
-              type: '()',
-              tokens: tokens.slice(t + 1)
+            const nestedTokens = tokens.slice(t+1)
+            if (nestedTokens.length === 1 && nestedTokens[0]['type'] === '()') { // Redundant nesting of parentheses
+              tokens.splice(t)
+              for (const nestedToken of nestedTokens) tokens.push(nestedToken)
+            } else {
+              const compoundToken = {
+                type: '()',
+                tokens: tokens.slice(t + 1)
+              }
+              tokens.splice(t)
+              tokens.push(compoundToken)
             }
-            tokens.splice(t)
-            tokens.push(compoundToken)
             foundCloseParenthese = true
             break
           } else if (token['type'] === '|') {
@@ -225,13 +294,13 @@ function parse(regex) {
         }
     }
   }
-  // Post-processing
-  // Check whether all opened parentheses are matched
+  // Post-processing:
+  // 1. Check whether all opened parentheses are matched
   if (openParentCount !== 0) return {
     success: false,
     errorMsg: "Not all parentheses have been closed!"
   }
-  // Aggregating |
+  // 2. Aggregating |
   let orTokens = null
   for (let t = tokens.length - 1; t >= 0; t--) {
     const token = tokens[t]

@@ -9,7 +9,7 @@ import { degToRad } from '../../helpers/generalHelpers';
 export function DisplayError({errorMsg}) {
     return <PageParagraph text={`>> ${errorMsg}`} bold/>
 }
-const Arrow = ({start, end, lineID, showHead=false, zIndex=-1, startAnchor="middle", endAnchor="middle", startOffset={x: 0, y: 0}, endOffset={x: 0, y: 0}, color="black"}) => {
+export const Arrow = ({start, end, lineID, showHead=false, zIndex=-1, startAnchor="middle", endAnchor="middle", startOffset={x: 0, y: 0}, endOffset={x: 0, y: 0}, color="black", labels}) => {
     const startA = {
         position: startAnchor,
         offset: startOffset
@@ -20,11 +20,11 @@ const Arrow = ({start, end, lineID, showHead=false, zIndex=-1, startAnchor="midd
     }
     return (
         <Box zIndex={zIndex} className={lineID}>
-            <Xarrow zIndex={zIndex} strokeWidth={1} color={color} start={start} end={end} path="straight" showHead={showHead} startAnchor={startA} endAnchor={endA} headSize={7}/>
+            <Xarrow zIndex={zIndex} strokeWidth={1} color={color} start={start} end={end} path="straight" showHead={showHead} startAnchor={startA} endAnchor={endA} headSize={7} labels={labels}/>
         </Box>
     )
 }
-const DirectedArrow = ({start, end, lineID, coordsStart, coordsEnd, nodeRadius=16, color}) => {
+export const DirectedArrow = ({start, end, lineID, coordsStart, coordsEnd, nodeRadius=16, color, labels}) => {
     // From the end coords, find the x and y offsets to make the arrow end at the radius of the node.
     const xDir = coordsEnd[0] > coordsStart[0] ? -1 : 1
     const yDir = coordsEnd[1] > coordsStart[1] ? -1 : 1
@@ -39,7 +39,7 @@ const DirectedArrow = ({start, end, lineID, coordsStart, coordsEnd, nodeRadius=1
         xOffset = nodeRadius * Math.cos(theta) * xDir
         yOffset = nodeRadius * Math.sin(theta) * yDir
     }
-    return <Arrow start={start} end={end} lineID={lineID} showHead endOffset={{x: xOffset, y: yOffset}} color={color} zIndex={color ? 0 : -1}/>
+    return <Arrow start={start} end={end} lineID={lineID} showHead endOffset={{x: xOffset, y: yOffset}} color={color} zIndex={color ? 0 : -1} labels={labels}/>
 }
 /*
 Use this for an input array of already created DOMs
