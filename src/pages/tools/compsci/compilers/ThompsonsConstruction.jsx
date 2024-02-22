@@ -29,35 +29,158 @@ function ThompsonsConstruction() {
     />
   )
   const LabelsText = ({text, ml}) => (
-    <PageParagraph text={text} backgroundColor='white' p={0.5} ml={ml}/>
+    <PageParagraph text={text} backgroundColor='white' p={0.5} ml={0}/>
   )
   const ConstructionGraph = () => {
     const tokens = algoOutputs['tokens']
     console.log(tokens)
-    const startX = 0, startY = 150
-    const currentCoords = [startX, startY]
     let currentNodeName = "start"
     const edgeLen = 80, labelsML = 1.5
     const nodes = []
     const edges = []
     const boxes = []
+    const wholeDiagramDims = getTokenSectionDims({
+      type: '()',
+      tokens: tokens
+    })
+    const startX = 0, startY = wholeDiagramDims['relativeTop']
+    const currentCoords = [startX, startY]
     nodes.push(<Node nodeName="start" value="S" left={0} top={startY}/>)
     for (let i = 0; i < tokens.length; i++) {
-      processToken(tokens[i])
+      processToken(tokens[i], i === tokens.length - 1)
     }
-    function processToken(token) {
+    function getTokenSectionDims(token) {
       const type = token['type']
-      let tokenInfo
       let height, width, relativeTop
+      let tokenDims
+      let tokenMaxTop, tokenMaxBottom
+      let ORStartRelTop, ORRelBottom
+      switch (type) {
+        case 'char':
+          height = 0
+          width = edgeLen
+          relativeTop = 0
+          break
+        case '*':
+          tokenDims = getTokenSectionDims(token['token'])
+          height = tokenDims['height'] + edgeLen
+          width = tokenDims['width'] + 2*edgeLen
+          relativeTop = tokenDims['relativeTop'] + edgeLen/2
+          break
+        case '+':
+          tokenDims = getTokenSectionDims(token['token'])
+          height = tokenDims['height']
+          width = tokenDims['width']
+          relativeTop = tokenDims['relativeTop']
+          tokenDims = getTokenSectionDims({
+            type: '*',
+            token: token['token']
+          })
+          width += tokenDims['width']
+          if (relativeTop < tokenDims['relativeTop']) relativeTop = tokenDims['relativeTop']
+          let maxBottom = height - relativeTop
+          const tokenMaxBot = tokenDims['height'] - token['relativeTop']
+          if (maxBottom < tokenMaxBot) maxBottom = tokenMaxBot
+          height = relativeTop + maxBottom
+          break
+        case '()':
+          width = 0
+          tokenMaxTop = 0
+          tokenMaxBottom = 0
+          for (let i = 0; i < token['tokens'].length; i++) {
+            tokenDims = getTokenSectionDims(token['tokens'][i])
+            width += tokenDims['width']
+            const tokenTop = tokenDims['relativeTop']
+            const tokenBottom = tokenDims['height'] - tokenTop
+            if (tokenTop > tokenMaxTop) tokenMaxTop = tokenTop
+            if (tokenBottom > tokenMaxBottom) tokenMaxBottom = tokenBottom
+          }
+          height = tokenMaxTop + tokenMaxBottom
+          relativeTop = tokenMaxTop
+          break
+        case '|':
+          width = 0
+          height = 0
+          ORStartRelTop = []
+          ORRelBottom = []
+          for (let i = 0; i < token['tokens'].length; i++) {
+            tokenDims = getTokenSectionDims({
+              type: '()',
+              tokens: token['tokens'][i]
+            })
+            ORStartRelTop.push(tokenDims['relativeTop'])
+            ORRelBottom.push(tokenDims['height'] - tokenDims['relativeTop'])
+            if (tokenDims['width'] > width) width = tokenDims['width']
+            height += tokenDims['height']
+          }
+          width += 2 * edgeLen
+          height += (token['tokens'].length - 1) * (3 * edgeLen / 4)
+          relativeTop = Math.floor(height / 2)
+          break
+        default:
+          throw new Error("getTokenSectionDims: Invalid type = " + type)
+      }
+      return {height, width, relativeTop, ORStartRelTop, ORRelBottom}
+    }
+    function processToken(token, isLast) {
+      const type = token['type']
+      let tokenInfo, tokensWidth
+      let height, width, relativeTop, finalNodeInfo
       let coordsStart, newNodeName, storeStartCoords, storeStartNodeName, storeTokenStartName
-      let boxTop, boxBottom
+      let yLevel, boxTop, boxBottom
       switch (type) {
         case '|':
           const orTokens = token['tokens']
+          storeStartCoords = [...currentCoords]
+          // Determine the overall dimensions of all the OR sections
+          const dims = getTokenSectionDims(token)
+          storeStartNodeName = currentNodeName
+          // Determine and create the final node
+          const finalNodeName = `node-${nodes.length}`
+          const storeEndNodeCoords = [currentCoords[0] + dims['width'], currentCoords[1]]
+          nodes.push(<Node nodeName={finalNodeName} value={isLast ? 'E' : ''} left={currentCoords[0] + dims['width']} top={currentCoords[1]}/>)
+          // Move to where the token start needs to be
+          currentCoords[0] += edgeLen
+          currentCoords[1] -= dims['relativeTop']
           for (let i = 0; i < orTokens.length; i++) {
+            // Move down by relativeTops to get to where the section is generated from
+            currentCoords[1] += dims['ORStartRelTop'][i]
+            coordsStart = [...currentCoords]
+            // Produce the start node
+            newNodeName = `node-${nodes.length}`
+            nodes.push(<Node nodeName={newNodeName} value={''} left={currentCoords[0]} top={currentCoords[1]}/>)
+            edges.push(<DirectedArrow start={storeStartNodeName} end={newNodeName} lineID={`line-${edges.length}`} coordsStart={[...storeStartCoords]} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
+            currentNodeName = newNodeName
+            // Produce the section
             for (let j = 0; j < orTokens[i].length; j++) {
-              processToken(orTokens[i][j])
+              tokenInfo = processToken(orTokens[i][j])
+              const finalNode = tokenInfo['finalNodeInfo']
+              // Create an edge to an intermediate box based on how far the end node is from the end box
+              const dist = storeEndNodeCoords[0] - edgeLen - finalNode['coords'][0]
+              let endNodeName, endNodeCoords
+              if (dist > 0) {
+                endNodeName = `box-${boxes.length}`
+                endNodeCoords = [finalNode['coords'][0] + dist, finalNode['coords'][1]]
+                boxes.push(<PlaceholderBox name={endNodeName} left={finalNode['coords'][0] + dist} top={finalNode['coords'][1]}/>)
+                edges.push(<Arrow start={finalNode['name']} end={endNodeName} lineID={`line-${edges.length}`} coordsStart={[...finalNode['coords']]} coordsEnd={[...endNodeCoords]} nodeRadius={nodeRadius}/>)
+              } else {
+                endNodeName = finalNode['name']
+                endNodeCoords = [...finalNode['coords']]
+              }
+              edges.push(<DirectedArrow start={endNodeName} end={finalNodeName} lineID={`line-${edges.length}`} coordsStart={[...endNodeCoords]} coordsEnd={[...storeEndNodeCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
             }
+            currentCoords[0] = coordsStart[0]
+            currentCoords[1] = coordsStart[1] + dims['ORRelBottom'][i] + 3 * edgeLen / 4
+          }
+          currentCoords[0] = storeEndNodeCoords[0]
+          currentCoords[1] = storeEndNodeCoords[1]
+          currentNodeName = finalNodeName
+          height = dims['height']
+          width = dims['width']
+          relativeTop = dims['relativeTop']
+          finalNodeInfo = {
+            name: finalNodeName,
+            coords: storeEndNodeCoords
           }
           break
         case '*':
@@ -75,29 +198,33 @@ function ThompsonsConstruction() {
           tokenInfo = processToken(token['token'])
           // Epsilon branch for the repeat feature of *
           boxTop = currentCoords[1] - edgeLen/2 - tokenInfo['relativeTop']
-          boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxTop} left={currentCoords[0] - nodeRadius/2}/>)
-          boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxTop} left={currentCoords[0] - tokenInfo['width'] + nodeRadius/2}/>)
+          boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxTop} left={currentCoords[0] - nodeRadius}/>)
+          boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxTop} left={currentCoords[0] - tokenInfo['width'] + nodeRadius}/>)
           edges.push(<Arrow start={currentNodeName} end={`box-${boxes.length - 2}`} lineID={`line-${edges.length}`}/>)
           edges.push(<Arrow start={`box-${boxes.length - 2}`} end={`box-${boxes.length - 1}`} lineID={`line-${edges.length}`} labels={<LabelsText text="ϵ"/>}/>)
-          edges.push(<DirectedArrow start={`box-${boxes.length - 1}`} end={storeTokenStartName} lineID={`line-${edges.length}`} coordsStart={[currentCoords[0] - tokenInfo['width']+ nodeRadius/2, boxTop]} coordsEnd={[currentCoords[0] - tokenInfo['width'], boxTop + edgeLen/2]} nodeRadius={nodeRadius}/>)
+          edges.push(<DirectedArrow start={`box-${boxes.length - 1}`} end={storeTokenStartName} lineID={`line-${edges.length}`} coordsStart={[currentCoords[0] - tokenInfo['width']+ nodeRadius, boxTop]} coordsEnd={[currentCoords[0] - tokenInfo['width'], boxTop + edgeLen/2]} nodeRadius={nodeRadius}/>)
           // Another epsilon branch (end)
           coordsStart = [...currentCoords]
           currentCoords[0] += edgeLen
           newNodeName = `node-${nodes.length}`
-          nodes.push(<Node nodeName={newNodeName} value={''} left={currentCoords[0]} top={currentCoords[1]}/>)
+          nodes.push(<Node nodeName={newNodeName} value={isLast ? 'E' : ''} left={currentCoords[0]} top={currentCoords[1]}/>)
           edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={`line-${edges.length}`} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
           currentNodeName = newNodeName
           // Last epsilon branch (from very beginning to end)
           boxBottom = currentCoords[1] + edgeLen/2 + tokenInfo['height'] - tokenInfo['relativeTop']
-          boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxBottom} left={storeStartCoords[0] + nodeRadius/2}/>)
-          boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxBottom} left={storeStartCoords[0] + tokenInfo['width'] + 2*edgeLen - nodeRadius/2}/>)
+          boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxBottom} left={storeStartCoords[0] + nodeRadius}/>)
+          boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxBottom} left={storeStartCoords[0] + tokenInfo['width'] + 2*edgeLen - nodeRadius}/>)
           edges.push(<Arrow start={storeStartNodeName} end={`box-${boxes.length - 2}`} lineID={`line-${edges.length}`}/>)
           edges.push(<Arrow start={`box-${boxes.length - 2}`} end={`box-${boxes.length - 1}`} lineID={`line-${edges.length}`} labels={<LabelsText text="ϵ"/>}/>)
-          edges.push(<DirectedArrow start={`box-${boxes.length - 1}`} end={currentNodeName} lineID={`line-${edges.length}`} coordsStart={[currentCoords[0] - nodeRadius/2, boxBottom]} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius}/>)
+          edges.push(<DirectedArrow start={`box-${boxes.length - 1}`} end={currentNodeName} lineID={`line-${edges.length}`} coordsStart={[currentCoords[0] - nodeRadius, boxBottom]} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius}/>)
           // Setting return vals
           height = boxBottom - boxTop
           width = 2*edgeLen + tokenInfo['width']
           relativeTop = currentCoords[1] - boxTop
+          finalNodeInfo = {
+            name: currentNodeName,
+            coords: [...currentCoords]
+          }
           break
         case '+':
           // Token type is either char or ()
@@ -106,47 +233,61 @@ function ThompsonsConstruction() {
           tokenInfo = processToken({
             type: '*',
             token: token['token']
-          })
+          }, isLast)
           height = tokenInfo['height']
           width += tokenInfo['width']
           relativeTop = tokenInfo['relativeTop']
+          finalNodeInfo = {
+            name: currentNodeName,
+            coords: [...currentCoords]
+          }
           break
         case '()':
           const parentTokens = token['tokens']
-          let maxTop = startY, maxBottom = startY, tokensWidth = 0
+          yLevel = currentCoords[1]
+          let maxTop = yLevel, maxBottom = yLevel
+          tokensWidth = 0
           for (let i = 0; i < parentTokens.length; i++) {
-            const tokenInfo = processToken(parentTokens[i])
+            const tokenInfo = processToken(parentTokens[i], isLast && i === parentTokens.length - 1)
             tokensWidth += tokenInfo['width']
-            const tokenMaxTop = startY - tokenInfo['relativeTop']
+            const tokenMaxTop = yLevel - tokenInfo['relativeTop']
             if (tokenMaxTop < maxTop) maxTop = tokenMaxTop
-            const tokenMaxBottom = startY + tokenInfo['height'] - tokenInfo['relativeTop']
+            const tokenMaxBottom = yLevel + tokenInfo['height'] - tokenInfo['relativeTop']
             if (tokenMaxBottom > maxBottom) maxBottom = tokenMaxBottom
           }
           height = maxBottom - maxTop
           width = tokensWidth
-          relativeTop = startY - maxTop
+          relativeTop = yLevel - maxTop
+          finalNodeInfo = {
+            name: currentNodeName,
+            coords: [...currentCoords]
+          }
           break
         case 'char':
           coordsStart = [...currentCoords]
           currentCoords[0] += edgeLen
           newNodeName = `node-${nodes.length}`
-          nodes.push(<Node nodeName={newNodeName} value={''} left={currentCoords[0]} top={currentCoords[1]}/>)
+          nodes.push(<Node nodeName={newNodeName} value={isLast ? 'E' : ''} left={currentCoords[0]} top={currentCoords[1]}/>)
           edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={`line-${edges.length}`} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text={token['value']} ml={labelsML}/>}/>)
           currentNodeName = newNodeName
           height = 0
           width = edgeLen
           relativeTop = 0
+          finalNodeInfo = {
+            name: currentNodeName,
+            coords: [...currentCoords]
+          }
           break
         default:
           throw new Error("processToken: Invalid type = " + type)
       }
-      return { height, width, relativeTop }
+      return { height, width, relativeTop, finalNodeInfo }
     }
     return (
       <Box
         position="relative"
         sx={{
-          height: 300, width: 500,
+          height: wholeDiagramDims['height'], width: wholeDiagramDims['width'],
         }}
       >
         {nodes}
