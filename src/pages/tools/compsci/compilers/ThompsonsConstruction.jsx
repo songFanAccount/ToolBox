@@ -31,20 +31,21 @@ function ThompsonsConstruction() {
   const ConstructionGraph = () => {
     const tokens = algoOutputs['tokens']
     console.log(tokens)
-    const currentCoords = [0, 150]
+    const startX = 0, startY = 150
+    const currentCoords = [startX, startY]
     let currentNodeName = "start"
     const edgeLen = 80
     const nodes = []
     const edges = []
     const boxes = []
-    nodes.push(<Node nodeName="start" value="S" left={0} top={150}/>)
+    nodes.push(<Node nodeName="start" value="S" left={0} top={startY}/>)
     for (let i = 0; i < tokens.length; i++) {
       processToken(tokens[i])
     }
     function processToken(token) {
       const type = token['type']
       let height, width, relativeTop
-      let coordsStart, newNodeName, storeStartCoords, storeStartNodeName
+      let coordsStart, newNodeName, storeStartCoords, storeStartNodeName, storeTokenStartName
       let boxTop, boxBottom
       console.log(type)
       switch (type) {
@@ -66,6 +67,7 @@ function ThompsonsConstruction() {
           nodes.push(<Node nodeName={newNodeName} value={''} left={currentCoords[0]} top={currentCoords[1]}/>)
           edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={`line-${edges.length}`} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels="ϵ"/>)
           currentNodeName = newNodeName
+          storeTokenStartName = currentNodeName
           // Process the token * is applied to
           const tokenInfo = processToken(token['token'])
           // Epsilon branch for the repeat feature of *
@@ -74,7 +76,7 @@ function ThompsonsConstruction() {
           boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxTop} left={currentCoords[0] - tokenInfo['width'] + nodeRadius/2}/>)
           edges.push(<Arrow start={currentNodeName} end={`box-${boxes.length - 2}`} lineID={`line-${edges.length}`}/>)
           edges.push(<Arrow start={`box-${boxes.length - 2}`} end={`box-${boxes.length - 1}`} lineID={`line-${edges.length}`} labels="ϵ"/>)
-          edges.push(<DirectedArrow start={`box-${boxes.length - 1}`} end={`node-${nodes.length - 2}`} lineID={`line-${edges.length}`} coordsStart={[currentCoords[0] - tokenInfo['width']+ nodeRadius/2, boxTop]} coordsEnd={[currentCoords[0] - tokenInfo['width'], boxTop + edgeLen/2]} nodeRadius={nodeRadius}/>)
+          edges.push(<DirectedArrow start={`box-${boxes.length - 1}`} end={storeTokenStartName} lineID={`line-${edges.length}`} coordsStart={[currentCoords[0] - tokenInfo['width']+ nodeRadius/2, boxTop]} coordsEnd={[currentCoords[0] - tokenInfo['width'], boxTop + edgeLen/2]} nodeRadius={nodeRadius}/>)
           // Another epsilon branch (end)
           coordsStart = [...currentCoords]
           currentCoords[0] += edgeLen
@@ -95,12 +97,27 @@ function ThompsonsConstruction() {
           relativeTop = currentCoords[1] - boxTop
           break
         case '+':
+          // Token type is either char or ()
+          processToken(token['token'])
+          processToken({
+            type: '*',
+            token: token['token']
+          })
           break
         case '()':
           const parentTokens = token['tokens']
+          let maxTop = startY, maxBottom = startY, tokensWidth = 0
           for (let i = 0; i < parentTokens.length; i++) {
-            processToken(parentTokens[i])
+            const tokenInfo = processToken(parentTokens[i])
+            tokensWidth += tokenInfo['width']
+            const tokenMaxTop = startY - tokenInfo['relativeTop']
+            if (tokenMaxTop < maxTop) maxTop = tokenMaxTop
+            const tokenMaxBottom = startY + tokenInfo['height'] - tokenInfo['relativeTop']
+            if (tokenMaxBottom > maxBottom) maxBottom = tokenMaxBottom
           }
+          height = maxBottom - maxTop
+          width = tokensWidth
+          relativeTop = startY - maxTop
           break
         case 'char':
           coordsStart = [...currentCoords]
@@ -122,9 +139,7 @@ function ThompsonsConstruction() {
       <Box
         position="relative"
         sx={{
-          height: 300,
-          width: 500,
-          border: 1
+          height: 300, width: 500,
         }}
       >
         {nodes}
