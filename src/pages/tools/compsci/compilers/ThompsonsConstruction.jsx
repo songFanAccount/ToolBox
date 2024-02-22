@@ -33,7 +33,6 @@ function ThompsonsConstruction() {
   )
   const ConstructionGraph = () => {
     const tokens = algoOutputs['tokens']
-    console.log(tokens)
     let currentNodeName = "start"
     const edgeLen = 80, labelsML = 1.5
     const nodes = []
