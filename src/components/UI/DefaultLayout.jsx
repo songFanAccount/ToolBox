@@ -202,16 +202,16 @@ export function PageSectionTitle({title, fs=24}) {
 /*
 By default, paragraphs are inline, since it is common to insert link or want to modify part of the paragraph.
 */
-export function PageParagraph({text, bold, nowrap, underline=false, block, color='inherit', fs='medium', mt, mb}) {
+export function PageParagraph({text, bold, nowrap, underline=false, block, color='inherit', fs='medium', mt, mb, ml, mr, p, backgroundColor}) {
     if(!text) {return <></>}
     return (
         <Typography display={block ? 'block' : 'inline'}
             sx={{
-                mb: mb, mt: mt,
+                mb: mb, mt: mt, ml: ml, mr: mr, p: p,
                 fontFamily: 'Verdana',
                 fontWeight: bold ? 'bold' : 'normal',
                 textDecoration: underline ? 'underline' : 'none',
-                color: color,
+                color: color, backgroundColor: backgroundColor,
                 fontSize: fs,
                 whiteSpace: nowrap ? 'nowrap' : 'normal'
             }}
@@ -345,6 +345,7 @@ export function ExternalLink({href, target, children}) {
 }
 const categoryNameToPath = {
     'Resource Allocation': '/tools/compsci/AI/resourceAlloc',
+    'Compilers': '/tools/compsci/compilers'
 }
 export function hasCategoryInfo(cat) {
     return categoryNameToPath.hasOwnProperty(cat)
@@ -383,13 +384,14 @@ const toolnameToPath = {
     'collab': '/collab',
     'latex converter': '/tools/maths/latex-converter',
     'maths expression parser': '/tools/compsci/parsing/maths-expression-parser',
-    'chemistry equation balancer': '/tools/chemistry/chem-equation-balancer',
-    'stationary points': '/',
-    'EF1': '/tools/compsci/AI/resourceAlloc/EF1-generator'
+    'tools': '/tools',
+    'chemical equation balancer': '/tools/chemistry/chem-equation-balancer',
+    'ef1 allocation algorithm': '/tools/compsci/AI/resourceAlloc/EF1-generator',
+    'student proposing deferred acceptance': '/tools/compsci/AI/resourceAlloc/student-proposing-DA',
 }
 export function ToolLink({name, linkText, textDecoration='underline', fs='inherit', color='#011627'}) {
     const toolPath = toolnameToPath[name]
-    if(!toolPath) {throw new Error("No matching tool path for given name!")}
+    if(!toolPath) {throw new Error("No matching tool path for given name: " + name)}
     return (
         <Link
             component={RouterLink}

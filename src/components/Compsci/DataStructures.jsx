@@ -9,7 +9,7 @@ import { degToRad } from '../../helpers/generalHelpers';
 export function DisplayError({errorMsg}) {
     return <PageParagraph text={`>> ${errorMsg}`} bold/>
 }
-const Arrow = ({start, end, lineID, showHead=false, zIndex=-1, startAnchor="middle", endAnchor="middle", startOffset={x: 0, y: 0}, endOffset={x: 0, y: 0}, color="black"}) => {
+export const Arrow = ({start, end, lineID, showHead=false, zIndex=-1, startAnchor="middle", endAnchor="middle", startOffset={x: 0, y: 0}, endOffset={x: 0, y: 0}, color="black", labels}) => {
     const startA = {
         position: startAnchor,
         offset: startOffset
@@ -20,11 +20,11 @@ const Arrow = ({start, end, lineID, showHead=false, zIndex=-1, startAnchor="midd
     }
     return (
         <Box zIndex={zIndex} className={lineID}>
-            <Xarrow zIndex={zIndex} strokeWidth={1} color={color} start={start} end={end} path="straight" showHead={showHead} startAnchor={startA} endAnchor={endA} headSize={7}/>
+            <Xarrow zIndex={zIndex} strokeWidth={1} color={color} start={start} end={end} path="straight" showHead={showHead} startAnchor={startA} endAnchor={endA} headSize={7} labels={labels}/>
         </Box>
     )
 }
-const DirectedArrow = ({start, end, lineID, coordsStart, coordsEnd, nodeRadius=16, color}) => {
+export const DirectedArrow = ({start, end, lineID, coordsStart, coordsEnd, nodeRadius=16, color, labels}) => {
     // From the end coords, find the x and y offsets to make the arrow end at the radius of the node.
     const xDir = coordsEnd[0] > coordsStart[0] ? -1 : 1
     const yDir = coordsEnd[1] > coordsStart[1] ? -1 : 1
@@ -39,7 +39,7 @@ const DirectedArrow = ({start, end, lineID, coordsStart, coordsEnd, nodeRadius=1
         xOffset = nodeRadius * Math.cos(theta) * xDir
         yOffset = nodeRadius * Math.sin(theta) * yDir
     }
-    return <Arrow start={start} end={end} lineID={lineID} showHead endOffset={{x: xOffset, y: yOffset}} color={color} zIndex={color ? 0 : -1}/>
+    return <Arrow start={start} end={end} lineID={lineID} showHead endOffset={{x: xOffset, y: yOffset}} color={color} zIndex={color ? 0 : -1} labels={labels}/>
 }
 /*
 Use this for an input array of already created DOMs
@@ -337,6 +337,11 @@ export function BinaryTree({tree, name, maxLayers, constructOrder}) {
             </Typography>
         </Box>
     )
+    const TreeArrow = ({start, end, lineID}) => (
+        <Box zIndex={-1} className={lineID}>
+            <Xarrow zIndex={-1} strokeWidth={1} color="black" start={start} end={end} path="straight" showHead={false} startAnchor="middle" endAnchor="middle"/>
+        </Box>
+    )
     /* 
     Returns the width of the node including its subtrees, used to provide parent nodes their margins
     A null node should return 0
@@ -363,11 +368,11 @@ export function BinaryTree({tree, name, maxLayers, constructOrder}) {
         layers[curLayerNum].push(<Node value={`${node.value.negate ? '-' : ''}${node.value.token}`} color={node.value.autoAdded ? 'red' : 'inherit'} ml={marginLeft} mr={marginRight} nodeName={nodeName}/>)
         if(left.nodeName) {
             const leftLineID = `${name}-${curLayerNum}-${arrayInd}-${left.arrayInd}`
-            lines.push(<Arrow lineID={leftLineID} zIndex={5} start={nodeName} end={left.nodeName}/>)
+            lines.push(<TreeArrow lineID={leftLineID} start={nodeName} end={left.nodeName}/>)
         }
         if(right.nodeName) {
             const rightLineID = `${name}-${curLayerNum}-${arrayInd}-${right.arrayInd}`
-            lines.push(<Arrow lineID={rightLineID} zIndex={5} start={nodeName} end={right.nodeName}/>)
+            lines.push(<TreeArrow lineID={rightLineID} start={nodeName} end={right.nodeName}/>)
         }
         return {width: Math.max(widthLeft, nodeRadius / 2) + Math.max(widthRight, nodeRadius / 2) + nodeRadius, nodeName: nodeName, arrayInd: arrayInd}
     }
@@ -415,7 +420,7 @@ export function BinaryTree({tree, name, maxLayers, constructOrder}) {
     )
 }
 
-function NormalNode({nodeName, nodeRadius=16, ml=0, mr=0, color, value, top, left}) {
+export function NormalNode({nodeName, nodeRadius=16, ml=0, mr=0, color, value, top, left}) {
     return (
         <Box
             className={nodeName}

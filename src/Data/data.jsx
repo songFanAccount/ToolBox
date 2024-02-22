@@ -6,111 +6,18 @@ const mathsTools = {
             sectionTitles: ['The Tool', 'How to use', 'Limitations', 'How it works']
         }
     },
-    subCategories: {
-        differentiation: {
-            displayName: 'Differentiation',
-            tools: {
-                'stationary-points': {
-                    displayName: 'Stationary points'
-                }
-            },
-            subCategories:  {
-                estimation: {
-                    displayName: 'Estimation techniques',
-                    tools: null,
-                    subCategories: {
-                        TEMPORARY: {
-                            displayName: 'Temporary',
-                            tools: null,
-                            subCategories: null
-                        }
-                    }
-                }
-            }
-        }
-    }
+    subCategories: null
 }
 
 const chemistryTools = {
     displayName: 'Chemistry',
     tools: {
         'chem-equation-balancer': {
-            displayName: 'Chemistry Equation Balancer',
+            displayName: 'Chemical Equation Balancer',
             sectionTitles: ['The Tool']
         }
     },
     subCategories: null
-}
-const physicsTools = {
-    displayName: 'Physics',
-    tools: null,
-    subCategories: {
-        integration: {
-            displayName: 'Physics Category 1',
-            tools: null,
-            subCategories:  {
-                TEMPORARY: {
-                    displayName: 'Physics Category 11',
-                    tools: null,
-                    subCategories: null
-                }
-            }
-        }
-    }
-}
-
-const engineeringTools = {
-    displayName: 'Engineering',
-    tools: null,
-    subCategories: {
-        integration: {
-            displayName: 'Engineering Category 1',
-            tools: null,
-            subCategories:  {
-                TEMPORARY: {
-                    displayName: 'Engineering Category 11',
-                    tools: null,
-                    subCategories: null
-                }
-            }
-        }
-    }
-}
-
-const irlGamesTools = {
-    displayName: 'IRL Games',
-    tools: null,
-    subCategories: {
-        integration: {
-            displayName: 'IRL Games Category 1',
-            tools: null,
-            subCategories:  {
-                TEMPORARY: {
-                    displayName: 'IRL Games Category  11',
-                    tools: null,
-                    subCategories: null
-                }
-            }
-        }
-    }
-}
-
-const videoGamesTools = {
-    displayName: 'Video Games',
-    tools: null,
-    subCategories: {
-        integration: {
-            displayName: 'Video Games Category 1',
-            tools: null,
-            subCategories:  {
-                TEMPORARY: {
-                    displayName: 'Video Games Category 11',
-                    tools: null,
-                    subCategories: null
-                }
-            }
-        }
-    }
 }
 
 const compsciTools = {
@@ -147,6 +54,21 @@ const compsciTools = {
                 }
             }
         },
+        compilers: {
+            displayName: 'Compilers',
+            tools: null,
+            subCategories: {
+                regex: {
+                    displayName: "Regex",
+                    tools: {
+                        'thompsons-construction': {
+                            displayName: "Thompson's Construction Algorithm",
+                            sectionTitles: ['The Tool', 'How it works']
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -155,10 +77,6 @@ export const tools = {
     subCategories: {
         maths: mathsTools,
         chemistry: chemistryTools,
-        physics: physicsTools,
         compsci: compsciTools,
-        engineering: engineeringTools,
-        irlGames: irlGamesTools,
-        videoGames: videoGamesTools
     }
 }

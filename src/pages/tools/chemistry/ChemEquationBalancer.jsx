@@ -149,7 +149,7 @@ export default function ChemEquationBalancer() {
         <Box>
             <SectionBox noBorder={true}>
                 <PageParagraph text={
-                    `The Chemistry Equation Balancer takes in a chemical equation and equips all reactants and products with coefficients that are optimised to give
+                    `The Chemical Equation Balancer takes in a chemical equation and equips all reactants and products with coefficients that are optimised to give
                     a balanced equation with the smallest possible combination of integer coefficients.`
                 }/>
                 <TBAlert

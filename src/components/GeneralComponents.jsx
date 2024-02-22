@@ -16,12 +16,12 @@ function ParserTextField({onChange, expr, placeholder}) {
         />
     )
 }
-export function MEPTextField({onChange, expr}) {
+export function MEPTextField({onChange, expr, placeHolder="e.g. ax^2 + bx + c"}) {
     return (
         <ParserTextField 
             onChange={onChange}
             expr={expr}
-            placeholder="e.g. ax^2 + bx + c"
+            placeholder={placeHolder}
         />
     )
 }
