@@ -44,6 +44,7 @@ function ThompsonsConstruction() {
     }
     function processToken(token) {
       const type = token['type']
+      let tokenInfo
       let height, width, relativeTop
       let coordsStart, newNodeName, storeStartCoords, storeStartNodeName, storeTokenStartName
       let boxTop, boxBottom
@@ -69,7 +70,7 @@ function ThompsonsConstruction() {
           currentNodeName = newNodeName
           storeTokenStartName = currentNodeName
           // Process the token * is applied to
-          const tokenInfo = processToken(token['token'])
+          tokenInfo = processToken(token['token'])
           // Epsilon branch for the repeat feature of *
           boxTop = currentCoords[1] - edgeLen/2 - tokenInfo['relativeTop']
           boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxTop} left={currentCoords[0] - nodeRadius/2}/>)
@@ -98,11 +99,15 @@ function ThompsonsConstruction() {
           break
         case '+':
           // Token type is either char or ()
-          processToken(token['token'])
-          processToken({
+          tokenInfo = processToken(token['token'])
+          width = tokenInfo['width']
+          tokenInfo = processToken({
             type: '*',
             token: token['token']
           })
+          height = tokenInfo['height']
+          width += tokenInfo['width']
+          relativeTop = tokenInfo['relativeTop']
           break
         case '()':
           const parentTokens = token['tokens']
