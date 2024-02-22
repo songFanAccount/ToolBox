@@ -28,13 +28,16 @@ function ThompsonsConstruction() {
       }}
     />
   )
+  const LabelsText = ({text, ml}) => (
+    <PageParagraph text={text} backgroundColor='white' p={0.5} ml={ml}/>
+  )
   const ConstructionGraph = () => {
     const tokens = algoOutputs['tokens']
     console.log(tokens)
     const startX = 0, startY = 150
     const currentCoords = [startX, startY]
     let currentNodeName = "start"
-    const edgeLen = 80
+    const edgeLen = 80, labelsML = 1.5
     const nodes = []
     const edges = []
     const boxes = []
@@ -48,7 +51,6 @@ function ThompsonsConstruction() {
       let height, width, relativeTop
       let coordsStart, newNodeName, storeStartCoords, storeStartNodeName, storeTokenStartName
       let boxTop, boxBottom
-      console.log(type)
       switch (type) {
         case '|':
           const orTokens = token['tokens']
@@ -66,7 +68,7 @@ function ThompsonsConstruction() {
           currentCoords[0] += edgeLen
           newNodeName = `node-${nodes.length}`
           nodes.push(<Node nodeName={newNodeName} value={''} left={currentCoords[0]} top={currentCoords[1]}/>)
-          edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={`line-${edges.length}`} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels="ϵ"/>)
+          edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={`line-${edges.length}`} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
           currentNodeName = newNodeName
           storeTokenStartName = currentNodeName
           // Process the token * is applied to
@@ -76,21 +78,21 @@ function ThompsonsConstruction() {
           boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxTop} left={currentCoords[0] - nodeRadius/2}/>)
           boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxTop} left={currentCoords[0] - tokenInfo['width'] + nodeRadius/2}/>)
           edges.push(<Arrow start={currentNodeName} end={`box-${boxes.length - 2}`} lineID={`line-${edges.length}`}/>)
-          edges.push(<Arrow start={`box-${boxes.length - 2}`} end={`box-${boxes.length - 1}`} lineID={`line-${edges.length}`} labels="ϵ"/>)
+          edges.push(<Arrow start={`box-${boxes.length - 2}`} end={`box-${boxes.length - 1}`} lineID={`line-${edges.length}`} labels={<LabelsText text="ϵ"/>}/>)
           edges.push(<DirectedArrow start={`box-${boxes.length - 1}`} end={storeTokenStartName} lineID={`line-${edges.length}`} coordsStart={[currentCoords[0] - tokenInfo['width']+ nodeRadius/2, boxTop]} coordsEnd={[currentCoords[0] - tokenInfo['width'], boxTop + edgeLen/2]} nodeRadius={nodeRadius}/>)
           // Another epsilon branch (end)
           coordsStart = [...currentCoords]
           currentCoords[0] += edgeLen
           newNodeName = `node-${nodes.length}`
           nodes.push(<Node nodeName={newNodeName} value={''} left={currentCoords[0]} top={currentCoords[1]}/>)
-          edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={`line-${edges.length}`} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels="ϵ"/>)
+          edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={`line-${edges.length}`} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
           currentNodeName = newNodeName
           // Last epsilon branch (from very beginning to end)
           boxBottom = currentCoords[1] + edgeLen/2 + tokenInfo['height'] - tokenInfo['relativeTop']
           boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxBottom} left={storeStartCoords[0] + nodeRadius/2}/>)
           boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxBottom} left={storeStartCoords[0] + tokenInfo['width'] + 2*edgeLen - nodeRadius/2}/>)
           edges.push(<Arrow start={storeStartNodeName} end={`box-${boxes.length - 2}`} lineID={`line-${edges.length}`}/>)
-          edges.push(<Arrow start={`box-${boxes.length - 2}`} end={`box-${boxes.length - 1}`} lineID={`line-${edges.length}`} labels="ϵ"/>)
+          edges.push(<Arrow start={`box-${boxes.length - 2}`} end={`box-${boxes.length - 1}`} lineID={`line-${edges.length}`} labels={<LabelsText text="ϵ"/>}/>)
           edges.push(<DirectedArrow start={`box-${boxes.length - 1}`} end={currentNodeName} lineID={`line-${edges.length}`} coordsStart={[currentCoords[0] - nodeRadius/2, boxBottom]} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius}/>)
           // Setting return vals
           height = boxBottom - boxTop
@@ -129,7 +131,7 @@ function ThompsonsConstruction() {
           currentCoords[0] += edgeLen
           newNodeName = `node-${nodes.length}`
           nodes.push(<Node nodeName={newNodeName} value={''} left={currentCoords[0]} top={currentCoords[1]}/>)
-          edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={`line-${edges.length}`} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={token['value']}/>)
+          edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={`line-${edges.length}`} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text={token['value']} ml={labelsML}/>}/>)
           currentNodeName = newNodeName
           height = 0
           width = edgeLen
