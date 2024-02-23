@@ -1,5 +1,5 @@
 import React from 'react'
-import { ExternalLink, PageParagraph, SectionBox, TBButton } from '../../../../components/UI/DefaultLayout'
+import { ExternalLink, PageParagraph, PageTextList, SectionBox, TBButton } from '../../../../components/UI/DefaultLayout'
 import { Box } from '@mui/material'
 import { MEPTextField } from '../../../../components/GeneralComponents'
 import { isLetterOrDigit, removeSpaces } from '../../../../helpers/generalHelpers'
@@ -137,7 +137,7 @@ function ThompsonsConstruction() {
           // Determine and create the final node
           const finalNodeName = `node-${nodes.length}`
           const storeEndNodeCoords = [currentCoords[0] + dims['width'], currentCoords[1]]
-          nodes.push(<Node nodeName={finalNodeName} value={isLast ? 'E' : ''} left={currentCoords[0] + dims['width']} top={currentCoords[1]}/>)
+          nodes.push(<Node nodeName={finalNodeName} value={nodes.length} left={currentCoords[0] + dims['width']} top={currentCoords[1]}/>)
           // Move to where the token start needs to be
           currentCoords[0] += edgeLen
           currentCoords[1] -= dims['relativeTop']
@@ -147,7 +147,7 @@ function ThompsonsConstruction() {
             coordsStart = [...currentCoords]
             // Produce the start node
             newNodeName = `node-${nodes.length}`
-            nodes.push(<Node nodeName={newNodeName} value={''} left={currentCoords[0]} top={currentCoords[1]}/>)
+            nodes.push(<Node nodeName={newNodeName} value={nodes.length} left={currentCoords[0]} top={currentCoords[1]}/>)
             edges.push(<DirectedArrow start={storeStartNodeName} end={newNodeName} lineID={`line-${edges.length}`} coordsStart={[...storeStartCoords]} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
             currentNodeName = newNodeName
             // Produce the section
@@ -189,7 +189,7 @@ function ThompsonsConstruction() {
           coordsStart = [...currentCoords]
           currentCoords[0] += edgeLen
           newNodeName = `node-${nodes.length}`
-          nodes.push(<Node nodeName={newNodeName} value={''} left={currentCoords[0]} top={currentCoords[1]}/>)
+          nodes.push(<Node nodeName={newNodeName} value={nodes.length} left={currentCoords[0]} top={currentCoords[1]}/>)
           edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={`line-${edges.length}`} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
           currentNodeName = newNodeName
           storeTokenStartName = currentNodeName
@@ -206,7 +206,7 @@ function ThompsonsConstruction() {
           coordsStart = [...currentCoords]
           currentCoords[0] += edgeLen
           newNodeName = `node-${nodes.length}`
-          nodes.push(<Node nodeName={newNodeName} value={isLast ? 'E' : ''} left={currentCoords[0]} top={currentCoords[1]}/>)
+          nodes.push(<Node nodeName={newNodeName} value={nodes.length} left={currentCoords[0]} top={currentCoords[1]}/>)
           edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={`line-${edges.length}`} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
           currentNodeName = newNodeName
           // Last epsilon branch (from very beginning to end)
@@ -266,7 +266,7 @@ function ThompsonsConstruction() {
           coordsStart = [...currentCoords]
           currentCoords[0] += edgeLen
           newNodeName = `node-${nodes.length}`
-          nodes.push(<Node nodeName={newNodeName} value={isLast ? 'E' : ''} left={currentCoords[0]} top={currentCoords[1]}/>)
+          nodes.push(<Node nodeName={newNodeName} value={nodes.length} left={currentCoords[0]} top={currentCoords[1]}/>)
           edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={`line-${edges.length}`} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text={token['value']} ml={labelsML}/>}/>)
           currentNodeName = newNodeName
           height = 0
@@ -314,6 +314,14 @@ function ThompsonsConstruction() {
         </Box>
       </SectionBox>
       <SectionBox title="How it works">
+        <PageTextList
+          listName="To begin, enter a valid regular expression composed of:"
+          list={[
+            "Character classes (a-z, A-Z, and 0-9): Accepted characters are alphanumeric characters.",
+            "Quantifiers (*, +): Characters that indicate how many occurrences of a character, or set of characters using paretheses, are allowed in the matched expression. Here, (token)* indicates 0 or more tokens are allowed, whereas (token)+ indicates 1 or more occurrences is possible. (token)+ can also be interpreted as token(token)*.",
+            "Alternation (|): Alternation allows the specification of multiple possible search patterns, we will use | to do this. A simple example is a|b, which means the expression can either be a, OR, b. A more complicated example may be S(a|b*c|(d+b))E, this means, our expression must start with S, then choose one of either a, b*c or (d+b), then it must end with E."
+          ]}
+        />
         <MEPTextField onChange={handleChange} expr={regex} placeHolder='e.g. (0|10*1)*10*'/>
         <TBButton buttonText="Run Algorithm" onClick={runThompsons} ml={0} mt={0}/>
         <SectionBox title="Construction:">
