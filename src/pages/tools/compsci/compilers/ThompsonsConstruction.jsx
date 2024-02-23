@@ -1,9 +1,11 @@
 import React from 'react'
 import { ExternalLink, PageParagraph, PageTextList, SectionBox, TBButton } from '../../../../components/UI/DefaultLayout'
-import { Box } from '@mui/material'
+import { Box, Stack } from '@mui/material'
 import { MEPTextField } from '../../../../components/GeneralComponents'
 import { isLetterOrDigit, removeSpaces } from '../../../../helpers/generalHelpers'
 import { Arrow, DirectedArrow, NormalNode } from '../../../../components/Compsci/DataStructures'
+import { AnimControlBoard, commonAnims } from '../../../../components/UI/Animation'
+import { useAnimate } from 'framer-motion'
 
 function ThompsonsConstruction() {
   const [regex, setRegex] = React.useState('')
@@ -38,6 +40,11 @@ function ThompsonsConstruction() {
     const nodes = []
     const edges = []
     const boxes = []
+    // Anim related
+    const anims = []
+    const [scope, animate] = useAnimate()
+    const step = React.useRef(-1)
+    //
     const wholeDiagramDims = getTokenSectionDims({
       type: '()',
       tokens: tokens
@@ -68,19 +75,14 @@ function ThompsonsConstruction() {
           break
         case '+':
           tokenDims = getTokenSectionDims(token['token'])
-          height = tokenDims['height']
           width = tokenDims['width']
-          relativeTop = tokenDims['relativeTop']
           tokenDims = getTokenSectionDims({
             type: '*',
             token: token['token']
           })
           width += tokenDims['width']
-          if (relativeTop < tokenDims['relativeTop']) relativeTop = tokenDims['relativeTop']
-          let maxBottom = height - relativeTop
-          const tokenMaxBot = tokenDims['height'] - token['relativeTop']
-          if (maxBottom < tokenMaxBot) maxBottom = tokenMaxBot
-          height = relativeTop + maxBottom
+          height = tokenDims['height']
+          relativeTop = tokenDims['relativeTop']
           break
         case '()':
           width = 0
@@ -127,6 +129,7 @@ function ThompsonsConstruction() {
       let height, width, relativeTop, finalNodeInfo
       let coordsStart, newNodeName, storeStartCoords, storeStartNodeName, storeTokenStartName
       let yLevel, boxTop, boxBottom
+      let edgeName, multiEdge
       switch (type) {
         case '|':
           const orTokens = token['tokens']
@@ -137,7 +140,8 @@ function ThompsonsConstruction() {
           // Determine and create the final node
           const finalNodeName = `node-${nodes.length}`
           const storeEndNodeCoords = [currentCoords[0] + dims['width'], currentCoords[1]]
-          nodes.push(<Node nodeName={finalNodeName} value={nodes.length} left={currentCoords[0] + dims['width']} top={currentCoords[1]}/>)
+          nodes.push(<Node nodeName={finalNodeName} value={isLast ? 'E' : ''} left={currentCoords[0] + dims['width']} top={currentCoords[1]}/>)
+          anims.push([`.${finalNodeName}`, commonAnims.reveal, {duration: 0.001, at: "<", delay: 1}])
           // Move to where the token start needs to be
           currentCoords[0] += edgeLen
           currentCoords[1] -= dims['relativeTop']
@@ -147,27 +151,43 @@ function ThompsonsConstruction() {
             coordsStart = [...currentCoords]
             // Produce the start node
             newNodeName = `node-${nodes.length}`
-            nodes.push(<Node nodeName={newNodeName} value={nodes.length} left={currentCoords[0]} top={currentCoords[1]}/>)
-            edges.push(<DirectedArrow start={storeStartNodeName} end={newNodeName} lineID={`line-${edges.length}`} coordsStart={[...storeStartCoords]} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
+            nodes.push(<Node nodeName={newNodeName} value={''} left={currentCoords[0]} top={currentCoords[1]}/>)
+            edgeName = `line-${edges.length}`
+            edges.push(<DirectedArrow start={storeStartNodeName} end={newNodeName} lineID={edgeName} coordsStart={[...storeStartCoords]} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
+            // ANIM
+            anims.push([`.${edgeName}`, commonAnims.reveal, {duration: 0.001, delay: 1}])
+            anims.push([`.${newNodeName}`, commonAnims.reveal, {duration: 0.001, at: "<", delay: 1}])
             currentNodeName = newNodeName
             // Produce the section
+            let finalNode
             for (let j = 0; j < orTokens[i].length; j++) {
               tokenInfo = processToken(orTokens[i][j])
-              const finalNode = tokenInfo['finalNodeInfo']
-              // Create an edge to an intermediate box based on how far the end node is from the end box
-              const dist = storeEndNodeCoords[0] - edgeLen - finalNode['coords'][0]
-              let endNodeName, endNodeCoords
-              if (dist > 0) {
-                endNodeName = `box-${boxes.length}`
-                endNodeCoords = [finalNode['coords'][0] + dist, finalNode['coords'][1]]
-                boxes.push(<PlaceholderBox name={endNodeName} left={finalNode['coords'][0] + dist} top={finalNode['coords'][1]}/>)
-                edges.push(<Arrow start={finalNode['name']} end={endNodeName} lineID={`line-${edges.length}`} coordsStart={[...finalNode['coords']]} coordsEnd={[...endNodeCoords]} nodeRadius={nodeRadius}/>)
-              } else {
-                endNodeName = finalNode['name']
-                endNodeCoords = [...finalNode['coords']]
-              }
-              edges.push(<DirectedArrow start={endNodeName} end={finalNodeName} lineID={`line-${edges.length}`} coordsStart={[...endNodeCoords]} coordsEnd={[...storeEndNodeCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
+              if (j === orTokens[i].length - 1) finalNode = tokenInfo['finalNodeInfo']
             }
+            // Create an edge to an intermediate box based on how far the end node is from the end box
+            const dist = storeEndNodeCoords[0] - edgeLen - finalNode['coords'][0]
+            let endNodeName, endNodeCoords
+            multiEdge = []
+            if (dist > 0) {
+              endNodeName = `box-${boxes.length}`
+              endNodeCoords = [finalNode['coords'][0] + dist, finalNode['coords'][1]]
+              boxes.push(<PlaceholderBox name={endNodeName} left={finalNode['coords'][0] + dist} top={finalNode['coords'][1]}/>)
+              edgeName = `line-${edges.length}`
+              edges.push(<Arrow start={finalNode['name']} end={endNodeName} lineID={edgeName} coordsStart={[...finalNode['coords']]} coordsEnd={[...endNodeCoords]} nodeRadius={nodeRadius}/>)
+              multiEdge.push(edgeName)
+            } else {
+              endNodeName = finalNode['name']
+              endNodeCoords = [...finalNode['coords']]
+            }
+            edgeName = `line-${edges.length}`
+            edges.push(<DirectedArrow start={endNodeName} end={finalNodeName} lineID={edgeName} coordsStart={[...endNodeCoords]} coordsEnd={[...storeEndNodeCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
+            multiEdge.push(edgeName)
+            // ANIM
+            multiEdge.forEach((name, index) => {
+              if (index === 0) anims.push([`.${name}`, commonAnims.reveal, {duration: 0.001, delay: 1}])
+              else anims.push([`.${name}`, commonAnims.reveal, {duration: 0.001, delay: 1, at: '<'}])
+            })
+            anims.push([`.${finalNodeName}`, commonAnims.show, {duration: 0.001, delay: 1, at: '<'}])
             currentCoords[0] = coordsStart[0]
             currentCoords[1] = coordsStart[1] + dims['ORRelBottom'][i] + 3 * edgeLen / 4
           }
@@ -189,33 +209,55 @@ function ThompsonsConstruction() {
           coordsStart = [...currentCoords]
           currentCoords[0] += edgeLen
           newNodeName = `node-${nodes.length}`
-          nodes.push(<Node nodeName={newNodeName} value={nodes.length} left={currentCoords[0]} top={currentCoords[1]}/>)
-          edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={`line-${edges.length}`} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
+          edgeName = `line-${edges.length}`
+          nodes.push(<Node nodeName={newNodeName} value={''} left={currentCoords[0]} top={currentCoords[1]}/>)
+          edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={edgeName} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
           currentNodeName = newNodeName
           storeTokenStartName = currentNodeName
+          // ANIM
+          anims.push([`.${edgeName}`, commonAnims.reveal, {duration: 0.001, delay: 1}])
+          anims.push([`.${newNodeName}`, commonAnims.reveal, {duration: 0.001, at: "<", delay: 1}])
           // Process the token * is applied to
           tokenInfo = processToken(token['token'])
-          // Epsilon branch for the repeat feature of *
-          boxTop = currentCoords[1] - edgeLen/2 - tokenInfo['relativeTop']
-          boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxTop} left={currentCoords[0] - nodeRadius}/>)
-          boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxTop} left={currentCoords[0] - tokenInfo['width'] + nodeRadius}/>)
-          edges.push(<Arrow start={currentNodeName} end={`box-${boxes.length - 2}`} lineID={`line-${edges.length}`}/>)
-          edges.push(<Arrow start={`box-${boxes.length - 2}`} end={`box-${boxes.length - 1}`} lineID={`line-${edges.length}`} labels={<LabelsText text="ϵ"/>}/>)
-          edges.push(<DirectedArrow start={`box-${boxes.length - 1}`} end={storeTokenStartName} lineID={`line-${edges.length}`} coordsStart={[currentCoords[0] - tokenInfo['width']+ nodeRadius, boxTop]} coordsEnd={[currentCoords[0] - tokenInfo['width'], boxTop + edgeLen/2]} nodeRadius={nodeRadius}/>)
+          const endNodeCoords = [...currentCoords]
+          const endNodeName = currentNodeName
           // Another epsilon branch (end)
           coordsStart = [...currentCoords]
           currentCoords[0] += edgeLen
           newNodeName = `node-${nodes.length}`
-          nodes.push(<Node nodeName={newNodeName} value={nodes.length} left={currentCoords[0]} top={currentCoords[1]}/>)
-          edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={`line-${edges.length}`} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
+          nodes.push(<Node nodeName={newNodeName} value={isLast ? 'E' : ''} left={currentCoords[0]} top={currentCoords[1]}/>)
+          edgeName = `line-${edges.length}`
+          edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={edgeName} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
+          // ANIM
+          anims.push([`.${edgeName}`, commonAnims.reveal, {duration: 0.001, delay: 1}])
+          anims.push([`.${newNodeName}`, commonAnims.reveal, {duration: 0.001, at: "<", delay: 1}])
           currentNodeName = newNodeName
+          // Epsilon branch for the repeat feature of *
+          boxTop = endNodeCoords[1] - edgeLen/2 - tokenInfo['relativeTop']
+          boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxTop} left={endNodeCoords[0] - nodeRadius}/>)
+          boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxTop} left={endNodeCoords[0] - tokenInfo['width'] + nodeRadius}/>)
+          multiEdge = [`line-${edges.length}`, `line-${edges.length+1}`, `line-${edges.length+2}`]
+          edges.push(<Arrow start={endNodeName} end={`box-${boxes.length - 2}`} lineID={`line-${edges.length}`}/>)
+          edges.push(<Arrow start={`box-${boxes.length - 2}`} end={`box-${boxes.length - 1}`} lineID={`line-${edges.length}`} labels={<LabelsText text="ϵ"/>}/>)
+          edges.push(<DirectedArrow start={`box-${boxes.length - 1}`} end={storeTokenStartName} lineID={`line-${edges.length}`} coordsStart={[endNodeCoords[0] - tokenInfo['width']+ nodeRadius, boxTop]} coordsEnd={[endNodeCoords[0] - tokenInfo['width'], boxTop + edgeLen/2]} nodeRadius={nodeRadius}/>)
+          // ANIM
+          anims.push([`.${multiEdge[0]}`, commonAnims.reveal, {duration: 0.001, delay: 1}])
+          anims.push([`.${multiEdge[1]}`, commonAnims.reveal, {duration: 0.001, at: "<", delay: 1}])
+          anims.push([`.${multiEdge[2]}`, commonAnims.reveal, {duration: 0.001, at: "<", delay: 1}])
+          anims.push([`.${storeTokenStartName}`, commonAnims.show, {duration: 0.001, delay: 1, at: '<'}])
           // Last epsilon branch (from very beginning to end)
           boxBottom = currentCoords[1] + edgeLen/2 + tokenInfo['height'] - tokenInfo['relativeTop']
           boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxBottom} left={storeStartCoords[0] + nodeRadius}/>)
           boxes.push(<PlaceholderBox name={`box-${boxes.length}`} top={boxBottom} left={storeStartCoords[0] + tokenInfo['width'] + 2*edgeLen - nodeRadius}/>)
+          multiEdge = [`line-${edges.length}`, `line-${edges.length+1}`, `line-${edges.length+2}`]
           edges.push(<Arrow start={storeStartNodeName} end={`box-${boxes.length - 2}`} lineID={`line-${edges.length}`}/>)
           edges.push(<Arrow start={`box-${boxes.length - 2}`} end={`box-${boxes.length - 1}`} lineID={`line-${edges.length}`} labels={<LabelsText text="ϵ"/>}/>)
           edges.push(<DirectedArrow start={`box-${boxes.length - 1}`} end={currentNodeName} lineID={`line-${edges.length}`} coordsStart={[currentCoords[0] - nodeRadius, boxBottom]} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius}/>)
+          // ANIM
+          anims.push([`.${multiEdge[0]}`, commonAnims.reveal, {duration: 0.001, delay: 1}])
+          anims.push([`.${multiEdge[1]}`, commonAnims.reveal, {duration: 0.001, at: "<", delay: 1}])
+          anims.push([`.${multiEdge[2]}`, commonAnims.reveal, {duration: 0.001, at: "<", delay: 1}])
+          anims.push([`.${currentNodeName}`, commonAnims.show, {duration: 0.001, delay: 1, at: '<'}])
           // Setting return vals
           height = boxBottom - boxTop
           width = 2*edgeLen + tokenInfo['width']
@@ -266,8 +308,11 @@ function ThompsonsConstruction() {
           coordsStart = [...currentCoords]
           currentCoords[0] += edgeLen
           newNodeName = `node-${nodes.length}`
-          nodes.push(<Node nodeName={newNodeName} value={nodes.length} left={currentCoords[0]} top={currentCoords[1]}/>)
-          edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={`line-${edges.length}`} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text={token['value']} ml={labelsML}/>}/>)
+          nodes.push(<Node nodeName={newNodeName} value={isLast ? 'E' : ''} left={currentCoords[0]} top={currentCoords[1]}/>)
+          edgeName = `line-${edges.length}`
+          edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={edgeName} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text={token['value']} ml={labelsML}/>}/>)
+          anims.push([`.${edgeName}`, commonAnims.reveal, {duration: 0.001, delay: 1}])
+          anims.push([`.${newNodeName}`, commonAnims.reveal, {duration: 0.001, at: "<", delay: 1}])
           currentNodeName = newNodeName
           height = 0
           width = edgeLen
@@ -282,17 +327,86 @@ function ThompsonsConstruction() {
       }
       return { height, width, relativeTop, finalNodeInfo }
     }
+    function fullConstruction() {
+      step.current = -1
+      animate(anims)
+    }
+    function getAllAnims() {
+      return anims.map((anim) => [anim[0], commonAnims.show, {at: "<"}])
+    }
+    function getClearAnims() {
+      return anims.map((anim) => [anim[0], commonAnims.hide, {at: "<"}])
+    }
+    const allAnims = getAllAnims()
+    const clearAnims = getClearAnims()
+    function stepConstruction() {
+      function animateFrom(s) {
+        stepAnims = []
+        let i
+        for (i = s; i < anims.length; i++) {
+          stepAnims.push([anims[i][0], commonAnims.show])
+          if (anims[i][0].startsWith('.node')) break
+        }
+        i++
+        while (i < anims.length && anims[i][0].startsWith('.node')) {
+          stepAnims.push([anims[i][0], commonAnims.show])
+          i++
+        }
+        step.current = i
+        animate(stepAnims)
+      }
+      let stepAnims
+      if (step.current >= anims.length) step.current = -1
+      if (step.current === -1) {
+        animate(clearAnims)
+        animateFrom(0)
+      } else {
+        animateFrom(step.current)
+      }
+    }
+    function stepBack() {
+      if (step.current === 0) return
+      if (step.current === -1) step.current = anims.length
+      let stepAnims = []
+      let i = step.current - 1
+      while (i >= 0 && anims[i][0].startsWith('.node')) {
+        console.log(anims[i])
+        stepAnims.push([anims[i][0], commonAnims.hide, {at: '<'}])
+        i--
+      }
+      while (i >= 0 && anims[i][0].startsWith('.line')) {
+        console.log(anims[i])
+        stepAnims.push([anims[i][0], commonAnims.hide, {at: '<'}])
+        i--
+      }
+      animate(stepAnims)
+      step.current = i + 1
+    }
+    function skipToEnd() {
+      animate(allAnims)
+      step.current = -1
+    }
     return (
-      <Box
-        position="relative"
-        sx={{
-          height: wholeDiagramDims['height'], width: wholeDiagramDims['width'],
-        }}
-      >
-        {nodes}
-        {edges}
-        {boxes}
-      </Box>
+      <Stack direction="column" rowGap={4}>
+        <Box
+          ref={scope}
+          position="relative"
+          sx={{
+            height: wholeDiagramDims['height'], width: wholeDiagramDims['width'],
+          }}
+          >
+          {nodes}
+          {edges}
+          {boxes}
+        </Box>
+        <AnimControlBoard label="Construction Control Board" play={fullConstruction} next={stepConstruction} back={stepBack} skipToEnd={skipToEnd}
+          tooltips={{
+            play: 'Show ordered construction',
+            next: 'Show next step',
+            back: 'Go back one step'
+          }}
+        />
+      </Stack>
     )
   }
   const Construction = () => {
