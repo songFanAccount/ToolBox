@@ -1,5 +1,5 @@
 import React from 'react'
-import { ExternalLink, PageParagraph, PageTextList, SectionBox, TBButton } from '../../../../components/UI/DefaultLayout'
+import { ExternalLink, PageParagraph, PageTextList, SectionBox, TBButton, TBButtonWithTextfield } from '../../../../components/UI/DefaultLayout'
 import { Box, Stack } from '@mui/material'
 import { MEPTextField } from '../../../../components/GeneralComponents'
 import { isLetterOrDigit, removeSpaces } from '../../../../helpers/generalHelpers'
@@ -9,10 +9,15 @@ import { useAnimate } from 'framer-motion'
 
 function ThompsonsConstruction() {
   const [regex, setRegex] = React.useState('')
+  const [testWord, setTestWord] = React.useState('')
   const [algoOutputs, setAlgoOutputs] = React.useState(null)
   const nodeRadius = 12
+  let graphObj = {}
   function handleChange(value) {
     setRegex(value)
+  }
+  function handleTestChange(value) {
+    setTestWord(value)
   }
   function runThompsons() {
     setAlgoOutputs(parse(regex))
@@ -40,6 +45,7 @@ function ThompsonsConstruction() {
     const nodes = []
     const edges = []
     const boxes = []
+    let graph = {}
     // Anim related
     const anims = []
     const [scope, animate] = useAnimate()
@@ -54,6 +60,13 @@ function ThompsonsConstruction() {
     nodes.push(<Node nodeName="start" value="S" left={0} top={startY}/>)
     for (let i = 0; i < tokens.length; i++) {
       processToken(tokens[i], i === tokens.length - 1)
+    }
+    graphObj = graph
+    function updateGraph(node1, node2, edges, label) {
+      console.log(`node1 = ${node1}, node2 = ${node2}`)
+      const newEl = [node2, edges, label]
+      if (graph.hasOwnProperty(node1)) graph[node1].push(newEl)
+      else graph[node1] = [newEl]
     }
     function getTokenSectionDims(token) {
       const type = token['type']
@@ -154,6 +167,7 @@ function ThompsonsConstruction() {
             nodes.push(<Node nodeName={newNodeName} value={''} left={currentCoords[0]} top={currentCoords[1]}/>)
             edgeName = `line-${edges.length}`
             edges.push(<DirectedArrow start={storeStartNodeName} end={newNodeName} lineID={edgeName} coordsStart={[...storeStartCoords]} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
+            updateGraph(storeStartNodeName, newNodeName, [edgeName], "ϵ")
             // ANIM
             anims.push([`.${edgeName}`, commonAnims.reveal, {duration: 0.001, delay: 1}])
             anims.push([`.${newNodeName}`, commonAnims.reveal, {duration: 0.001, at: "<", delay: 1}])
@@ -187,6 +201,7 @@ function ThompsonsConstruction() {
               if (index === 0) anims.push([`.${name}`, commonAnims.reveal, {duration: 0.001, delay: 1}])
               else anims.push([`.${name}`, commonAnims.reveal, {duration: 0.001, delay: 1, at: '<'}])
             })
+            updateGraph(finalNode['name'], finalNodeName, multiEdge, "ϵ")
             anims.push([`.${finalNodeName}`, commonAnims.show, {duration: 0.001, delay: 1, at: '<'}])
             currentCoords[0] = coordsStart[0]
             currentCoords[1] = coordsStart[1] + dims['ORRelBottom'][i] + 3 * edgeLen / 4
@@ -212,6 +227,7 @@ function ThompsonsConstruction() {
           edgeName = `line-${edges.length}`
           nodes.push(<Node nodeName={newNodeName} value={''} left={currentCoords[0]} top={currentCoords[1]}/>)
           edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={edgeName} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
+          updateGraph(currentNodeName, newNodeName, [edgeName], "ϵ")
           currentNodeName = newNodeName
           storeTokenStartName = currentNodeName
           // ANIM
@@ -228,6 +244,7 @@ function ThompsonsConstruction() {
           nodes.push(<Node nodeName={newNodeName} value={isLast ? 'E' : ''} left={currentCoords[0]} top={currentCoords[1]}/>)
           edgeName = `line-${edges.length}`
           edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={edgeName} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
+          updateGraph(currentNodeName, newNodeName, [edgeName], "ϵ")
           // ANIM
           anims.push([`.${edgeName}`, commonAnims.reveal, {duration: 0.001, delay: 1}])
           anims.push([`.${newNodeName}`, commonAnims.reveal, {duration: 0.001, at: "<", delay: 1}])
@@ -240,6 +257,7 @@ function ThompsonsConstruction() {
           edges.push(<Arrow start={endNodeName} end={`box-${boxes.length - 2}`} lineID={`line-${edges.length}`}/>)
           edges.push(<Arrow start={`box-${boxes.length - 2}`} end={`box-${boxes.length - 1}`} lineID={`line-${edges.length}`} labels={<LabelsText text="ϵ"/>}/>)
           edges.push(<DirectedArrow start={`box-${boxes.length - 1}`} end={storeTokenStartName} lineID={`line-${edges.length}`} coordsStart={[endNodeCoords[0] - tokenInfo['width']+ nodeRadius, boxTop]} coordsEnd={[endNodeCoords[0] - tokenInfo['width'], boxTop + edgeLen/2]} nodeRadius={nodeRadius}/>)
+          updateGraph(endNodeName, storeTokenStartName, multiEdge, "ϵ")
           // ANIM
           anims.push([`.${multiEdge[0]}`, commonAnims.reveal, {duration: 0.001, delay: 1}])
           anims.push([`.${multiEdge[1]}`, commonAnims.reveal, {duration: 0.001, at: "<", delay: 1}])
@@ -253,6 +271,7 @@ function ThompsonsConstruction() {
           edges.push(<Arrow start={storeStartNodeName} end={`box-${boxes.length - 2}`} lineID={`line-${edges.length}`}/>)
           edges.push(<Arrow start={`box-${boxes.length - 2}`} end={`box-${boxes.length - 1}`} lineID={`line-${edges.length}`} labels={<LabelsText text="ϵ"/>}/>)
           edges.push(<DirectedArrow start={`box-${boxes.length - 1}`} end={currentNodeName} lineID={`line-${edges.length}`} coordsStart={[currentCoords[0] - nodeRadius, boxBottom]} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius}/>)
+          updateGraph(storeStartNodeName, currentNodeName, multiEdge, "ϵ")
           // ANIM
           anims.push([`.${multiEdge[0]}`, commonAnims.reveal, {duration: 0.001, delay: 1}])
           anims.push([`.${multiEdge[1]}`, commonAnims.reveal, {duration: 0.001, at: "<", delay: 1}])
@@ -311,6 +330,7 @@ function ThompsonsConstruction() {
           nodes.push(<Node nodeName={newNodeName} value={isLast ? 'E' : ''} left={currentCoords[0]} top={currentCoords[1]}/>)
           edgeName = `line-${edges.length}`
           edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={edgeName} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text={token['value']} ml={labelsML}/>}/>)
+          updateGraph(currentNodeName, newNodeName, [edgeName], token['value'])
           anims.push([`.${edgeName}`, commonAnims.reveal, {duration: 0.001, delay: 1}])
           anims.push([`.${newNodeName}`, commonAnims.reveal, {duration: 0.001, at: "<", delay: 1}])
           currentNodeName = newNodeName
@@ -370,12 +390,10 @@ function ThompsonsConstruction() {
       let stepAnims = []
       let i = step.current - 1
       while (i >= 0 && anims[i][0].startsWith('.node')) {
-        console.log(anims[i])
         stepAnims.push([anims[i][0], commonAnims.hide, {at: '<'}])
         i--
       }
       while (i >= 0 && anims[i][0].startsWith('.line')) {
-        console.log(anims[i])
         stepAnims.push([anims[i][0], commonAnims.hide, {at: '<'}])
         i--
       }
@@ -428,16 +446,41 @@ function ThompsonsConstruction() {
         </Box>
       </SectionBox>
       <SectionBox title="How it works">
+        <MEPTextField onChange={handleChange} expr={regex} placeHolder='e.g. (0|10*1)*10*'/>
         <PageTextList
           listName="To begin, enter a valid regular expression composed of:"
           list={[
             "Character classes (a-z, A-Z, and 0-9): Accepted characters are alphanumeric characters.",
             "Quantifiers (*, +): Characters that indicate how many occurrences of a character, or set of characters using paretheses, are allowed in the matched expression. Here, (token)* indicates 0 or more tokens are allowed, whereas (token)+ indicates 1 or more occurrences is possible. (token)+ can also be interpreted as token(token)*.",
-            "Alternation (|): Alternation allows the specification of multiple possible search patterns, we will use | to do this. A simple example is a|b, which means the expression can either be a, OR, b. A more complicated example may be S(a|b*c|(d+b))E, this means, our expression must start with S, then choose one of either a, b*c or (d+b), then it must end with E."
+            "Alternation (|): Alternation allows the specification of multiple possible search patterns, we will use | to do this. A simple example is a|b, which means the expression can either be a, OR, b. A more complicated example may be S(a|b*c|(d+b))E, this means, our expression must start with S, then choose one of either a, b*c or (d+b), then it must end with E.",
+            "Parentheses: Parentheses help group elements that should be processed together."
           ]}
         />
-        <MEPTextField onChange={handleChange} expr={regex} placeHolder='e.g. (0|10*1)*10*'/>
-        <TBButton buttonText="Run Algorithm" onClick={runThompsons} ml={0} mt={0}/>
+        <PageTextList
+          listName={
+            <Box>
+              <PageParagraph text={`Then, press the "RUN ALGORITHM" button to find the corresponding Thompson's Construction graph. `}/>
+              <PageParagraph bold text="All possible words"/>
+              <PageParagraph text=" matched by the input regex is equivalent to "/>
+              <PageParagraph bold text="all possible traversals"/>
+              <PageParagraph text=" of the produced graph. The graph will be composed of:"/>
+            </Box>
+          }
+          list={[
+            'A start node labelled S: At this point, the output word is empty "".',
+            'An end node labelled E: Once this is reached, we have produced one word instance that matches the regex. Then return back to S to find other possible words.',
+            'Directed edges E with labels L: From any node, one may find 0 or more outgoing edges, each indicating a possible step to the next node. Whichever edge you take, its label L is concatenated to the end of your current word. For example, if you currently have the word "he", traversing an outgoing edge with label "y" would update your word to "hey". One special label is epsilon, ϵ, which represents an empty character such that traversing such an edge leaves your current word unchanged.'
+          ]}
+        />
+        <Stack direction="row" columnGap={2}>
+          <TBButton buttonText="Run Algorithm" onClick={runThompsons} ml={0} mt={0}/>
+          <Stack direction="row">
+            <TBButtonWithTextfield buttonText="Test word" onClick={runThompsons} ml={0} mt={0}
+              onChange={handleTestChange}
+              value={testWord}
+            />
+          </Stack>
+        </Stack>
         <SectionBox title="Construction:">
           <Construction/>
         </SectionBox>

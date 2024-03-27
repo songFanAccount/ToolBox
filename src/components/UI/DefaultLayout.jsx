@@ -8,6 +8,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { HashLink } from 'react-router-hash-link';
+import { TBTextField } from './Form';
 
 function DefaultLayout() {
     /*
@@ -305,30 +306,41 @@ export function LatexBox({latex, fs=20, pb=2}) {
     )
 }
 
-export function TBButton({buttonText, onClick, p=1, mt=2, ml=2, mr=2, mb=2}) {
+export function TBButton({buttonText, onClick, p=1, mt=2, ml=2, mr=2, mb=2, flatLeft, flatRight}) {
     return (
         <Button 
             variant="outlined"
             onClick={onClick}
             disableRipple
             sx={{
-                width: 'fit-content',
+                width: 'fit-content', height: 40,
                 p:p,
-                mt:mt,
-                ml:ml,
-                mr:mr,
-                mb:mb,
+                mt:mt, ml:ml, mr:mr, mb:mb,
                 backgroundColor: '#011627',
                 borderColor: '#011627',
                 '&:hover': {
                     backgroundColor: '#011627',
                     borderColor: '#011627'
                 },
+                borderTopLeftRadius: flatLeft ? 0 : null,
+                borderBottomLeftRadius: flatLeft ? 0 : null,
+                borderTopRightRadius: flatRight ? 0 : null,
+                borderBottomRightRadius: flatRight ? 0 : null,
             }}
         >
             <Typography sx={{color: '#fdfffc', fontFamily: 'Verdana', fontSize: 14, fontWeight: 550}}>{buttonText}</Typography>
         </Button>
     )
+}
+export function TBButtonWithTextfield({buttonText, onClick, p=1, ml=2, mr=2, buttonSide=1,
+                                       onChange, value}) {
+  return (
+    <Stack direction="row" alignItems="flex-start" flexWrap="nowrap">
+      {buttonSide === -1 && <TBButton buttonText={buttonText} onClick={onClick} p={p} mt={0} ml={ml} mr={0} mb={0} flatRight/>}
+      <TBTextField variant="outlined" height={39.5} onChange={onChange} value={value} py={0} pt="0.5px" my={0} consistentBorderWidth="2px" flatLeft={buttonSide === -1} flatRight={buttonSide === 1}/>
+      {buttonSide === 1 && <TBButton buttonText={buttonText} onClick={onClick} p={p} mt={0} ml={ml} mr={mr} mb={0} flatLeft/>}
+    </Stack>
+  )
 }
 export function ExternalLink({href, target, children}) {
     return (
