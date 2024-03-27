@@ -9,18 +9,23 @@ import { useAnimate } from 'framer-motion'
 
 function ThompsonsConstruction() {
   const [regex, setRegex] = React.useState('')
+  const regexRef = React.useRef('')
+  const lastRegexRun = React.useRef('')
   const [testWord, setTestWord] = React.useState('')
   const [algoOutputs, setAlgoOutputs] = React.useState(null)
   const nodeRadius = 12
   let graphObj = {}
   function handleChange(value) {
     setRegex(value)
+    regexRef.current = value
   }
   function handleTestChange(value) {
     setTestWord(value)
   }
   function runThompsons() {
-    setAlgoOutputs(parse(regex))
+    if (lastRegexRun.current === regexRef.current) return
+    setAlgoOutputs(parse(regexRef.current))
+    lastRegexRun.current = regexRef.current
   }
   const Node = ({nodeName, value, top, left}) => (
     <NormalNode nodeRadius={nodeRadius} nodeName={nodeName} value={value} top={top} left={left}/> 
@@ -63,7 +68,6 @@ function ThompsonsConstruction() {
     }
     graphObj = graph
     function updateGraph(node1, node2, edges, label) {
-      console.log(`node1 = ${node1}, node2 = ${node2}`)
       const newEl = [node2, edges, label]
       if (graph.hasOwnProperty(node1)) graph[node1].push(newEl)
       else graph[node1] = [newEl]
