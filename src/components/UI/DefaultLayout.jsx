@@ -333,12 +333,15 @@ export function TBButton({buttonText, onClick, p=1, mt=2, ml=2, mr=2, mb=2, flat
     )
 }
 export function TBButtonWithTextfield({buttonText, onClick, p=1, ml=2, mr=2, buttonSide=1,
-                                       onChange, value}) {
+                                       onChange, value, msg, msgColor}) {
   return (
-    <Stack direction="row" alignItems="flex-start" flexWrap="nowrap">
-      {buttonSide === -1 && <TBButton buttonText={buttonText} onClick={onClick} p={p} mt={0} ml={ml} mr={0} mb={0} flatRight/>}
-      <TBTextField variant="outlined" height={39.5} onChange={onChange} value={value} py={0} pt="0.5px" my={0} consistentBorderWidth="2px" flatLeft={buttonSide === -1} flatRight={buttonSide === 1}/>
-      {buttonSide === 1 && <TBButton buttonText={buttonText} onClick={onClick} p={p} mt={0} ml={ml} mr={mr} mb={0} flatLeft/>}
+    <Stack direction="row" columnGap={2}>
+      <Stack direction="row" alignItems="flex-start" flexWrap="nowrap">
+        {buttonSide === -1 && <TBButton buttonText={buttonText} onClick={onClick} p={p} mt={0} ml={ml} mr={0} mb={0} flatRight/>}
+        <TBTextField variant="outlined" height={39.5} onChange={onChange} value={value} py={0} pt="0.5px" my={0} consistentBorderWidth="2px" flatLeft={buttonSide === -1} flatRight={buttonSide === 1}/>
+        {buttonSide === 1 && <TBButton buttonText={buttonText} onClick={onClick} p={p} mt={0} ml={ml} mr={mr} mb={0} flatLeft/>}
+      </Stack>
+      <PageParagraph mt={1} text={msg} color={msgColor}/>
     </Stack>
   )
 }

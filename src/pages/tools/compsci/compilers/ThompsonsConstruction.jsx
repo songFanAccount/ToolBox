@@ -13,10 +13,15 @@ function ThompsonsConstruction() {
   const potentialSymbols = React.useRef(null)
   const lastRegexRun = React.useRef('')
   const [testWord, setTestWord] = React.useState('')
+  const [testWordErrorMsg, setTestWordErrorMsg] = React.useState(null)
+  const [testWordBuilding, setTestWordBuilding] = React.useState('')
   const testWordRef = React.useRef('')
+  const testWordPath = React.useRef(null)
+  const testWordPathAnims = React.useRef(null)
   const [algoOutputs, setAlgoOutputs] = React.useState(null)
   const nodeRadius = 12
-  let graphObj = {}
+  const graphObj = React.useRef(null)
+  const [scope, animate] = useAnimate()
   function handleChange(value) {
     setRegex(value)
     regexRef.current = value
@@ -26,34 +31,92 @@ function ThompsonsConstruction() {
     testWordRef.current = value
   }
   function runThompsons() {
-    if (lastRegexRun.current === regexRef.current) return
+    if (lastRegexRun.current === regexRef.current || regexRef.current.trim() === '') return
     const newAlgoOutputs = parse(regexRef.current)
-    console.log(newAlgoOutputs)
     setAlgoOutputs(newAlgoOutputs)
     lastRegexRun.current = regexRef.current
     potentialSymbols.current = new Set(newAlgoOutputs['potentialSymbols'])
   }
   function testWordValidRegex() {
     if (!algoOutputs || !algoOutputs['success'] || !potentialSymbols.current) {
-      console.log('Invalid regex!')
+      setTestWordErrorMsg('Invalid regex!')
       return
     }
     const targetWord = testWordRef.current.trim()
     for (let i = 0; i < targetWord.length; i++) {
       const c = targetWord[i]
       if (c === ' ') {
-        console.log('Please input a word without spaces!')
+        setTestWordErrorMsg('Please input a word without spaces!')
         return
       }
       if (!potentialSymbols.current.has(c)) {
-        console.log("Character '" + c + "' cannot exist in this regex.")
+        setTestWordErrorMsg("Character '" + c + "' cannot exist in this regex.")
         return
       }
     }
-    console.log(recursiveBuildWord('', 'start', targetWord))
+    setTestWordErrorMsg(null)
+    testWordPath.current = []
+    if (recursiveBuildWord('', 'start', targetWord)) {
+      setTestWordErrorMsg("Valid word! :)")
+      testWordPath.current.push('start')
+      testWordPath.current.reverse()
+      updateTWPAnims()
+      animate(testWordPathAnims.current)
+    } else {
+      setTestWordErrorMsg('Invalid! :(')
+      testWordPath.current = null
+      testWordPathAnims.current = null
+    }
   }
-  function recursiveBuildWord(currentWord, currentNodeNam, targetWord) {
-
+  function recursiveBuildWord(currentWord, currentNodeName, targetWord) {
+    if (currentNodeName === 'end') return currentWord === targetWord
+    const nextChar = currentWord.length === targetWord.length ? 'ϵ' : targetWord[currentWord.length]
+    const outgoingEdgesList = graphObj.current?.[currentNodeName]
+    let builtWord = false
+    for (const e of outgoingEdgesList) {
+      const newChar = e[2]
+      const newNodeName = e[0]
+      if (newChar !== 'ϵ' && nextChar !== newChar) continue
+      const updatedWord = newChar === 'ϵ' ? currentWord : currentWord + newChar
+      if (recursiveBuildWord(updatedWord, newNodeName, targetWord)) {
+        builtWord = true
+        testWordPath.current.push(newNodeName)
+        break
+      }
+    }
+    return builtWord
+  }
+  function updateTWPAnims() {
+    const anims = []
+    let fromNodeName = 'start'
+    let toNodeName = testWordPath.current[1]
+    let toIndex = 1
+    const nodeFlashAnim = { backgroundColor: ['#EE4B2B'] }
+    const nodeCancelFlashAnim = { backgroundColor: ['#fdfffc'] }
+    const edgeFlashAnim = { color: ['#000000', '#EE4B2B', '#000000'] }
+    const nodeFlashTrans = { duration: 0.2 }
+    const edgeFlashTrans = { duration: 0.6 }
+    while (true) {
+      const edges = graphObj.current[fromNodeName]
+      let newChar
+      for (const edge of edges) {
+        if (edge[0] === toNodeName) {
+          const e = edge[1].length > 1 ? edge[1][1] : edge[1][0]
+          anims.push([`.${e}`, edgeFlashAnim, edgeFlashTrans])
+          newChar = edge[2]
+          break
+        }
+      }
+      anims.push([`.${toNodeName}`, nodeFlashAnim, nodeFlashTrans])
+      if (toIndex >= testWordPath.current.length - 1) break
+      fromNodeName = testWordPath.current[toIndex]
+      toIndex++
+      toNodeName = testWordPath.current[toIndex]
+      if (toIndex >= 2) anims.push([`.${testWordPath.current[toIndex - 2]}`, nodeCancelFlashAnim, {duration: 0.001}])
+    }
+    anims.push([`.end`, { backgroundColor: ['#fdfffc', '#EE4B2B', '#fdfffc'] }, {duration: 1}])
+    anims.push([`.${testWordPath.current[toIndex - 1]}`, nodeCancelFlashAnim, {duration: 0.001, at: '<'}])
+    testWordPathAnims.current = anims
   }
   const Node = ({nodeName, value, top, left}) => (
     <NormalNode nodeRadius={nodeRadius} nodeName={nodeName} value={value} top={top} left={left}/> 
@@ -71,7 +134,7 @@ function ThompsonsConstruction() {
   const LabelsText = ({text, ml}) => (
     <PageParagraph text={text} backgroundColor='white' p={0.5} ml={0}/>
   )
-  const ConstructionGraph = () => {
+  const ConstructionGraph = ({scope, animate}) => {
     const tokens = algoOutputs['tokens']
     let currentNodeName = "start"
     const edgeLen = 80, labelsML = 1.5
@@ -81,7 +144,6 @@ function ThompsonsConstruction() {
     let graph = {}
     // Anim related
     const anims = []
-    const [scope, animate] = useAnimate()
     const step = React.useRef(-1)
     //
     const wholeDiagramDims = getTokenSectionDims({
@@ -94,7 +156,7 @@ function ThompsonsConstruction() {
     for (let i = 0; i < tokens.length; i++) {
       processToken(tokens[i], i === tokens.length - 1)
     }
-    graphObj = graph
+    graphObj.current = graph
     function updateGraph(node1, node2, edges, label) {
       const newEl = [node2, edges, label]
       if (graph.hasOwnProperty(node1)) graph[node1].push(newEl)
@@ -462,7 +524,7 @@ function ThompsonsConstruction() {
   const Construction = () => {
     if (algoOutputs) {
       if (algoOutputs.success) {
-        return <ConstructionGraph/>
+        return <ConstructionGraph scope={scope} animate={animate}/>
       } else return <PageParagraph text={"Syntax Error: " + algoOutputs.errorMsg}/>
     } else return <PageParagraph text="Please enter a regular expression to begin!"/>
   }
@@ -510,6 +572,7 @@ function ThompsonsConstruction() {
             <TBButtonWithTextfield buttonText="Test word" onClick={testWordValidRegex} ml={0} mt={0}
               onChange={handleTestChange}
               value={testWord}
+              msg={testWordErrorMsg}
             />
           </Stack>
         </Stack>
@@ -682,7 +745,6 @@ function parse(regex) {
     }
     tokens.push(orCompoundToken)
   }
-  console.log(potentialSymbols)
   return {
     success: true,
     tokens: tokens,
