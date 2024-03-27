@@ -10,8 +10,10 @@ import { useAnimate } from 'framer-motion'
 function ThompsonsConstruction() {
   const [regex, setRegex] = React.useState('')
   const regexRef = React.useRef('')
+  const potentialSymbols = React.useRef(null)
   const lastRegexRun = React.useRef('')
   const [testWord, setTestWord] = React.useState('')
+  const testWordRef = React.useRef('')
   const [algoOutputs, setAlgoOutputs] = React.useState(null)
   const nodeRadius = 12
   let graphObj = {}
@@ -21,11 +23,37 @@ function ThompsonsConstruction() {
   }
   function handleTestChange(value) {
     setTestWord(value)
+    testWordRef.current = value
   }
   function runThompsons() {
     if (lastRegexRun.current === regexRef.current) return
-    setAlgoOutputs(parse(regexRef.current))
+    const newAlgoOutputs = parse(regexRef.current)
+    console.log(newAlgoOutputs)
+    setAlgoOutputs(newAlgoOutputs)
     lastRegexRun.current = regexRef.current
+    potentialSymbols.current = new Set(newAlgoOutputs['potentialSymbols'])
+  }
+  function testWordValidRegex() {
+    if (!algoOutputs || !algoOutputs['success'] || !potentialSymbols.current) {
+      console.log('Invalid regex!')
+      return
+    }
+    const targetWord = testWordRef.current.trim()
+    for (let i = 0; i < targetWord.length; i++) {
+      const c = targetWord[i]
+      if (c === ' ') {
+        console.log('Please input a word without spaces!')
+        return
+      }
+      if (!potentialSymbols.current.has(c)) {
+        console.log("Character '" + c + "' cannot exist in this regex.")
+        return
+      }
+    }
+    console.log(recursiveBuildWord('', 'start', targetWord))
+  }
+  function recursiveBuildWord(currentWord, currentNodeNam, targetWord) {
+
   }
   const Node = ({nodeName, value, top, left}) => (
     <NormalNode nodeRadius={nodeRadius} nodeName={nodeName} value={value} top={top} left={left}/> 
@@ -155,7 +183,7 @@ function ThompsonsConstruction() {
           const dims = getTokenSectionDims(token)
           storeStartNodeName = currentNodeName
           // Determine and create the final node
-          const finalNodeName = `node-${nodes.length}`
+          const finalNodeName = isLast ? 'end' : `node-${nodes.length}`
           const storeEndNodeCoords = [currentCoords[0] + dims['width'], currentCoords[1]]
           nodes.push(<Node nodeName={finalNodeName} value={isLast ? 'E' : ''} left={currentCoords[0] + dims['width']} top={currentCoords[1]}/>)
           anims.push([`.${finalNodeName}`, commonAnims.reveal, {duration: 0.001, at: "<", delay: 1}])
@@ -244,7 +272,7 @@ function ThompsonsConstruction() {
           // Another epsilon branch (end)
           coordsStart = [...currentCoords]
           currentCoords[0] += edgeLen
-          newNodeName = `node-${nodes.length}`
+          newNodeName = isLast ? 'end' : `node-${nodes.length}`
           nodes.push(<Node nodeName={newNodeName} value={isLast ? 'E' : ''} left={currentCoords[0]} top={currentCoords[1]}/>)
           edgeName = `line-${edges.length}`
           edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={edgeName} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
@@ -330,7 +358,7 @@ function ThompsonsConstruction() {
         case 'char':
           coordsStart = [...currentCoords]
           currentCoords[0] += edgeLen
-          newNodeName = `node-${nodes.length}`
+          newNodeName = isLast ? 'end' : `node-${nodes.length}`
           nodes.push(<Node nodeName={newNodeName} value={isLast ? 'E' : ''} left={currentCoords[0]} top={currentCoords[1]}/>)
           edgeName = `line-${edges.length}`
           edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={edgeName} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text={token['value']} ml={labelsML}/>}/>)
@@ -479,7 +507,7 @@ function ThompsonsConstruction() {
         <Stack direction="row" columnGap={2}>
           <TBButton buttonText="Run Algorithm" onClick={runThompsons} ml={0} mt={0}/>
           <Stack direction="row">
-            <TBButtonWithTextfield buttonText="Test word" onClick={runThompsons} ml={0} mt={0}
+            <TBButtonWithTextfield buttonText="Test word" onClick={testWordValidRegex} ml={0} mt={0}
               onChange={handleTestChange}
               value={testWord}
             />
@@ -500,6 +528,7 @@ function parse(regex) {
   const len = regex.length
   let tokens = []
   let openParentCount = 0
+  const potentialSymbols = new Set()
   for (let i = 0; i < len; i++) {
     const currentChar = regex[i]
     switch (currentChar) {
@@ -615,6 +644,7 @@ function parse(regex) {
       default:
         if (isLetterOrDigit(currentChar)) {
           // Letters and digits are to be treated the same way
+          potentialSymbols.add(currentChar)
           tokens.push({
             type: 'char',
             value: currentChar
@@ -652,8 +682,10 @@ function parse(regex) {
     }
     tokens.push(orCompoundToken)
   }
+  console.log(potentialSymbols)
   return {
     success: true,
-    tokens: tokens
+    tokens: tokens,
+    potentialSymbols
   }
 }
