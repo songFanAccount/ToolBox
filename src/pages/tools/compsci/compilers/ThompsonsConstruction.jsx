@@ -4,7 +4,7 @@ import { Box, Stack } from '@mui/material'
 import { MEPTextField } from '../../../../components/GeneralComponents'
 import { isLetterOrDigit, removeSpaces } from '../../../../helpers/generalHelpers'
 import { Arrow, DirectedArrow, NormalNode } from '../../../../components/Compsci/DataStructures'
-import { AnimControlBoard, commonAnims } from '../../../../components/UI/Animation'
+import { AnimControlBoard, AnimatableBox, commonAnims } from '../../../../components/UI/Animation'
 import { useAnimate } from 'framer-motion'
 
 function ThompsonsConstruction() {
@@ -14,8 +14,8 @@ function ThompsonsConstruction() {
   const lastRegexRun = React.useRef('')
   const [testWord, setTestWord] = React.useState('')
   const [testWordErrorMsg, setTestWordErrorMsg] = React.useState(null)
-  const [testWordBuilding, setTestWordBuilding] = React.useState('')
   const testWordRef = React.useRef('')
+  const lastTestRun = React.useRef('')
   const testWordPath = React.useRef(null)
   const testWordPathAnims = React.useRef(null)
   const [algoOutputs, setAlgoOutputs] = React.useState(null)
@@ -29,15 +29,23 @@ function ThompsonsConstruction() {
   function handleTestChange(value) {
     setTestWord(value)
     testWordRef.current = value
+    setTestWordErrorMsg('')
   }
   function runThompsons() {
-    if (lastRegexRun.current === regexRef.current || regexRef.current.trim() === '') return
+    if (lastRegexRun.current.trim() === regexRef.current.trim()) return
+    testWordPath.current = null
+    testWordPathAnims.current = null
+    lastTestRun.current = ''
     const newAlgoOutputs = parse(regexRef.current)
     setAlgoOutputs(newAlgoOutputs)
     lastRegexRun.current = regexRef.current
     potentialSymbols.current = new Set(newAlgoOutputs['potentialSymbols'])
   }
   function testWordValidRegex() {
+    if (testWordPath.current && testWordPathAnims.current && lastTestRun.current.trim() === testWordRef.current.trim()) {
+      animate(testWordPathAnims.current)
+      return
+    }
     if (!algoOutputs || !algoOutputs['success'] || !potentialSymbols.current) {
       setTestWordErrorMsg('Invalid regex!')
       return
@@ -60,8 +68,8 @@ function ThompsonsConstruction() {
       setTestWordErrorMsg("Valid word! :)")
       testWordPath.current.push('start')
       testWordPath.current.reverse()
+      lastTestRun.current = testWordRef.current
       updateTWPAnims()
-      animate(testWordPathAnims.current)
     } else {
       setTestWordErrorMsg('Invalid! :(')
       testWordPath.current = null
@@ -96,6 +104,8 @@ function ThompsonsConstruction() {
     const edgeFlashAnim = { color: ['#000000', '#EE4B2B', '#000000'] }
     const nodeFlashTrans = { duration: 0.2 }
     const edgeFlashTrans = { duration: 0.6 }
+    anims.push(['.start', nodeFlashAnim, nodeFlashTrans])
+    let testWordIndex = 0
     while (true) {
       const edges = graphObj.current[fromNodeName]
       let newChar
@@ -104,6 +114,11 @@ function ThompsonsConstruction() {
           const e = edge[1].length > 1 ? edge[1][1] : edge[1][0]
           anims.push([`.${e}`, edgeFlashAnim, edgeFlashTrans])
           newChar = edge[2]
+          if (newChar !== 'ϵ') {
+            const revealAnim = [`.testWord-${testWordIndex}`, commonAnims.reveal, {duration: 0.001, at: '<'}]
+            anims.push(revealAnim)
+            testWordIndex++
+          }
           break
         }
       }
@@ -114,7 +129,7 @@ function ThompsonsConstruction() {
       toNodeName = testWordPath.current[toIndex]
       if (toIndex >= 2) anims.push([`.${testWordPath.current[toIndex - 2]}`, nodeCancelFlashAnim, {duration: 0.001}])
     }
-    anims.push([`.end`, { backgroundColor: ['#fdfffc', '#EE4B2B', '#fdfffc'] }, {duration: 1}])
+    anims.push([`.end`, { backgroundColor: ['#EE4B2B', '#fdfffc'] }, {duration: 0.6}])
     anims.push([`.${testWordPath.current[toIndex - 1]}`, nodeCancelFlashAnim, {duration: 0.001, at: '<'}])
     testWordPathAnims.current = anims
   }
@@ -134,7 +149,7 @@ function ThompsonsConstruction() {
   const LabelsText = ({text, ml}) => (
     <PageParagraph text={text} backgroundColor='white' p={0.5} ml={0}/>
   )
-  const ConstructionGraph = ({scope, animate}) => {
+  const ConstructionGraph = ({scope, animate, testWord}) => {
     const tokens = algoOutputs['tokens']
     let currentNodeName = "start"
     const edgeLen = 80, labelsML = 1.5
@@ -499,9 +514,8 @@ function ThompsonsConstruction() {
       step.current = -1
     }
     return (
-      <Stack direction="column" rowGap={4}>
+      <Stack direction="column" rowGap={4} ref={scope}>
         <Box
-          ref={scope}
           position="relative"
           sx={{
             height: wholeDiagramDims['height'], width: wholeDiagramDims['width'],
@@ -511,20 +525,28 @@ function ThompsonsConstruction() {
           {edges}
           {boxes}
         </Box>
-        <AnimControlBoard label="Construction Control Board" play={fullConstruction} next={stepConstruction} back={stepBack} skipToEnd={skipToEnd}
-          tooltips={{
-            play: 'Show ordered construction',
-            next: 'Show next step',
-            back: 'Go back one step'
-          }}
-        />
+        <Stack direction="row" alignItems="center" columnGap={2}>
+          <AnimControlBoard label="Construction Control Board" play={fullConstruction} next={stepConstruction} back={stepBack} skipToEnd={skipToEnd}
+            tooltips={{
+              play: 'Show ordered construction',
+              next: 'Show next step',
+              back: 'Go back one step'
+            }}
+          />
+          <Stack direction="row" columnGap={1}>
+            <PageParagraph text="Test word construction: "/>
+            <Stack direction="row">
+              {testWord && testWord.split('').map((c, i) => <AnimatableBox className={`testWord-${i}`}><PageParagraph text={c}/></AnimatableBox>)}
+            </Stack>
+          </Stack>
+        </Stack>
       </Stack>
     )
   }
   const Construction = () => {
     if (algoOutputs) {
       if (algoOutputs.success) {
-        return <ConstructionGraph scope={scope} animate={animate}/>
+        return <ConstructionGraph scope={scope} animate={animate} testWord={testWordPath.current ? testWordRef.current.trim() : null}/>
       } else return <PageParagraph text={"Syntax Error: " + algoOutputs.errorMsg}/>
     } else return <PageParagraph text="Please enter a regular expression to begin!"/>
   }
@@ -567,9 +589,9 @@ function ThompsonsConstruction() {
           ]}
         />
         <Stack direction="row" columnGap={2}>
-          <TBButton buttonText="Run Algorithm" onClick={runThompsons} ml={0} mt={0}/>
+          <TBButton buttonText={regexRef.current.trim() === lastRegexRun.current.trim() ? "Run Algorithm" : "UPDATE"} onClick={runThompsons} ml={0} mt={0}/>
           <Stack direction="row">
-            <TBButtonWithTextfield buttonText="Test word" onClick={testWordValidRegex} ml={0} mt={0}
+            <TBButtonWithTextfield buttonText={testWordRef.current.trim() === lastTestRun.current.trim() ? "Animate path" : "Test word"} onClick={testWordValidRegex} ml={0} mt={0}
               onChange={handleTestChange}
               value={testWord}
               msg={testWordErrorMsg}
