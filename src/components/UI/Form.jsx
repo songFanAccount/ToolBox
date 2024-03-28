@@ -25,7 +25,7 @@ By default, text fields cannot start as an error, even if their default value is
 Visually, we don't want the form to look red/invalid at first glance. So, error detection takes place only after the field has been
 modified
 */
-export function TBTextField({value, label, placeholder, width=200, variant='standard', onChange, required, rows, minRows, maxRows, maxLength=50, error, errorMsg, stickToTop}) {
+export function TBTextField({value, label, placeholder, width=200, height, variant='standard', onChange, required, rows, minRows, maxRows, maxLength=50, error, errorMsg, stickToTop, my, py, pt, consistentBorderWidth, flatLeft, flatRight}) {
     if(rows && (minRows || maxRows)) throw new Error("TBTextField: Rows is defined -> Don't input min/max rows!") // May need to change this restraint
     if(error !== undefined && errorMsg === undefined) throw new Error("TBTextField: If errors can occur, supply an error message!")
     const [modified, setModified] = useState(false)
@@ -61,6 +61,7 @@ export function TBTextField({value, label, placeholder, width=200, variant='stan
             sx={{
                 width: width,
                 maxWidth: 1,
+                my: my, py: py, pt: pt,
                 position: stickToTop ? 'sticky' : 'relative',
                 top: stickToTop ? 97 : 0,
                 backgroundColor: 'white',
@@ -74,12 +75,27 @@ export function TBTextField({value, label, placeholder, width=200, variant='stan
                 },
                 '& .MuiOutlinedInput-root': {
                     '&.Mui-focused fieldset': {
-                        borderColor: (modified && error) ? 'error' : '#011627'
-                    }
+                        borderColor: (modified && error) ? 'error' : '#011627',
+                        borderWidth: consistentBorderWidth ? consistentBorderWidth : null,
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderWidth: consistentBorderWidth ? consistentBorderWidth : null,
+                    },
+                },
+                '& .MuiOutlinedInput-notchedOutline': {
+                    borderWidth: consistentBorderWidth ? consistentBorderWidth : null,
+                    borderColor: consistentBorderWidth ? "#011627" : null,
+                    borderTopRightRadius: flatRight ? 0 : null,
+                    borderBottomRightRadius: flatRight ? 0 : null,
+                    borderTopLeftRadius: flatLeft ? 0 : null,
+                    borderBottomLeftRadius: flatLeft ? 0 : null,
                 },
                 "& .MuiInputBase-input": {
                     overflow: "hidden",
                     textOverflow: "ellipsis"
+                },
+                '& .MuiInputBase-root': {
+                    height: height
                 }
             }}
         />

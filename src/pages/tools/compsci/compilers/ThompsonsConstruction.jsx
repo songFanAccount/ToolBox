@@ -1,21 +1,137 @@
 import React from 'react'
-import { ExternalLink, PageParagraph, PageTextList, SectionBox, TBButton } from '../../../../components/UI/DefaultLayout'
+import { ExternalLink, PageParagraph, PageTextList, SectionBox, TBButton, TBButtonWithTextfield } from '../../../../components/UI/DefaultLayout'
 import { Box, Stack } from '@mui/material'
 import { MEPTextField } from '../../../../components/GeneralComponents'
 import { isLetterOrDigit, removeSpaces } from '../../../../helpers/generalHelpers'
 import { Arrow, DirectedArrow, NormalNode } from '../../../../components/Compsci/DataStructures'
-import { AnimControlBoard, commonAnims } from '../../../../components/UI/Animation'
+import { AnimControlBoard, AnimatableBox, commonAnims } from '../../../../components/UI/Animation'
 import { useAnimate } from 'framer-motion'
 
 function ThompsonsConstruction() {
   const [regex, setRegex] = React.useState('')
+  const regexRef = React.useRef('')
+  const potentialSymbols = React.useRef(null)
+  const lastRegexRun = React.useRef('')
+  const [testWord, setTestWord] = React.useState('')
+  const [testWordErrorMsg, setTestWordErrorMsg] = React.useState(null)
+  const testWordRef = React.useRef('')
+  const lastTestRun = React.useRef('')
+  const testWordPath = React.useRef(null)
+  const testWordPathAnims = React.useRef(null)
   const [algoOutputs, setAlgoOutputs] = React.useState(null)
   const nodeRadius = 12
+  const graphObj = React.useRef(null)
+  const [scope, animate] = useAnimate()
   function handleChange(value) {
     setRegex(value)
+    regexRef.current = value
+  }
+  function handleTestChange(value) {
+    setTestWord(value)
+    testWordRef.current = value
+    setTestWordErrorMsg('')
   }
   function runThompsons() {
-    setAlgoOutputs(parse(regex))
+    if (lastRegexRun.current.trim() === regexRef.current.trim()) return
+    testWordPath.current = null
+    testWordPathAnims.current = null
+    lastTestRun.current = ''
+    const newAlgoOutputs = parse(regexRef.current)
+    setAlgoOutputs(newAlgoOutputs)
+    lastRegexRun.current = regexRef.current
+    potentialSymbols.current = new Set(newAlgoOutputs['potentialSymbols'])
+  }
+  function testWordValidRegex() {
+    if (testWordPath.current && testWordPathAnims.current && lastTestRun.current.trim() === testWordRef.current.trim()) {
+      animate(testWordPathAnims.current)
+      return
+    }
+    if (!algoOutputs || !algoOutputs['success'] || !potentialSymbols.current) {
+      setTestWordErrorMsg('Invalid regex!')
+      return
+    }
+    const targetWord = testWordRef.current.trim()
+    for (let i = 0; i < targetWord.length; i++) {
+      const c = targetWord[i]
+      if (c === ' ') {
+        setTestWordErrorMsg('Please input a word without spaces!')
+        return
+      }
+      if (!potentialSymbols.current.has(c)) {
+        setTestWordErrorMsg("Character '" + c + "' cannot exist in this regex.")
+        return
+      }
+    }
+    setTestWordErrorMsg(null)
+    testWordPath.current = []
+    if (recursiveBuildWord('', 'start', targetWord)) {
+      setTestWordErrorMsg("Valid word! :)")
+      testWordPath.current.push('start')
+      testWordPath.current.reverse()
+      lastTestRun.current = testWordRef.current
+      updateTWPAnims()
+    } else {
+      setTestWordErrorMsg('Invalid! :(')
+      testWordPath.current = null
+      testWordPathAnims.current = null
+    }
+  }
+  function recursiveBuildWord(currentWord, currentNodeName, targetWord) {
+    if (currentNodeName === 'end') return currentWord === targetWord
+    const nextChar = currentWord.length === targetWord.length ? 'ϵ' : targetWord[currentWord.length]
+    const outgoingEdgesList = graphObj.current?.[currentNodeName]
+    let builtWord = false
+    for (const e of outgoingEdgesList) {
+      const newChar = e[2]
+      const newNodeName = e[0]
+      if (newChar !== 'ϵ' && nextChar !== newChar) continue
+      const updatedWord = newChar === 'ϵ' ? currentWord : currentWord + newChar
+      if (recursiveBuildWord(updatedWord, newNodeName, targetWord)) {
+        builtWord = true
+        testWordPath.current.push(newNodeName)
+        break
+      }
+    }
+    return builtWord
+  }
+  function updateTWPAnims() {
+    const anims = []
+    let fromNodeName = 'start'
+    let toNodeName = testWordPath.current[1]
+    let toIndex = 1
+    const nodeFlashAnim = { backgroundColor: ['#EE4B2B'] }
+    const nodeCancelFlashAnim = { backgroundColor: ['#fdfffc'] }
+    const edgeFlashAnim = { color: ['#000000', '#EE4B2B', '#000000'] }
+    const nodeFlashTrans = { duration: 0.2 }
+    const edgeFlashTrans = { duration: 0.6 }
+    anims.push(['.start', nodeFlashAnim, nodeFlashTrans])
+    let testWordIndex = 0
+    while (true) {
+      const edges = graphObj.current[fromNodeName]
+      let newChar
+      for (const edge of edges) {
+        if (edge[0] === toNodeName) {
+          const e = edge[1].length > 1 ? edge[1][1] : edge[1][0]
+          anims.push([`.${e}`, edgeFlashAnim, edgeFlashTrans])
+          newChar = edge[2]
+          if (newChar !== 'ϵ') {
+            const revealAnim = [`.testWord-${testWordIndex}`, commonAnims.reveal, {duration: 0.001, at: '<'}]
+            anims.push(revealAnim)
+            testWordIndex++
+          }
+          break
+        }
+      }
+      anims.push([`.${toNodeName}`, nodeFlashAnim, nodeFlashTrans])
+      if (toIndex >= testWordPath.current.length - 1) break
+      fromNodeName = testWordPath.current[toIndex]
+      toIndex++
+      toNodeName = testWordPath.current[toIndex]
+      if (toIndex >= 2) anims.push([`.${testWordPath.current[toIndex - 2]}`, nodeCancelFlashAnim, {duration: 0.001}])
+    }
+    anims.push([`.end`, { backgroundColor: ['#EE4B2B', '#fdfffc'] }, {duration: 0.6}])
+    anims.push([`.${testWordPath.current[toIndex - 1]}`, nodeCancelFlashAnim, {duration: 0.001, at: '<'}])
+    testWordPathAnims.current = anims
   }
   const Node = ({nodeName, value, top, left}) => (
     <NormalNode nodeRadius={nodeRadius} nodeName={nodeName} value={value} top={top} left={left}/> 
@@ -33,16 +149,16 @@ function ThompsonsConstruction() {
   const LabelsText = ({text, ml}) => (
     <PageParagraph text={text} backgroundColor='white' p={0.5} ml={0}/>
   )
-  const ConstructionGraph = () => {
+  const ConstructionGraph = ({scope, animate, testWord}) => {
     const tokens = algoOutputs['tokens']
     let currentNodeName = "start"
     const edgeLen = 80, labelsML = 1.5
     const nodes = []
     const edges = []
     const boxes = []
+    let graph = {}
     // Anim related
     const anims = []
-    const [scope, animate] = useAnimate()
     const step = React.useRef(-1)
     //
     const wholeDiagramDims = getTokenSectionDims({
@@ -54,6 +170,12 @@ function ThompsonsConstruction() {
     nodes.push(<Node nodeName="start" value="S" left={0} top={startY}/>)
     for (let i = 0; i < tokens.length; i++) {
       processToken(tokens[i], i === tokens.length - 1)
+    }
+    graphObj.current = graph
+    function updateGraph(node1, node2, edges, label) {
+      const newEl = [node2, edges, label]
+      if (graph.hasOwnProperty(node1)) graph[node1].push(newEl)
+      else graph[node1] = [newEl]
     }
     function getTokenSectionDims(token) {
       const type = token['type']
@@ -138,7 +260,7 @@ function ThompsonsConstruction() {
           const dims = getTokenSectionDims(token)
           storeStartNodeName = currentNodeName
           // Determine and create the final node
-          const finalNodeName = `node-${nodes.length}`
+          const finalNodeName = isLast ? 'end' : `node-${nodes.length}`
           const storeEndNodeCoords = [currentCoords[0] + dims['width'], currentCoords[1]]
           nodes.push(<Node nodeName={finalNodeName} value={isLast ? 'E' : ''} left={currentCoords[0] + dims['width']} top={currentCoords[1]}/>)
           anims.push([`.${finalNodeName}`, commonAnims.reveal, {duration: 0.001, at: "<", delay: 1}])
@@ -154,6 +276,7 @@ function ThompsonsConstruction() {
             nodes.push(<Node nodeName={newNodeName} value={''} left={currentCoords[0]} top={currentCoords[1]}/>)
             edgeName = `line-${edges.length}`
             edges.push(<DirectedArrow start={storeStartNodeName} end={newNodeName} lineID={edgeName} coordsStart={[...storeStartCoords]} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
+            updateGraph(storeStartNodeName, newNodeName, [edgeName], "ϵ")
             // ANIM
             anims.push([`.${edgeName}`, commonAnims.reveal, {duration: 0.001, delay: 1}])
             anims.push([`.${newNodeName}`, commonAnims.reveal, {duration: 0.001, at: "<", delay: 1}])
@@ -187,6 +310,7 @@ function ThompsonsConstruction() {
               if (index === 0) anims.push([`.${name}`, commonAnims.reveal, {duration: 0.001, delay: 1}])
               else anims.push([`.${name}`, commonAnims.reveal, {duration: 0.001, delay: 1, at: '<'}])
             })
+            updateGraph(finalNode['name'], finalNodeName, multiEdge, "ϵ")
             anims.push([`.${finalNodeName}`, commonAnims.show, {duration: 0.001, delay: 1, at: '<'}])
             currentCoords[0] = coordsStart[0]
             currentCoords[1] = coordsStart[1] + dims['ORRelBottom'][i] + 3 * edgeLen / 4
@@ -212,6 +336,7 @@ function ThompsonsConstruction() {
           edgeName = `line-${edges.length}`
           nodes.push(<Node nodeName={newNodeName} value={''} left={currentCoords[0]} top={currentCoords[1]}/>)
           edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={edgeName} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
+          updateGraph(currentNodeName, newNodeName, [edgeName], "ϵ")
           currentNodeName = newNodeName
           storeTokenStartName = currentNodeName
           // ANIM
@@ -224,10 +349,11 @@ function ThompsonsConstruction() {
           // Another epsilon branch (end)
           coordsStart = [...currentCoords]
           currentCoords[0] += edgeLen
-          newNodeName = `node-${nodes.length}`
+          newNodeName = isLast ? 'end' : `node-${nodes.length}`
           nodes.push(<Node nodeName={newNodeName} value={isLast ? 'E' : ''} left={currentCoords[0]} top={currentCoords[1]}/>)
           edgeName = `line-${edges.length}`
           edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={edgeName} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text="ϵ" ml={labelsML}/>}/>)
+          updateGraph(currentNodeName, newNodeName, [edgeName], "ϵ")
           // ANIM
           anims.push([`.${edgeName}`, commonAnims.reveal, {duration: 0.001, delay: 1}])
           anims.push([`.${newNodeName}`, commonAnims.reveal, {duration: 0.001, at: "<", delay: 1}])
@@ -240,6 +366,7 @@ function ThompsonsConstruction() {
           edges.push(<Arrow start={endNodeName} end={`box-${boxes.length - 2}`} lineID={`line-${edges.length}`}/>)
           edges.push(<Arrow start={`box-${boxes.length - 2}`} end={`box-${boxes.length - 1}`} lineID={`line-${edges.length}`} labels={<LabelsText text="ϵ"/>}/>)
           edges.push(<DirectedArrow start={`box-${boxes.length - 1}`} end={storeTokenStartName} lineID={`line-${edges.length}`} coordsStart={[endNodeCoords[0] - tokenInfo['width']+ nodeRadius, boxTop]} coordsEnd={[endNodeCoords[0] - tokenInfo['width'], boxTop + edgeLen/2]} nodeRadius={nodeRadius}/>)
+          updateGraph(endNodeName, storeTokenStartName, multiEdge, "ϵ")
           // ANIM
           anims.push([`.${multiEdge[0]}`, commonAnims.reveal, {duration: 0.001, delay: 1}])
           anims.push([`.${multiEdge[1]}`, commonAnims.reveal, {duration: 0.001, at: "<", delay: 1}])
@@ -253,6 +380,7 @@ function ThompsonsConstruction() {
           edges.push(<Arrow start={storeStartNodeName} end={`box-${boxes.length - 2}`} lineID={`line-${edges.length}`}/>)
           edges.push(<Arrow start={`box-${boxes.length - 2}`} end={`box-${boxes.length - 1}`} lineID={`line-${edges.length}`} labels={<LabelsText text="ϵ"/>}/>)
           edges.push(<DirectedArrow start={`box-${boxes.length - 1}`} end={currentNodeName} lineID={`line-${edges.length}`} coordsStart={[currentCoords[0] - nodeRadius, boxBottom]} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius}/>)
+          updateGraph(storeStartNodeName, currentNodeName, multiEdge, "ϵ")
           // ANIM
           anims.push([`.${multiEdge[0]}`, commonAnims.reveal, {duration: 0.001, delay: 1}])
           anims.push([`.${multiEdge[1]}`, commonAnims.reveal, {duration: 0.001, at: "<", delay: 1}])
@@ -307,10 +435,11 @@ function ThompsonsConstruction() {
         case 'char':
           coordsStart = [...currentCoords]
           currentCoords[0] += edgeLen
-          newNodeName = `node-${nodes.length}`
+          newNodeName = isLast ? 'end' : `node-${nodes.length}`
           nodes.push(<Node nodeName={newNodeName} value={isLast ? 'E' : ''} left={currentCoords[0]} top={currentCoords[1]}/>)
           edgeName = `line-${edges.length}`
           edges.push(<DirectedArrow start={currentNodeName} end={newNodeName} lineID={edgeName} coordsStart={coordsStart} coordsEnd={[...currentCoords]} nodeRadius={nodeRadius} labels={<LabelsText text={token['value']} ml={labelsML}/>}/>)
+          updateGraph(currentNodeName, newNodeName, [edgeName], token['value'])
           anims.push([`.${edgeName}`, commonAnims.reveal, {duration: 0.001, delay: 1}])
           anims.push([`.${newNodeName}`, commonAnims.reveal, {duration: 0.001, at: "<", delay: 1}])
           currentNodeName = newNodeName
@@ -370,12 +499,10 @@ function ThompsonsConstruction() {
       let stepAnims = []
       let i = step.current - 1
       while (i >= 0 && anims[i][0].startsWith('.node')) {
-        console.log(anims[i])
         stepAnims.push([anims[i][0], commonAnims.hide, {at: '<'}])
         i--
       }
       while (i >= 0 && anims[i][0].startsWith('.line')) {
-        console.log(anims[i])
         stepAnims.push([anims[i][0], commonAnims.hide, {at: '<'}])
         i--
       }
@@ -387,9 +514,8 @@ function ThompsonsConstruction() {
       step.current = -1
     }
     return (
-      <Stack direction="column" rowGap={4}>
+      <Stack direction="column" rowGap={4} ref={scope}>
         <Box
-          ref={scope}
           position="relative"
           sx={{
             height: wholeDiagramDims['height'], width: wholeDiagramDims['width'],
@@ -399,20 +525,28 @@ function ThompsonsConstruction() {
           {edges}
           {boxes}
         </Box>
-        <AnimControlBoard label="Construction Control Board" play={fullConstruction} next={stepConstruction} back={stepBack} skipToEnd={skipToEnd}
-          tooltips={{
-            play: 'Show ordered construction',
-            next: 'Show next step',
-            back: 'Go back one step'
-          }}
-        />
+        <Stack direction="row" alignItems="center" columnGap={2}>
+          <AnimControlBoard label="Construction Control Board" play={fullConstruction} next={stepConstruction} back={stepBack} skipToEnd={skipToEnd}
+            tooltips={{
+              play: 'Show ordered construction',
+              next: 'Show next step',
+              back: 'Go back one step'
+            }}
+          />
+          <Stack direction="row" columnGap={1}>
+            <PageParagraph text="Test word construction: "/>
+            <Stack direction="row">
+              {testWord && testWord.split('').map((c, i) => <AnimatableBox className={`testWord-${i}`}><PageParagraph text={c}/></AnimatableBox>)}
+            </Stack>
+          </Stack>
+        </Stack>
       </Stack>
     )
   }
   const Construction = () => {
     if (algoOutputs) {
       if (algoOutputs.success) {
-        return <ConstructionGraph/>
+        return <ConstructionGraph scope={scope} animate={animate} testWord={testWordPath.current ? testWordRef.current.trim() : null}/>
       } else return <PageParagraph text={"Syntax Error: " + algoOutputs.errorMsg}/>
     } else return <PageParagraph text="Please enter a regular expression to begin!"/>
   }
@@ -428,16 +562,42 @@ function ThompsonsConstruction() {
         </Box>
       </SectionBox>
       <SectionBox title="How it works">
+        <MEPTextField onChange={handleChange} expr={regex} placeHolder='e.g. (0|10*1)*10*'/>
         <PageTextList
           listName="To begin, enter a valid regular expression composed of:"
           list={[
             "Character classes (a-z, A-Z, and 0-9): Accepted characters are alphanumeric characters.",
             "Quantifiers (*, +): Characters that indicate how many occurrences of a character, or set of characters using paretheses, are allowed in the matched expression. Here, (token)* indicates 0 or more tokens are allowed, whereas (token)+ indicates 1 or more occurrences is possible. (token)+ can also be interpreted as token(token)*.",
-            "Alternation (|): Alternation allows the specification of multiple possible search patterns, we will use | to do this. A simple example is a|b, which means the expression can either be a, OR, b. A more complicated example may be S(a|b*c|(d+b))E, this means, our expression must start with S, then choose one of either a, b*c or (d+b), then it must end with E."
+            "Alternation (|): Alternation allows the specification of multiple possible search patterns, we will use | to do this. A simple example is a|b, which means the expression can either be a, OR, b. A more complicated example may be S(a|b*c|(d+b))E, this means, our expression must start with S, then choose one of either a, b*c or (d+b), then it must end with E.",
+            "Parentheses: Parentheses help group elements that should be processed together."
           ]}
         />
-        <MEPTextField onChange={handleChange} expr={regex} placeHolder='e.g. (0|10*1)*10*'/>
-        <TBButton buttonText="Run Algorithm" onClick={runThompsons} ml={0} mt={0}/>
+        <PageTextList
+          listName={
+            <Box>
+              <PageParagraph text={`Then, press the "RUN ALGORITHM" button to find the corresponding Thompson's Construction graph. `}/>
+              <PageParagraph bold text="All possible words"/>
+              <PageParagraph text=" matched by the input regex is equivalent to "/>
+              <PageParagraph bold text="all possible traversals"/>
+              <PageParagraph text=" of the produced graph. The graph will be composed of:"/>
+            </Box>
+          }
+          list={[
+            'A start node labelled S: At this point, the output word is empty "".',
+            'An end node labelled E: Once this is reached, we have produced one word instance that matches the regex. Then return back to S to find other possible words.',
+            'Directed edges E with labels L: From any node, one may find 0 or more outgoing edges, each indicating a possible step to the next node. Whichever edge you take, its label L is concatenated to the end of your current word. For example, if you currently have the word "he", traversing an outgoing edge with label "y" would update your word to "hey". One special label is epsilon, ϵ, which represents an empty character such that traversing such an edge leaves your current word unchanged.'
+          ]}
+        />
+        <Stack direction="row" columnGap={2}>
+          <TBButton buttonText={regexRef.current.trim() === lastRegexRun.current.trim() ? "Run Algorithm" : "UPDATE"} onClick={runThompsons} ml={0} mt={0}/>
+          <Stack direction="row">
+            <TBButtonWithTextfield buttonText={testWordRef.current.trim() === lastTestRun.current.trim() ? "Animate path" : "Test word"} onClick={testWordValidRegex} ml={0} mt={0}
+              onChange={handleTestChange}
+              value={testWord}
+              msg={testWordErrorMsg}
+            />
+          </Stack>
+        </Stack>
         <SectionBox title="Construction:">
           <Construction/>
         </SectionBox>
@@ -453,6 +613,7 @@ function parse(regex) {
   const len = regex.length
   let tokens = []
   let openParentCount = 0
+  const potentialSymbols = new Set()
   for (let i = 0; i < len; i++) {
     const currentChar = regex[i]
     switch (currentChar) {
@@ -568,6 +729,7 @@ function parse(regex) {
       default:
         if (isLetterOrDigit(currentChar)) {
           // Letters and digits are to be treated the same way
+          potentialSymbols.add(currentChar)
           tokens.push({
             type: 'char',
             value: currentChar
@@ -607,6 +769,7 @@ function parse(regex) {
   }
   return {
     success: true,
-    tokens: tokens
+    tokens: tokens,
+    potentialSymbols
   }
 }
