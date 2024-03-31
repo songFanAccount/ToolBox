@@ -98,10 +98,15 @@ function AboutUs() {
 						<PageParagraph text=" and "/>
 						<ToolLink name="student proposing deferred acceptance" linkText="Student Proposing Deferred Acceptance algorithm."/>
 					</Box>
+					<Box>
+						<PageParagraph text="Feb 2024 - May 2024 - [UNSW COMP3131/9102 Programming Languages and Compilers] Developed the tool for "/>
+						<ToolLink name="thompsons construction" linkText="Thompson's Construction."/>
+					</Box>
 				</CollapseSectionBox>
 			</SectionBox>
 			<SectionBox title="Meet the dev!" usePageTitle>
-				<img src={meImage} alt="Developer - Daniel Song" width="270rem"/>
+        <PageParagraph text="//TODO"/>
+				{/* <img src={meImage} alt="Developer - Daniel Song" width="270rem"/> */}
 			</SectionBox>
 		</Box>  
 	)

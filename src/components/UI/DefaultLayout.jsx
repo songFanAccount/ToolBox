@@ -322,6 +322,7 @@ export function TBButton({buttonText, onClick, p=1, mt=2, ml=2, mr=2, mb=2, flat
                     backgroundColor: '#011627',
                     borderColor: '#011627'
                 },
+                whiteSpace: 'nowrap',
                 borderTopLeftRadius: flatLeft ? 0 : null,
                 borderBottomLeftRadius: flatLeft ? 0 : null,
                 borderTopRightRadius: flatRight ? 0 : null,
@@ -403,6 +404,7 @@ const toolnameToPath = {
     'chemical equation balancer': '/tools/chemistry/chem-equation-balancer',
     'ef1 allocation algorithm': '/tools/compsci/AI/resourceAlloc/EF1-generator',
     'student proposing deferred acceptance': '/tools/compsci/AI/resourceAlloc/student-proposing-DA',
+    'thompsons construction': '/tools/compsci/compilers/regex/thompsons-construction'
 }
 export function ToolLink({name, linkText, textDecoration='underline', fs='inherit', color='#011627'}) {
     const toolPath = toolnameToPath[name]
