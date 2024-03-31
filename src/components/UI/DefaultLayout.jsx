@@ -360,6 +360,7 @@ export function ExternalLink({href, target, children}) {
     )
 }
 const categoryNameToPath = {
+    'About': '/about',
     'Resource Allocation': '/tools/compsci/AI/resourceAlloc',
     'Compilers': '/tools/compsci/compilers'
 }

@@ -25,7 +25,7 @@ import Compilers from './pages/tools/compsci/compilers/Compilers';
 import ThompsonsConstruction from './pages/tools/compsci/compilers/ThompsonsConstruction';
 function App() {
 	return (
-    	<BrowserRouter>
+    <BrowserRouter>
 			<Routes>
 				<Route path="/" element={<DefaultLayout />} >
 					<Route index element={<Home />} />
@@ -71,8 +71,8 @@ function App() {
 				</Route>
 				
 			</Routes>
-    	</BrowserRouter>
-  	);
+    </BrowserRouter>
+  );
 }
 
 export default App;
